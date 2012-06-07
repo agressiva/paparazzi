@@ -1,0 +1,79 @@
+<layout width="1270" height="715">
+  <columns>
+    <rows SIZE="375">
+      <widget NAME="strips" SIZE="200"/>
+      <widget NAME="alarms"/>
+    </rows>
+    <rows>
+      <widget NAME="map2d" SIZE="500">
+        <papget type="message_field" display="text" x="598" y="91">
+          <property name="scale" value="1."/>
+          <property name="field" value="GPS_SOL:numSV"/>
+          <property name="format" value="Num Sat: %.2f"/>
+          <property name="size" value="15."/>
+          <property name="color" value="green"/>
+        </papget>
+        <papget type="message_field" display="text" x="598" y="112">
+          <property name="scale" value="0.01"/>
+          <property name="field" value="BAT:amps"/>
+          <property name="format" value="BAT: %.2f amp"/>
+          <property name="size" value="15."/>
+          <property name="color" value="green"/>
+        </papget>
+        <papget type="message_field" display="text" x="595" y="153">
+          <property name="scale" value="1."/>
+          <property name="field" value="CIRCLE:radius"/>
+          <property name="format" value="Nav Radius: %.2f"/>
+          <property name="size" value="15."/>
+          <property name="color" value="green"/>
+        </papget>
+        <papget type="message_field" display="text" x="600" y="3">
+          <property name="scale" value="0.001"/>
+          <property name="field" value="GPS:alt"/>
+          <property name="format" value="GPS_alt: %.2f"/>
+          <property name="size" value="15."/>
+          <property name="color" value="green"/>
+        </papget>
+        <papget type="message_field" display="text" x="600" y="26">
+          <property name="scale" value="1."/>
+          <property name="field" value="ESTIMATOR:z"/>
+          <property name="format" value="Estim_z: %.2f"/>
+          <property name="size" value="15."/>
+          <property name="color" value="green"/>
+        </papget>
+        <papget type="message_field" display="text" x="599" y="47">
+          <property name="scale" value="1."/>
+          <property name="field" value="BMP_STATUS:UP"/>
+          <property name="format" value="Baro_alt: %.2f"/>
+          <property name="size" value="15."/>
+          <property name="color" value="green"/>
+        </papget>
+        <papget type="expression" display="text" x="8" y="336">
+          <property name="scale" value="1"/>
+          <property name="expr" value="BlockName(NAVIGATION.cur_block)"/>
+          <property name="format" value="%.2f"/>
+          <property name="size" value="20."/>
+          <property name="color" value="white"/>
+        </papget>
+        <papget type="message_field" display="text" x="599" y="135">
+          <property name="scale" value="1."/>
+          <property name="field" value="BAT:energy"/>
+          <property name="format" value="BAT total: %.2f mha"/>
+          <property name="size" value="15."/>
+          <property name="color" value="green"/>
+        </papget>
+        <papget type="message_field" display="text" x="598" y="70">
+          <property name="scale" value="1."/>
+          <property name="field" value="AIRSPEED_ETS:scaled"/>
+          <property name="format" value="AirSpeed: %.2f"/>
+          <property name="size" value="15."/>
+          <property name="color" value="green"/>
+        </papget>
+      </widget>
+      <widget NAME="aircraft" SIZE="400"/>
+    </rows>
+    <rows>
+      <widget size="100" name="altgraph"/>
+    </rows>
+  </columns>
+</layout>
