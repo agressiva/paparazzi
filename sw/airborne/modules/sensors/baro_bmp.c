@@ -37,6 +37,7 @@
 #include "mcu_periph/uart.h"
 #include "messages.h"
 #include "subsystems/datalink/downlink.h"
+#include "estimator.h"
 
 #ifndef DOWNLINK_DEVICE
 #define DOWNLINK_DEVICE DOWNLINK_AP_DEVICE
@@ -52,11 +53,26 @@
 
 #define BMP085_SLAVE_ADDR 0xEE
 
+#define BARO_BMP_OFFSET_MAX 30000
+#define BARO_BMP_OFFSET_MIN 10
+#define BARO_BMP_OFFSET_NBSAMPLES_INIT 2
+#define BARO_BMP_OFFSET_NBSAMPLES_AVRG 4
+#define BARO_BMP_R 0.5
+#define BARO_BMP_SIGMA2 0.1
+
 struct i2c_transaction bmp_trans;
 
+bool_t baro_bmp_valid;
+bool_t baro_bmp_enabled;
+float baro_bmp_r;
+float baro_bmp_sigma2;
+
+// Global variables
 uint8_t  baro_bmp_status;
 uint32_t baro_bmp_pressure;
 uint16_t baro_bmp_temperature;
+int32_t baro_bmp_altitude, baro_bmp,baro_bmp_temp,baro_bmp_offset;
+double   tmp_float;
 
 int16_t  bmp_ac1, bmp_ac2, bmp_ac3;
 uint16_t bmp_ac4, bmp_ac5, bmp_ac6;
@@ -64,14 +80,26 @@ int16_t  bmp_b1, bmp_b2;
 int16_t  bmp_mb, bmp_mc, bmp_md;
 int32_t  bmp_up, bmp_ut;
 
+// Local variables
+bool_t baro_bmp_offset_init;
+int32_t baro_bmp_offset_tmp;
+uint16_t baro_bmp_cnt;
+
 void baro_bmp_init( void ) {
   baro_bmp_status = BARO_BMP_UNINIT;
+  baro_bmp_r = BARO_BMP_R;
+  baro_bmp_sigma2 = BARO_BMP_SIGMA2;
+  baro_bmp_valid = TRUE;
+  baro_bmp_enabled = TRUE;
+  baro_bmp_offset_init = FALSE;
+  baro_bmp_cnt = BARO_BMP_OFFSET_NBSAMPLES_INIT + BARO_BMP_OFFSET_NBSAMPLES_AVRG;
   /* read calibration values */
   bmp_trans.buf[0] = BMP085_EEPROM_AC1;
   I2CTransceive(BMP_I2C_DEV, bmp_trans, BMP085_SLAVE_ADDR, 1, 22);
 }
 
 void baro_bmp_periodic( void ) {
+  #ifndef SITL
   if (baro_bmp_status == BARO_BMP_IDLE) {
     /* start temp measurement (once) */
     bmp_trans.buf[0] = BMP085_CTRL_REG;
@@ -91,6 +119,13 @@ void baro_bmp_periodic( void ) {
     I2CTransceive(BMP_I2C_DEV, bmp_trans, BMP085_SLAVE_ADDR, 1, 3);
     baro_bmp_status = BARO_BMP_READ_PRESS;
   }
+#else // SITL
+  baro_ets_adc = 0;
+  baro_ets_altitude = gps.hmsl / 1000.0;
+  baro_ets_valid = TRUE;
+  EstimatorSetAlt(baro_ets_altitude);
+#endif
+
 }
 
 void baro_bmp_event( void ) {
@@ -165,9 +200,63 @@ void baro_bmp_event( void ) {
 
       baro_bmp_temperature = bmp_t;
       baro_bmp_pressure = bmp_p;
+
+      tmp_float = bmp_p/101325.0; //pressao nivel mar
+      tmp_float = pow(tmp_float,0.190295); //eleva pressao ao expoente
+      baro_bmp = 44330*(1.0-tmp_float);
+
+   if (!baro_bmp_offset_init) {
+	baro_bmp_offset = baro_bmp;
+	baro_bmp_offset_init = TRUE;
+/*
+     --baro_bmp_cnt;
+      // Check if averaging completed
+      if (baro_bmp_cnt == 0) {
+        // Calculate average
+        baro_bmp_offset = (baro_bmp_offset_tmp / BARO_BMP_OFFSET_NBSAMPLES_AVRG);
+        // Limit offset
+        if (baro_bmp_offset < BARO_BMP_OFFSET_MIN)
+          baro_bmp_offset = BARO_BMP_OFFSET_MIN;
+        if (baro_bmp_offset > BARO_BMP_OFFSET_MAX)
+          baro_bmp_offset = BARO_BMP_OFFSET_MAX;
+        baro_bmp_offset_init = TRUE;
+      }
+      // Check if averaging needs to continue
+      else if (baro_bmp_cnt <= BARO_BMP_OFFSET_NBSAMPLES_AVRG)
+        baro_bmp_offset_tmp += baro_bmp;
+*/
+    }//baro offset init
+
+   baro_bmp_temp = (baro_bmp - baro_bmp_offset);
+
+   if (baro_bmp_offset_init) {
+      baro_bmp_altitude = ground_alt + baro_bmp_temp; 
+      // New value available
+#ifdef USE_BARO_BMP
+#pragma message "USING BARO BMP"
+      EstimatorSetAlt(baro_bmp_altitude);
+#endif
+
+
+
 #ifdef SENSOR_SYNC_SEND
       DOWNLINK_SEND_BMP_STATUS(DefaultChannel, DefaultDevice, &bmp_up, &bmp_ut, &bmp_p, &bmp_t);
+#else
+      RunOnceEvery(10, DOWNLINK_SEND_BMP_STATUS(DefaultChannel, DefaultDevice, &baro_bmp_temp, &bmp_ut, &bmp_p, &bmp_t));
 #endif
+	}
+else {
+      baro_bmp_altitude = 0.0;
+    }
+
+
     }
   }
+else 
+  baro_bmp_enabled = FALSE;
 }
+
+
+//    }
+//  }
+//}
