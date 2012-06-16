@@ -249,7 +249,9 @@ static inline void v_ctl_set_throttle( void ) {
     + v_ctl_auto_throttle_pgain * err
     + v_ctl_auto_throttle_dgain * d_err
     + v_ctl_auto_throttle_igain * v_ctl_auto_throttle_sum_err;
-
+   if (controlled_throttle < v_ctl_auto_throttle_min_cruise_throttle) {   // colocado para limitar o acelerador 
+          controlled_throttle = v_ctl_auto_throttle_min_cruise_throttle;
+   }
 }
 
 #if USE_AIRSPEED
@@ -316,6 +318,9 @@ static inline void v_ctl_set_airspeed( void ) {
     + v_ctl_auto_airspeed_throttle_pgain * err_airspeed
     + v_ctl_auto_airspeed_throttle_dgain * d_err_airspeed
     + v_ctl_auto_airspeed_throttle_igain * v_ctl_auto_airspeed_throttle_sum_err;
+    if (controlled_throttle < v_ctl_auto_throttle_min_cruise_throttle) {   // colocado para limitar o acelerador 
+          controlled_throttle = v_ctl_auto_throttle_min_cruise_throttle;
+    }
 
 }
 
