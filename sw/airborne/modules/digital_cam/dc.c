@@ -87,7 +87,7 @@ void dc_send_shot_position(void)
 #endif /* SENSOR_SYNC_SEND */
 
 uint8_t dc_info(void) {
-#ifdef DOWNLINK_SEND_DC_INFO
+//#ifdef DOWNLINK_SEND_DC_INFO
   float course = DegOfRad(estimator_psi);
   DOWNLINK_SEND_DC_INFO(DefaultChannel, DefaultDevice,
                         &dc_autoshoot,
@@ -104,7 +104,7 @@ uint8_t dc_info(void) {
                         &dc_circle_last_block,
                         &dc_gps_count,
                         &dc_autoshoot_quartersec_period);
-#endif
+//#endif
   return 0;
 }
 
