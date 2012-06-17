@@ -5,7 +5,7 @@
 #include "subsystems/navigation/nav_line.h"
 #include "subsystems/navigation/OSAMNav.h"
 #include "subsystems/datalink/datalink.h"
-#define LINE_START_FUNCTION dc_autoshoot = DC_AUTOSHOOT_PERIODIC;
+#define LINE_START_FUNCTION dc_survey(30,DC_IGNORE,DC_IGNORE);
 #define LINE_STOP_FUNCTION dc_autoshoot = DC_AUTOSHOOT_STOP;
 </header>
   <waypoints>

@@ -6,8 +6,13 @@
 #include "subsystems/navigation/OSAMNav.h"
 #include "subsystems/navigation/poly_survey_adv.h"
 #include "subsystems/datalink/datalink.h"
+<<<<<<< HEAD
 <!--#define LINE_START_FUNCTION dc_autoshoot = DC_AUTOSHOOT_PERIODIC;  DISTANCE-->
 #define LINE_START_FUNCTION dc_autoshoot = dc_survey(50,0,0);
+=======
+//#define LINE_START_FUNCTION dc_survey(30,DC_IGNORE,DC_IGNORE);
+#define LINE_START_FUNCTION dc_Survey(dc_gps_dist);
+>>>>>>> 0dad3d1537035d5384b681951db78f45daa40756
 #define LINE_STOP_FUNCTION dc_autoshoot = DC_AUTOSHOOT_STOP;
 </header>
   <waypoints>
@@ -24,11 +29,16 @@
     <waypoint name="_9" x="64.5" y="-111.4"/>
     <waypoint name="_10" x="-184.7" y="-31.9"/>
     <waypoint name="_11" x="-209.3" y="182.3"/>
-    <waypoint name="1" x="-38.0" y="16.4"/>
-    <waypoint name="2" x="-23.6" y="70.1"/>
-    <waypoint name="3" x="41.5" y="60.3"/>
-    <waypoint name="4" x="92.1" y="47.0"/>
-    <waypoint name="5" x="56.5" y="-66.9"/>
+    <waypoint name="1" x="288.2" y="-88.6"/>
+    <waypoint name="2" x="-1123.1" y="947.5"/>
+    <waypoint name="3" x="-112.2" y="2119.3"/>
+    <waypoint name="4" x="1395.3" y="1243.6"/>
+    <waypoint name="5" x="390.1" y="19.3"/>
+    <waypoint name="WP_1" x="300.0" y="-97.4"/>
+    <waypoint name="WP_2" x="-1113.1" y="924.5"/>
+    <waypoint name="WP_3" x="-221.6" y="1965.4"/>
+    <waypoint name="WP_4" x="1226.3" y="1094.3"/>
+    <waypoint name="WP_5" x="398.2" y="30.7"/>
     <waypoint name="6" x="22.0" y="-132.8"/>
     <waypoint name="7" x="-81.7" y="-101.3"/>
     <waypoint name="8" x="-55.8" y="20.3"/>
@@ -113,6 +123,7 @@
       <call fun="FlightLine(7,8,nav_radius,50,50)"/>
       <deroute block="Standby"/>
     </block>
+<<<<<<< HEAD
     <block name="PolySrvADV cont">
       <call fun="poly_survey_adv()"/>
     </block>
@@ -121,6 +132,10 @@
       <call fun="PolygonSurvey()"/>
     </block>
     <block name="INI Poly Survey 50m 0 deg">
+=======
+
+    <block name="Poly Survey 50m 0 deg">
+>>>>>>> 0dad3d1537035d5384b681951db78f45daa40756
       <call fun="InitializePolygonSurvey(WP_S1, 11, 50, 0)"/>
       <call fun="PolygonSurvey()"/>
     </block>
@@ -132,14 +147,18 @@
       <call fun="InitializePolygonSurvey(WP_S1, 11, 240, 50)"/>
       <call fun="PolygonSurvey()"/>
     </block>
-
     <block group="Psurvey" name="P-Survey 240m 4pt 50deg" strip_button="PSurv4-240m50d">
       <call fun="InitializePolygonSurvey(WP_S1, 4, 240, 50)"/>
       <call fun="PolygonSurvey()"/>
     </block>
-
     <block group="Psurvey" name="P-Survey 160m 4pt 50deg" strip_button="PSurv4-160m50d">
       <call fun="InitializePolygonSurvey(WP_S1, 4, 160, 50)"/>
+      <call fun="PolygonSurvey()"/>
+    </block>
+    <block group="Psurvey" name="Initialize Poly Survey 1-5" strip_button="SurveyAUTO">
+      <call fun="PhotogrammetryCalculatorPolygonSurvey(WP_1, 5)"/>
+    </block>
+    <block name="PSrv continue"  strip_button="PSurv Cont">
       <call fun="PolygonSurvey()"/>
     </block>
 
@@ -196,6 +215,11 @@
     <block name="flare">
       <go approaching_time="0" from="AF" hmode="route" throttle="0.0" vmode="throttle" wp="TD"/>
       <attitude roll="0.0" throttle="0.0" until="FALSE" vmode="throttle"/>
+    </block>
+    <block name="Test datalink (go to wp 2)">
+      <exception cond="datalink_time > 22" deroute="Standby"/>
+      <go from="STDBY" hmode="route" wp="2"/>
+      <go from="2" hmode="route" wp="STDBY"/>
     </block>
   </blocks>
 </flight_plan>
