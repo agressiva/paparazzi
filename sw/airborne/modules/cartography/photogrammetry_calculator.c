@@ -40,9 +40,12 @@
 #define PHOTOGRAMMETRY_SIDELAP 50
 #endif
 
+#ifndef PHOTOGRAMMETRY_RESOLUTION
+#define PHOTOGRAMMETRY_RESOLUTION 80
+#endif
 
 // Flightplan Paramters
-int photogrammetry_sweep_angle = 0; // in rad
+int photogrammetry_sweep_angle = 0;
 
 int photogrammetry_sidestep = 0;
 int photogrammetry_triggerstep = 0;

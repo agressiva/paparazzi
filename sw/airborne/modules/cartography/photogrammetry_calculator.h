@@ -123,7 +123,7 @@ void photogrammetry_calculator_update(void);
   int _ang = 90 - photogrammetry_sweep_angle; 					\
   if (_ang > 90) _ang -= 180; if (_ang < -90) _ang += 180; 			\
   InitializePolygonSurvey((_WP), (_COUNT), 2*photogrammetry_sidestep, _ang);	\
-  dc_gps_dist = photogrammetry_overlap;   					\
+  dc_gps_dist = photogrammetry_triggerstep;   					\
 }
 
 #define PhotogrammetryCalculatorPolygonSurveyADV(_WP, _COUNT) {			\

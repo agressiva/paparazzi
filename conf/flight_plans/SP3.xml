@@ -6,13 +6,8 @@
 #include "subsystems/navigation/OSAMNav.h"
 #include "subsystems/navigation/poly_survey_adv.h"
 #include "subsystems/datalink/datalink.h"
-<<<<<<< HEAD
-<!--#define LINE_START_FUNCTION dc_autoshoot = DC_AUTOSHOOT_PERIODIC;  DISTANCE-->
-#define LINE_START_FUNCTION dc_autoshoot = dc_survey(50,0,0);
-=======
 //#define LINE_START_FUNCTION dc_survey(30,DC_IGNORE,DC_IGNORE);
 #define LINE_START_FUNCTION dc_Survey(dc_gps_dist);
->>>>>>> 0dad3d1537035d5384b681951db78f45daa40756
 #define LINE_STOP_FUNCTION dc_autoshoot = DC_AUTOSHOOT_STOP;
 </header>
   <waypoints>
@@ -123,19 +118,11 @@
       <call fun="FlightLine(7,8,nav_radius,50,50)"/>
       <deroute block="Standby"/>
     </block>
-<<<<<<< HEAD
-    <block name="PolySrvADV cont">
-      <call fun="poly_survey_adv()"/>
-    </block>
     <block name="Poly Survey 25">
       <call fun="InitializePolygonSurvey(WP_S1, 11, 25, 0)"/>
       <call fun="PolygonSurvey()"/>
     </block>
     <block name="INI Poly Survey 50m 0 deg">
-=======
-
-    <block name="Poly Survey 50m 0 deg">
->>>>>>> 0dad3d1537035d5384b681951db78f45daa40756
       <call fun="InitializePolygonSurvey(WP_S1, 11, 50, 0)"/>
       <call fun="PolygonSurvey()"/>
     </block>
@@ -160,6 +147,14 @@
     </block>
     <block name="PSrv continue"  strip_button="PSurv Cont">
       <call fun="PolygonSurvey()"/>
+    </block>
+
+    <block group="Psurvey" name="Initialize ADV Poly 1234 Survey" strip_button="SurveyAUTO-ADV" strip_icon="survey.png">
+      <call fun="PhotogrammetryCalculatorPolygonSurveyADV(WP_1, 5)"/>
+    </block>
+
+    <block name="PSrvADV continue"  strip_button="PSurvADV Cont">
+      <call fun="poly_survey_adv()"/>
     </block>
 
     <block group="extra_pattern" name="Survey S1-S2 25m NS" strip_button="Survey25-NS" strip_icon="survey.png">

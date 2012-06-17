@@ -559,7 +559,12 @@ bool_t PolygonSurvey(void)
 	float DInt2 = 0;
 
 	NavVerticalAutoThrottleMode(0); /* No pitch */
-  	NavVerticalAltitudeMode(waypoints[SurveyEntryWP].a, 0.);
+//  	NavVerticalAltitudeMode(waypoints[SurveyEntryWP].a, 0.);
+	NavVerticalAltitudeMode(photogrammetry_height + GROUND_ALT, 0.0);
+
+//  NavVerticalAutoThrottleMode(100.0);
+//  NavVerticalAltitudeMode(psa_altitude, 0.0);    photogrammetry_height + GROUND_ALT
+
 
 	switch(CSurveyStatus)
 	{
@@ -573,7 +578,8 @@ bool_t PolygonSurvey(void)
 		//follow the circle
 		nav_circle_XY(C.x, C.y, SurveyRadius);
 
-		if(NavQdrCloseTo(SurveyCircleQdr) && NavCircleCount() > .1 && estimator_z > waypoints[SurveyEntryWP].a-10)
+		//if(NavQdrCloseTo(SurveyCircleQdr) && NavCircleCount() > .1 && estimator_z > waypoints[SurveyEntryWP].a-10)
+		if(NavQdrCloseTo(SurveyCircleQdr) && NavCircleCount() > .1 && estimator_z > photogrammetry_height + GROUND_ALT-10)
 		{
 			CSurveyStatus = Sweep;
 			nav_init_stage();
