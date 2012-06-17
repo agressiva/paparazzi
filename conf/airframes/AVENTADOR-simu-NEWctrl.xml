@@ -217,7 +217,7 @@
 
   <section name="CATAPULT" prefix="NAV_CATAPULT_" >
     <define name="MOTOR_DELAY" value="45" />
-    <define name="HEADING_DELAY" value="(60*3)" />
+    <!--<define name="HEADING_DELAY" value="(60*3)" />-->
     <define name="ACCELERATION_THRESHOLD" value="1.75" />
     <define name="INITIAL_PITCH" value="(15.0/57.0)" />
     <define name="INITIAL_THROTTLE" value="1.0" />

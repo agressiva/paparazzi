@@ -703,7 +703,7 @@ bool_t PolygonSurvey(void)
 			//Go into circle state
 			CSurveyStatus = SweepCircle;
 			nav_init_stage();
-      LINE_STOP_FUNCTION;
+                        LINE_STOP_FUNCTION;
 			PolySurveySweepNum++;
 		}
 

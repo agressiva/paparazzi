@@ -16,7 +16,7 @@ extern bool_t BungeeTakeoff(void);
 extern bool_t InitializeSkidLanding(uint8_t AFWP, uint8_t TDWP, float radius);
 extern bool_t SkidLanding(void);
 
-#define PolygonSize 10
+#define PolygonSize 20
 #define MaxFloat   1000000000
 #define MinFloat   -1000000000
 
