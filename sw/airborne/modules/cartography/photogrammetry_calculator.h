@@ -119,7 +119,7 @@ void photogrammetry_calculator_update(void);
 
 // Flightplan Routine Wrappers
 #define PhotogrammetryCalculatorPolygonSurvey(_WP, _COUNT) {  			\
-  WaypointAlt(WP__BASELEG) = photogrammetry_height + GROUND_ALT;		\
+  WaypointAlt(WP__BASELEG) = ground_alt + photogrammetry_height;		\
   int _ang = 90 - photogrammetry_sweep_angle; 					\
   if (_ang > 90) _ang -= 180; if (_ang < -90) _ang += 180; 			\
   InitializePolygonSurvey((_WP), (_COUNT), 2*photogrammetry_sidestep, _ang);	\
@@ -129,7 +129,7 @@ void photogrammetry_calculator_update(void);
 #define PhotogrammetryCalculatorPolygonSurveyADV(_WP, _COUNT) {			\
   init_poly_survey_adv((_WP), (_COUNT), photogrammetry_sweep_angle, 		\
     photogrammetry_sidestep, photogrammetry_triggerstep, 			\
-  photogrammetry_radius_min,  photogrammetry_height + GROUND_ALT);		\
+  photogrammetry_radius_min,  GROUND_ALT + photogrammetry_height);		\
 }
 
 #endif

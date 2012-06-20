@@ -234,8 +234,8 @@
   <section name="Photogrammetry" prefix="PHOTOGRAMMETRY_">
     <!-- Camera Parameters -->
     <define name="FOCAL_LENGTH" value="5" unit="mm"/>
-    <define name="SENSOR_WIDTH" value="8.8" unit="mm"/>                <!-- In direction of the plane's wings -->
-    <define name="SENSOR_HEIGHT" value="6.6" unit="mm"/>               <!-- In direction of the plane's nose -->
+    <define name="SENSOR_WIDTH" value="6.16" unit="mm"/>                <!-- In direction of the plane's wings -->
+    <define name="SENSOR_HEIGHT" value="4.62" unit="mm"/>               <!-- In direction of the plane's nose -->
     <define name="PIXELS_WIDTH" value="4000" unit=""/>
 
     <!-- Photogrammetry Parameters : defined per flightplan -->

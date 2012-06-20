@@ -2,7 +2,7 @@
 <!DOCTYPE sectors SYSTEM "sectors.dtd">
 
 <sectors>
-  <sector name="airexpo">
+  <sector name="area1">
     <polygon>
      <point pos="WGS84 43.4475 1.2663"/>
      <point pos="WGS84 43.4472 1.2618"/>
@@ -13,7 +13,7 @@
     </polygon>
   </sector>
 
-  <sector name="survey">
+  <sector name="area2">
     <polygon>
       <point pos="WGS84 43.465789	1.271318"/>
       <point pos="WGS84 43.465429	1.277119"/>
@@ -31,3 +31,4 @@
     </polygon>
   </sector>
 </sectors>
+
