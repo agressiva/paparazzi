@@ -152,6 +152,8 @@ void stabilization_attitude_run(bool_t enable_integrator) {
     scaled_att_err.qx = att_err.qx / IERROR_SCALE;
     scaled_att_err.qy = att_err.qy / IERROR_SCALE;
     scaled_att_err.qz = att_err.qz / IERROR_SCALE;
+    
+    if (scaled_att_err.qy > 100) scaled_att_err.qy = 100;
     INT32_QUAT_COMP(new_sum_err, stabilization_att_sum_err_quat, scaled_att_err);
     INT32_QUAT_NORMALIZE(new_sum_err);
     QUAT_COPY(stabilization_att_sum_err_quat, new_sum_err);

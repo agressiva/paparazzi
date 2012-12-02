@@ -23,6 +23,9 @@
 #include "subsystems/ahrs.h"
 #include "subsystems/radio_control.h"
 
+#include "subsystems/datalink/downlink.h"
+
+
 #include "firmwares/rotorcraft/stabilization/stabilization_attitude_rc_setpoint.h"
 
 #include "generated/airframe.h"
@@ -89,15 +92,15 @@ void stabilization_attitude_enter(void) {
 
   stab_att_sp_euler.psi = ahrs.ltp_to_body_euler.psi;
   reset_psi_ref_from_body();
-  INT_EULERS_ZERO( stabilization_att_sum_err );
+ // INT_EULERS_ZERO( stabilization_att_sum_err ); this line cause integrtor reset when changing Hmode. Its dangerous.
 
 }
-
 
 #define OFFSET_AND_ROUND(_a, _b) (((_a)+(1<<((_b)-1)))>>(_b))
 #define OFFSET_AND_ROUND2(_a, _b) (((_a)+(1<<((_b)-1))-((_a)<0?1:0))>>(_b))
 
-#define MAX_SUM_ERR 4000000
+#define MAX_SUM_ERR 1000000
+#define IERROR_SCALE 8
 
 void stabilization_attitude_run(bool_t  in_flight) {
 
@@ -119,13 +122,17 @@ void stabilization_attitude_run(bool_t  in_flight) {
     OFFSET_AND_ROUND(stab_att_ref_euler.phi,   (REF_ANGLE_FRAC - INT32_ANGLE_FRAC)),
     OFFSET_AND_ROUND(stab_att_ref_euler.theta, (REF_ANGLE_FRAC - INT32_ANGLE_FRAC)),
     OFFSET_AND_ROUND(stab_att_ref_euler.psi,   (REF_ANGLE_FRAC - INT32_ANGLE_FRAC)) };
-  struct Int32Eulers att_err;
+  struct Int32Eulers att_err, scaled_att_err;
   EULERS_DIFF(att_err, att_ref_scaled, ahrs.ltp_to_body_euler);
-  INT32_ANGLE_NORMALIZE(att_err.psi);
+  
+  INT32_ANGLE_NORMALIZE(att_err.psi); //
+    struct Int32Eulers ;
+    /* update accumulator */
+    EULERS_SDIV(scaled_att_err,att_err,IERROR_SCALE);
 
   if (in_flight) {
     /* update integrator */
-    EULERS_ADD(stabilization_att_sum_err, att_err);
+    EULERS_ADD(stabilization_att_sum_err, scaled_att_err);
     EULERS_BOUND_CUBE(stabilization_att_sum_err, -MAX_SUM_ERR, MAX_SUM_ERR);
   }
   else {
@@ -141,21 +148,20 @@ void stabilization_attitude_run(bool_t  in_flight) {
   RATES_DIFF(rate_err, rate_ref_scaled, ahrs.body_rate);
 
   /* PID                  */
-  stabilization_att_fb_cmd[COMMAND_ROLL] =
-    stabilization_gains.p.x    * att_err.phi +
-    stabilization_gains.d.x    * rate_err.p +
-    OFFSET_AND_ROUND2((stabilization_gains.i.x  * stabilization_att_sum_err.phi), 10);
+    stabilization_att_fb_cmd[COMMAND_ROLL] =
+    stabilization_gains.p.x    * att_err.phi   +
+    stabilization_gains.d.x    * rate_err.p    +
+    OFFSET_AND_ROUND2((stabilization_gains.i.x  * stabilization_att_sum_err.phi), 7);
 
   stabilization_att_fb_cmd[COMMAND_PITCH] =
     stabilization_gains.p.y    * att_err.theta +
-    stabilization_gains.d.y    * rate_err.q +
-    OFFSET_AND_ROUND2((stabilization_gains.i.y  * stabilization_att_sum_err.theta), 10);
+    stabilization_gains.d.y    * rate_err.q    + 
+    OFFSET_AND_ROUND2((stabilization_gains.i.y  * stabilization_att_sum_err.theta), 7);
 
   stabilization_att_fb_cmd[COMMAND_YAW] =
     stabilization_gains.p.z    * att_err.psi +
-    stabilization_gains.d.z    * rate_err.r +
-    OFFSET_AND_ROUND2((stabilization_gains.i.z  * stabilization_att_sum_err.psi), 10);
-
+    stabilization_gains.d.z    * rate_err.r  +
+    OFFSET_AND_ROUND2((stabilization_gains.i.z  * stabilization_att_sum_err.psi), 7);
 
   /* with P gain of 100, att_err of 180deg (3.14 rad)
    * fb cmd: 100 * 3.14 * 2^12 / 2^CMD_SHIFT = 628
