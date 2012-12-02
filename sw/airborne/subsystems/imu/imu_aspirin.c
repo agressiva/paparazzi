@@ -74,13 +74,15 @@ static void configure_gyro(void) {
   t.type = I2CTransTx;
   t.slave_addr = ITG3200_ADDR;
   /* set gyro range to 2000deg/s and low pass at 256Hz */
-  t.buf[0] = ITG3200_REG_DLPF_FS;
-  t.buf[1] = (0x03<<3);
+  #define ITG3200_DLPF_CFG 0x4 //03 Internal sampling (1kHz, 42Hz LP Bandwidth)
+  #define ITG3200_FS_SEL 0x3 // Full scale range +- 2000°/s
+  t.buf[0] = ITG3200_REG_DLPF_FS;//(ITG3200_FS_SEL<<3)|(ITG3200_DLPF_CFG)
+  t.buf[1] = (ITG3200_FS_SEL<<3)|(ITG3200_DLPF_CFG);//(0x03<<3)
   t.len_w = 2;
   send_i2c_msg_with_retry(&t);
   /* set sample rate to 533Hz */
   t.buf[0] = ITG3200_REG_SMPLRT_DIV;
-  t.buf[1] = 0x0E;
+  t.buf[1] = 0x00;//0e
   send_i2c_msg_with_retry(&t);
   /* switch to gyroX clock */
   t.buf[0] = ITG3200_REG_PWR_MGM;
