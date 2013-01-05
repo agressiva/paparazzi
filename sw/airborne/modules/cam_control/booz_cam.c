@@ -36,7 +36,7 @@
 #include "subsystems/datalink/downlink.h"
 
 uint8_t booz_cam_mode;
-
+int16_t cam_temp;
 // Tilt definition
 #ifdef BOOZ_CAM_TILT_NEUTRAL
 int16_t booz_cam_tilt_pwm;
@@ -166,8 +166,8 @@ void booz_cam_periodic(void) {
       break;
     case BOOZ_CAM_MODE_STABILIZE:
 #ifdef BOOZ_CAM_USE_TILT
-      booz_cam_tilt = ahrs.ltp_to_body_euler.theta;
-      booz_cam_tilt_pwm = BOOZ_CAM_TILT_MIN + D_TILT * (booz_cam_tilt  - CAM_TA_MIN) / (CAM_TA_MAX - CAM_TA_MIN);
+      cam_temp = ahrs.ltp_to_body_euler.theta;
+      booz_cam_tilt_pwm = BOOZ_CAM_TILT_MIN + D_TILT * (cam_temp + booz_cam_tilt - CAM_TA_MIN) / (CAM_TA_MAX - CAM_TA_MIN);
       Bound(booz_cam_tilt_pwm, CT_MIN, CT_MAX);
             
 //        int32_t tmpi[2];
