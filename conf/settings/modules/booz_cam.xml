@@ -7,6 +7,7 @@
         <strip_button name="CM" value="1" group="cam_mode1"/>
         <strip_button name="CH" value="2" group="cam_mode2"/>
         <strip_button name="CWP" value="3" group="cam_mode2"/>
+        <strip_button name="STAB" value="4" group="cam_mode2"/>
         <key_press key="F1" value="0"/>
         <key_press key="F2" value="1"/>
       </dl_setting>
