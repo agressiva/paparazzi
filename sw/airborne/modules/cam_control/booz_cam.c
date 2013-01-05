@@ -93,13 +93,13 @@ void booz_cam_init(void) {
   booz_cam_SetCamMode(BOOZ_CAM_DEFAULT_MODE);
 #ifdef BOOZ_CAM_USE_TILT
   booz_cam_tilt_pwm = BOOZ_CAM_TILT_NEUTRAL;
-  actuators_pwm_values[4] = booz_cam_tilt_pwm;
+  actuators_pwm_values[BOOZ_CAM_TILT_SERVO] = booz_cam_tilt_pwm;
   booz_cam_tilt = 0;
 #endif
   
   #ifdef BOOZ_CAM_USE_ROLL
   booz_cam_roll_pwm = BOOZ_CAM_ROLL_NEUTRAL;
-  actuators_pwm_values[6] = booz_cam_roll_pwm;
+  actuators_pwm_values[BOOZ_CAM_ROLL_SERVO] = booz_cam_roll_pwm;
   booz_cam_roll = 0;
 #endif
 
