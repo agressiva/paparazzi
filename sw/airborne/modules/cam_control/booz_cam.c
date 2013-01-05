@@ -23,12 +23,17 @@
  */
 
 #include "cam_control/booz_cam.h"
-#include "modules/core/booz_pwm_arch.h"
+#include "firmwares/rotorcraft/actuators.h"
+#include "firmwares/rotorcraft/actuators/actuators_pwm.h"
 #include "subsystems/ahrs.h"
 #include "firmwares/rotorcraft/navigation.h"
 #include "subsystems/ins.h"
 #include "generated/flight_plan.h"
 #include "std.h"
+
+#include "mcu_periph/uart.h"
+#include "messages.h"
+#include "subsystems/datalink/downlink.h"
 
 uint8_t booz_cam_mode;
 
@@ -43,6 +48,18 @@ int16_t booz_cam_tilt;
 #define BOOZ_CAM_TILT_MAX BOOZ_CAM_TILT_NEUTRAL
 #endif
 #define BOOZ_CAM_USE_TILT 1
+#endif
+
+// Roll definition
+#ifdef BOOZ_CAM_ROLL_NEUTRAL
+int16_t booz_cam_roll_pwm;
+int16_t booz_cam_roll;
+#ifndef BOOZ_CAM_ROLL_MIN
+#define BOOZ_CAM_ROLL_MIN BOOZ_CAM_ROLL_NEUTRAL
+#endif
+#ifndef BOOZ_CAM_ROLL_MAX
+#define BOOZ_CAM_ROLL_MAX BOOZ_CAM_ROLL_NEUTRAL
+#endif
 #endif
 
 // Pan definition
@@ -63,25 +80,32 @@ int16_t booz_cam_pan;
 #define BOOZ_CAM_USE_TILT_ANGLES 1
 #endif
 
-// PWM definition
-#ifndef BOOZ_CAM_SetPwm
-#define BOOZ_CAM_SetPwm(_v) BoozSetPwmValue(_v)
+#if defined BOOZ_CAM_ROLL_ANGLE_MIN && defined BOOZ_CAM_ROLL_ANGLE_MAX && defined BOOZ_CAM_USE_ROLL
+#define CAM_RA_MIN ANGLE_BFP_OF_REAL(BOOZ_CAM_ROLL_ANGLE_MIN)
+#define CAM_RA_MAX ANGLE_BFP_OF_REAL(BOOZ_CAM_ROLL_ANGLE_MAX)
 #endif
 
 #ifndef BOOZ_CAM_DEFAULT_MODE
-#define BOOZ_CAM_DEFAULT_MODE BOOZ_CAM_MODE_NONE
+#define BOOZ_CAM_DEFAULT_MODE BOOZ_CAM_MODE_STABILIZE
 #endif
 
 void booz_cam_init(void) {
   booz_cam_SetCamMode(BOOZ_CAM_DEFAULT_MODE);
 #ifdef BOOZ_CAM_USE_TILT
   booz_cam_tilt_pwm = BOOZ_CAM_TILT_NEUTRAL;
-  BOOZ_CAM_SetPwm(booz_cam_tilt_pwm);
+  actuators_pwm_values[4] = booz_cam_tilt_pwm;
   booz_cam_tilt = 0;
 #endif
-#ifdef BOOZ_CAM_USE_PAN
-  booz_cam_pan = BOOZ_CAM_PAN_NEUTRAL;
+  
+  #ifdef BOOZ_CAM_USE_ROLL
+  booz_cam_roll_pwm = BOOZ_CAM_ROLL_NEUTRAL;
+  actuators_pwm_values[6] = booz_cam_roll_pwm;
+  booz_cam_roll = 0;
 #endif
+
+  #ifdef BOOZ_CAM_USE_PAN
+  booz_cam_pan = BOOZ_CAM_PAN_NEUTRAL;
+  #endif
 }
 
 #define D_TILT (BOOZ_CAM_TILT_MAX - BOOZ_CAM_TILT_MIN)
@@ -97,6 +121,9 @@ void booz_cam_periodic(void) {
 #ifdef BOOZ_CAM_USE_TILT
       booz_cam_tilt_pwm = BOOZ_CAM_TILT_NEUTRAL;
 #endif
+#ifdef BOOZ_CAM_USE_ROLL
+      booz_cam_roll_pwm = BOOZ_CAM_ROLL_NEUTRAL;
+#endif      
 #ifdef BOOZ_CAM_USE_PAN
       booz_cam_pan = ahrs.ltp_to_body_euler.psi;
 #endif
@@ -137,9 +164,33 @@ void booz_cam_periodic(void) {
       }
 #endif
       break;
+    case BOOZ_CAM_MODE_STABILIZE:
+#ifdef BOOZ_CAM_USE_TILT
+      booz_cam_tilt = ahrs.ltp_to_body_euler.theta;
+      booz_cam_tilt_pwm = BOOZ_CAM_TILT_MIN + D_TILT * (booz_cam_tilt  - CAM_TA_MIN) / (CAM_TA_MAX - CAM_TA_MIN);
+      Bound(booz_cam_tilt_pwm, CT_MIN, CT_MAX);
+            
+//        int32_t tmpi[2];
+//	  tmpi[0] = booz_cam_tilt;
+//	  tmpi[1] = booz_cam_tilt_pwm;
+//	  RunOnceEvery(60,DOWNLINK_SEND_DEBUG32(DefaultChannel, DefaultDevice,2, tmpi));
+      
+#endif
+#ifdef BOOZ_CAM_USE_ROLL
+      booz_cam_roll = ahrs.ltp_to_body_euler.phi;
+      booz_cam_roll_pwm = BOOZ_CAM_ROLL_MIN + D_ROLL * (booz_cam_roll  - CAM_RA_MIN) / (CAM_RA_MAX - CAM_RA_MIN);
+      Bound(booz_cam_roll_pwm, CR_MIN, CR_MAX);
+#endif
+      break;      
   }
 #ifdef BOOZ_CAM_USE_TILT
-  BOOZ_CAM_SetPwm(booz_cam_tilt_pwm);
+  actuators_pwm_values[BOOZ_CAM_TILT_SERVO] = booz_cam_tilt_pwm;
 #endif
+#ifdef BOOZ_CAM_USE_ROLL
+  actuators_pwm_values[BOOZ_CAM_ROLL_SERVO] = booz_cam_roll_pwm;
+#endif
+  
 }
+
+
 

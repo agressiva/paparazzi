@@ -20,7 +20,14 @@
 #define ITG3200_REG_GYRO_ZOUT_H 0X21
 #define ITG3200_REG_GYRO_ZOUT_L 0X22
 #define ITG3200_REG_PWR_MGM     0X3E
-
+/* Low Pass filter */
+#define ITG3200_DLPF_256hz 0x0
+#define ITG3200_DLPF_188hz 0x1
+#define ITG3200_DLPF_98hz  0x2
+#define ITG3200_DLPF_42hz  0x3
+#define ITG3200_DLPF_20hz  0x4
+#define ITG3200_DLPF_10hz  0x5
+#define ITG3200_DLPF_05hz  0x6
 
 
 #endif /* ITG3200 */

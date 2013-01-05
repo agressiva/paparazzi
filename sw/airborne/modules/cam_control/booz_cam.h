@@ -30,10 +30,11 @@
 #include "std.h"
 #include "led.h"
 
-#define BOOZ_CAM_MODE_NONE     0
-#define BOOZ_CAM_MODE_MANUAL   1
-#define BOOZ_CAM_MODE_HEADING  2
-#define BOOZ_CAM_MODE_WP       3
+#define BOOZ_CAM_MODE_NONE      0
+#define BOOZ_CAM_MODE_MANUAL    1
+#define BOOZ_CAM_MODE_HEADING   2
+#define BOOZ_CAM_MODE_WP        3
+#define BOOZ_CAM_MODE_STABILIZE 4
 
 // Warning:
 // LED_ON set GPIO low

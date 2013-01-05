@@ -28,8 +28,12 @@ static inline void i2c_reset_init(struct i2c_periph *p);
 
 #ifdef USE_I2C1
 #ifndef I2C1_BITRATE
+#pragma message "USING I2C1 200khz bitrate"
 #define I2C1_BITRATE 200000
+#else
+#pragma message "NoT USING I2C1 Default bitrate"
 #endif
+
 static I2C_InitTypeDef  I2C1_InitStruct = {
       .I2C_Mode = I2C_Mode_I2C,
       .I2C_DutyCycle = I2C_DutyCycle_2,

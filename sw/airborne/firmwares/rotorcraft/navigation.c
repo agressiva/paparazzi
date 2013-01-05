@@ -72,8 +72,8 @@ float flight_altitude;
 static inline void nav_set_altitude( void );
 
 #define CLOSE_TO_WAYPOINT (15 << 8)
-#define ARRIVED_AT_WAYPOINT (3 << 8)
-#define CARROT_DIST (12 << 8)
+#define ARRIVED_AT_WAYPOINT (6 << 8) // (3 << 8)
+#define CARROT_DIST (10 << 8)  // (12 << 8)
 
 void nav_init(void) {
   // init int32 waypoints

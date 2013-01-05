@@ -12,6 +12,12 @@ static void configure_accel(void);
 
 #ifndef ASPIRIN_ACCEL_RATE
 #define ASPIRIN_ACCEL_RATE ADXL345_RATE_800
+#pragma message "USING ACC default RATE"
+#endif
+
+#ifndef ITG3200_DLPF
+#define ITG3200_DLPF ITG3200_DLPF_98hz  //256,188,98,42,20,10,05
+#pragma message "USING GYRO default LPF filter"
 #endif
 
 // FIXME: there should be no arch dependent code here!
@@ -73,11 +79,10 @@ static void configure_gyro(void) {
   struct i2c_transaction t;
   t.type = I2CTransTx;
   t.slave_addr = ITG3200_ADDR;
-  /* set gyro range to 2000deg/s and low pass at 256Hz */
-  #define ITG3200_DLPF_CFG 0x4 //03 Internal sampling (1kHz, 42Hz LP Bandwidth)
+  /* set gyro range to 2000deg/s */
   #define ITG3200_FS_SEL 0x3 // Full scale range +- 2000°/s
-  t.buf[0] = ITG3200_REG_DLPF_FS;//(ITG3200_FS_SEL<<3)|(ITG3200_DLPF_CFG)
-  t.buf[1] = (ITG3200_FS_SEL<<3)|(ITG3200_DLPF_CFG);//(0x03<<3)
+  t.buf[0] = ITG3200_REG_DLPF_FS;
+  t.buf[1] = (ITG3200_FS_SEL<<3)|(ITG3200_DLPF);
   t.len_w = 2;
   send_i2c_msg_with_retry(&t);
   /* set sample rate to 533Hz */
