@@ -44,6 +44,7 @@
 #ifndef ITG3200_DLPF_CFG
 #define ITG3200_DLPF_CFG 0x3 // Internal sampling (1kHz, 42Hz LP Bandwidth)
 #endif
+
 #ifndef ITG3200_INT_CFG
 #define ITG3200_INT_CFG 0x00 // No interrupt
 #endif

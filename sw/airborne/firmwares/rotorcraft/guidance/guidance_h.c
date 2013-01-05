@@ -254,7 +254,7 @@ static inline void guidance_h_update_reference(bool_t use_ref) {
 
 #define MAX_POS_ERR   POS_BFP_OF_REAL(16.)
 #define MAX_SPEED_ERR SPEED_BFP_OF_REAL(16.)
-#define MAX_POS_ERR_SUM ((int32_t)(MAX_POS_ERR)<< 12)
+#define MAX_POS_ERR_SUM ((int32_t)(MAX_POS_ERR)<< 8) //12
 
 /* with a pgain of 100 and a scale of 2,
  * you get an angle of 5.6 degrees for 1m pos error */

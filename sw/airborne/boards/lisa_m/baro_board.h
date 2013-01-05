@@ -83,6 +83,10 @@ static inline void baro_event(void (*b_abs_handler)(void), void (*b_diff_handler
       int32_t tmp = (baro_trans.buf[0]<<16) | (baro_trans.buf[1] << 8) | baro_trans.buf[2];
       tmp = tmp >> (8 - BMP085_OSS);
       baro.absolute = baro_apply_calibration(tmp);
+          
+//      float tmp_float = baro.absolute/101325.0; //pressao nivel mar
+//      tmp_float = pow(tmp_float,0.190295); //eleva pressao ao expoente
+//      baro.absolute = 44330*(1.0-tmp_float);
       b_abs_handler();
     }
   }

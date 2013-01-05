@@ -1335,6 +1335,10 @@
   </message>
 
   <!-- 161 is free -->
+  
+    <message name="DEBUG32" id="161">
+    <field name="msg" type="int32[]"/>
+  </message>
 
   <message name="VFF" id="162">
       <field name="measure"        type="float"/>

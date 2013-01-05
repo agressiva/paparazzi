@@ -63,13 +63,21 @@ static inline void LED_ERROR(uint8_t base, uint8_t nr)
 //////////////////////////////////////////////////////////////////////////////////
 
 #ifdef USE_I2C1
+
+#ifndef I2C1_BITRATE
+#pragma message "USING I2C1 40khz bitrate"
+#define I2C1_BITRATE 40000
+#else
+#pragma message "NoT USING I2C1 Default bitrate"
+#endif
+
 static I2C_InitTypeDef  I2C1_InitStruct = {
       .I2C_Mode = I2C_Mode_I2C,
       .I2C_DutyCycle = I2C_DutyCycle_2,
       .I2C_OwnAddress1 = 0x00,
       .I2C_Ack = I2C_Ack_Enable,
       .I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit,
-      .I2C_ClockSpeed = 40000
+      .I2C_ClockSpeed = I2C1_BITRATE //40000
 };
 #endif
 

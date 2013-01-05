@@ -177,7 +177,8 @@ void ins_propagate() {
 
 void ins_update_baro() {
 #if USE_VFF
-  if (baro.status == BS_RUNNING) {
+  #pragma message "USING INS BARO"
+if (baro.status == BS_RUNNING) {
     if (!ins_baro_initialised) {
       ins_qfe = baro.absolute;
       ins_baro_initialised = TRUE;

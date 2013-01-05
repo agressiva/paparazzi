@@ -82,9 +82,7 @@ void stabilization_attitude_init(void) {
 
 
 void stabilization_attitude_read_rc(bool_t in_flight) {
-
   stabilization_attitude_read_rc_setpoint_eulers(&stab_att_sp_euler, in_flight);
-
 }
 
 
@@ -103,13 +101,16 @@ void stabilization_attitude_enter(void) {
 #define IERROR_SCALE 8
 
 void stabilization_attitude_run(bool_t  in_flight) {
-
+     static int32_t last_att_err_phi,delta_phi,delta1_phi,delta2_phi;
+     static int32_t last_att_err_theta,delta_theta,delta1_theta,delta2_theta;
+     int32_t deltaSum_phi,dampener_phi;
+     int32_t deltaSum_theta,dampener_theta;     
 
   /* update reference */
   stabilization_attitude_ref_update();
 
   /* compute feedforward command */
-  stabilization_att_ff_cmd[COMMAND_ROLL] =
+ stabilization_att_ff_cmd[COMMAND_ROLL] =
     OFFSET_AND_ROUND(stabilization_gains.dd.x * stab_att_ref_accel.p, 5);
   stabilization_att_ff_cmd[COMMAND_PITCH] =
     OFFSET_AND_ROUND(stabilization_gains.dd.y * stab_att_ref_accel.q, 5);
@@ -145,18 +146,45 @@ void stabilization_attitude_run(bool_t  in_flight) {
     OFFSET_AND_ROUND(stab_att_ref_rate.q, (REF_RATE_FRAC - INT32_RATE_FRAC)),
     OFFSET_AND_ROUND(stab_att_ref_rate.r, (REF_RATE_FRAC - INT32_RATE_FRAC)) };
   struct Int32Rates rate_err;
-  RATES_DIFF(rate_err, rate_ref_scaled, ahrs.body_rate);
-
+    RATES_DIFF(rate_err, rate_ref_scaled, ahrs.body_rate);
+// Damper--------------------------------------------------------
+    //3stage average filter
+  delta_phi = (att_err.phi - last_att_err_phi) * 100;
+  last_att_err_phi = att_err.phi;
+  
+  deltaSum_phi = (delta1_phi + delta2_phi + delta_phi / 3);
+  delta2_phi=delta1_phi;
+  delta1_phi=delta_phi;
+  //--------------------------
+  dampener_phi = deltaSum_phi * stabilization_gains.d.x; 
+  // dampener_phi = deltaSum_phi * 114;
+  if (dampener_phi > 1000000) dampener_phi = 1000000;
+  if (dampener_phi < -1000000) dampener_phi = -1000000;
+  
+  // Damper--------------------------------------------------------
+    //3stage average filter
+  delta_theta = (att_err.theta - last_att_err_theta) * 100;
+  last_att_err_theta = att_err.theta;
+  
+  deltaSum_theta = (delta1_theta + delta2_theta + delta_theta / 3);
+  delta2_theta=delta1_theta;
+  delta1_theta=delta_theta;
+  //--------------------------
+  dampener_theta = deltaSum_theta * stabilization_gains.d.y;
+  if (dampener_theta > 1000000) dampener_theta = 1000000;
+  if (dampener_theta < -1000000) dampener_theta = -1000000;
+// Damper--------------------------------------------------------    
+  
   /* PID                  */
     stabilization_att_fb_cmd[COMMAND_ROLL] =
     stabilization_gains.p.x    * att_err.phi   +
     stabilization_gains.d.x    * rate_err.p    +
-    OFFSET_AND_ROUND2((stabilization_gains.i.x  * stabilization_att_sum_err.phi), 7);
+    OFFSET_AND_ROUND2((stabilization_gains.i.x  * stabilization_att_sum_err.phi), 7);// - dampener_phi ;
 
   stabilization_att_fb_cmd[COMMAND_PITCH] =
     stabilization_gains.p.y    * att_err.theta +
     stabilization_gains.d.y    * rate_err.q    + 
-    OFFSET_AND_ROUND2((stabilization_gains.i.y  * stabilization_att_sum_err.theta), 7);
+    OFFSET_AND_ROUND2((stabilization_gains.i.y  * stabilization_att_sum_err.theta), 7);// - dampener_theta;
 
   stabilization_att_fb_cmd[COMMAND_YAW] =
     stabilization_gains.p.z    * att_err.psi +
@@ -182,6 +210,6 @@ void stabilization_attitude_run(bool_t  in_flight) {
   /* bound the result */
   BoundAbs(stabilization_cmd[COMMAND_ROLL], MAX_PPRZ);
   BoundAbs(stabilization_cmd[COMMAND_PITCH], MAX_PPRZ);
-  BoundAbs(stabilization_cmd[COMMAND_YAW], MAX_PPRZ);
+  BoundAbs(stabilization_cmd[COMMAND_YAW], (MAX_PPRZ/4)); //bound YAW to 25%
 
 }
