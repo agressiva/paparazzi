@@ -42,9 +42,11 @@ DFU_PRODUCT = any
 #
 RADIO_CONTROL_LED ?= none
 BARO_LED ?= none
-AHRS_ALIGNER_LED ?= 2
+AHRS_ALIGNER_LED ?= none
+#AHRS_ALIGNER_LED ?= 2
 GPS_LED ?= none
-SYS_TIME_LED ?= 1
+SYS_TIME_LED ?= none
+#SYS_TIME_LED ?= 1
 
 #
 # default uart configuration

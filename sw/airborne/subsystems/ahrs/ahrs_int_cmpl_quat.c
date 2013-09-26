@@ -278,7 +278,7 @@ void ahrs_update_accel(void) {
 
 
   /* FIR filtered pseudo_gravity_measurement */
-  #define FIR_FILTER_SIZE 8
+  #define FIR_FILTER_SIZE 16   //8
   static struct Int32Vect3 filtered_gravity_measurement = {0, 0, 0};
   VECT3_SMUL(filtered_gravity_measurement, filtered_gravity_measurement, FIR_FILTER_SIZE-1);
   VECT3_ADD(filtered_gravity_measurement, pseudo_gravity_measurement);

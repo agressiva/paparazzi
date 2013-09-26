@@ -66,9 +66,11 @@
 #define CAM_V_GPIO_PIN GPIO15
 #define CAM_V_AFIO_REMAP ((void)0)
 
-#define BEEPER_GPIO             GPIOC
+#define BEEPER_GPIO GPIOC
 #define BEEPER_GPIO_CLK RCC_AHB1ENR_IOPCEN
 #define BEEPER_GPIO_PIN GPIO14
+#define BEEPER_GPIO_ON gpio_clear
+#define BEEPER_GPIO_OFF gpio_set
 #define BEEPER_AFIO_REMAP ((void)0)
 
 
@@ -156,6 +158,7 @@
 #define ADC_CHANNEL_VSUPPLY ADC_4
 #endif
 
+#define USE_ADC_1
 #define ADC_CHANNEL_CAM1    ADC_1
 
 #ifndef USE_AD1

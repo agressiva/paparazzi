@@ -35,6 +35,10 @@ static struct {
 } electrical_priv;
 #endif
 
+#ifndef AUTOPILOT_BAT_LOW_TIME
+#define AUTOPILOT_BAT_LOW_TIME	500
+#endif
+
 #ifndef VoltageOfAdc
 #define VoltageOfAdc(adc) DefaultVoltageOfAdc(adc)
 #endif
@@ -61,18 +65,26 @@ void electrical_init(void) {
 PRINT_CONFIG_VAR(CURRENT_ESTIMATION_NONLINEARITY)
   electrical_priv.nonlin_factor = CURRENT_ESTIMATION_NONLINEARITY;
 #endif
+  electrical.vsupply_low = AUTOPILOT_BAT_LOW_TIME;
 }
 
 void electrical_periodic(void) {
 #if defined(ADC_CHANNEL_VSUPPLY) && !defined(SITL)
   electrical.vsupply = 10 * VoltageOfAdc((electrical_priv.vsupply_adc_buf.sum/electrical_priv.vsupply_adc_buf.av_nb_sample));
+  if(electrical.vsupply < LOW_BAT_LEVEL*10) {
+		if(electrical.vsupply_low > 0)
+			electrical.vsupply_low--;
+	}
+	else
+		if(electrical.vsupply_low)
+			electrical.vsupply_low = AUTOPILOT_BAT_LOW_TIME;  
 #endif
 
 #ifdef ADC_CHANNEL_CURRENT
 #ifndef SITL
   electrical.current = MilliAmpereOfAdc((electrical_priv.current_adc_buf.sum/electrical_priv.current_adc_buf.av_nb_sample));
   /* Prevent an overflow on high current spikes when using the motor brake */
-  BoundAbs(electrical.current, 65000);
+  //BoundAbs(electrical.current, 65000);
 #endif
 #elif defined MILLIAMP_AT_FULL_THROTTLE && defined COMMAND_CURRENT_ESTIMATION
   /*
