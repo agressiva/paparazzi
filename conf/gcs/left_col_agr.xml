@@ -1,0 +1,20 @@
+<layout width="1268" height="719">
+  <columns>
+    <rows SIZE="400">
+      <widget SIZE="300" NAME="strips"/>
+      <widget NAME="alarms"/>
+    </rows>
+    <rows>
+      <widget NAME="map2d">
+        <papget type="message_field" display="text" x="460" y="16">
+          <property name="scale" value="0.0139882"/>
+          <property name="field" value="ROTORCRAFT_FP:psi"/>
+          <property name="format" value="%.1f"/>
+          <property name="size" value="92."/>
+          <property name="color" value="green"/>
+        </papget>
+      </widget>
+      <widget NAME="aircraft"/>
+    </rows>
+  </columns>
+</layout>
