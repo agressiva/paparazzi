@@ -253,7 +253,7 @@ void ahrs_update_accel(void) {
   FLOAT_VECT3_CROSS_PRODUCT(residual, pseudo_gravity_measurement, c2);
 
   /* FIR filtered pseudo_gravity_measurement */
-  #define FIR_FILTER_SIZE 8
+  #define FIR_FILTER_SIZE 12 //
   static struct FloatVect3 filtered_gravity_measurement = {0., 0., 0.};
   VECT3_SMUL(filtered_gravity_measurement, filtered_gravity_measurement, FIR_FILTER_SIZE-1);
   VECT3_ADD(filtered_gravity_measurement, pseudo_gravity_measurement);

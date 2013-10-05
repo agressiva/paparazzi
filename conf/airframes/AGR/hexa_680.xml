@@ -49,7 +49,7 @@ Radio: FR-Sky CPPM - Turnigy 9x
     <subsystem name="imu"  type="krooz_sd"/>
       <define name="KROOZ_LOWPASS_FILTER"  value="MPU60X0_DLPF_188HZ"/> <!--05,10,20,42,98,188,256-->
       <define name="KROOZ_SMPLRT_DIV"  value="1"/>
-      <define name="IMU_KROOZ_USE_ACCEL_MEDIAN_FILTER"/>
+<!--      <define name="IMU_KROOZ_USE_ACCEL_MEDIAN_FILTER"/>  -->
     <subsystem name="gps"           type="ublox"/>
       <configure name="GPS_BAUD"  value="B38400"/>
     <subsystem name="stabilization" type="int_quat"/>
@@ -81,9 +81,9 @@ Radio: FR-Sky CPPM - Turnigy 9x
    <define name="REF_MIN_ZD"   value="-3."/><!--1.5-->
    <define name="REF_MAX_ZD"   value=" 3."/>
 <!--  ------------------------------------------------ -->
-    <define name="HOVER_KP"    value="150"/>  <!-- 120  70-->
-    <define name="HOVER_KD"    value="120"/><!-- 90  120-->
-    <define name="HOVER_KI"    value="10"/><!-- 20 -->
+    <define name="HOVER_KP"    value="180"/>  <!-- 150muito bom mesmo com vento 10m/s -->
+    <define name="HOVER_KD"    value="120"/><!-- 120muito bom mesmo com vento 10m/s-->
+    <define name="HOVER_KI"    value="10"/><!-- 20muito bom mesmo com vento 10m/s -->
     <!-- 1.5m/s for full stick : BOOZ_SPEED_I_OF_F(1.5) / (MAX_PPRZ/2) -->
     <define name="RC_CLIMB_COEF" value ="163"/> <!--163-->
     <!-- BOOZ_SPEED_I_OF_F(1.5) * 20% -->
@@ -136,12 +136,12 @@ Radio: FR-Sky CPPM - Turnigy 9x
   </section>
 
   <servos driver="Pwm">
-    <servo name="FRONT_RIGHT"  no="0" min="1000" neutral="1100" max="1900"/>
-    <servo name="MID_RIGHT"    no="1" min="1000" neutral="1100" max="1900"/>
-    <servo name="BACK_RIGHT"   no="2" min="1000" neutral="1100" max="1900"/>
-    <servo name="BACK_LEFT"    no="3" min="1000" neutral="1100" max="1900"/>
-    <servo name="MID_LEFT"     no="4" min="1000" neutral="1100" max="1900"/>
-    <servo name="FRONT_LEFT"   no="5" min="1000" neutral="1100" max="1900"/>
+    <servo name="FRONT_RIGHT"  no="0" min="1000" neutral="1150" max="1900"/>
+    <servo name="MID_RIGHT"    no="1" min="1000" neutral="1150" max="1900"/>
+    <servo name="BACK_RIGHT"   no="2" min="1000" neutral="1150" max="1900"/>
+    <servo name="BACK_LEFT"    no="3" min="1000" neutral="1150" max="1900"/>
+    <servo name="MID_LEFT"     no="4" min="1000" neutral="1150" max="1900"/>
+    <servo name="FRONT_LEFT"   no="5" min="1000" neutral="1150" max="1900"/>
   </servos>
 
   <commands>
@@ -157,10 +157,20 @@ Radio: FR-Sky CPPM - Turnigy 9x
     <define name="TRIM_YAW" value="0"/>
     <define name="NB_MOTOR" value="6"/>
     <define name="SCALE" value="256"/>
-    <define name="ROLL_COEF"   value="{-128, -256, -128,  128,  256,  128 }"/>
+<!--<define name="ROLL_COEF"   value="{-128, -256, -128,  128,  256,  128 }"/>
     <define name="PITCH_COEF"  value="{ 256,  0,   -256, -256,  0,    256 }"/>
     <define name="YAW_COEF"    value="{ 249, -256,  249, -249,  256, -249 }"/>
-    <define name="THRUST_COEF" value="{ 256,  256,  256,  256,  256,  256 }"/>
+    <define name="THRUST_COEF" value="{ 256,  256,  256,  256,  256,  256 }"/>-->
+                                  <!--  FR    MR    BR    BL    ML    FL  -->
+    <define name="ROLL_COEF"   value="{-256, -256, -256,  256,  256,  256 }"/>
+    <define name="PITCH_COEF"  value="{ 256,  0,   -256, -256,  0,    256 }"/>
+    <define name="YAW_COEF"    value="{ 128, -256,  128, -128,  256, -128 }"/>
+    <define name="THRUST_COEF" value="{ 256,  256,  256,  256,  256,  256 }"/> 
+
+ <!--   <define name="ROLL_COEF"   value="{-0, -0, -0,  0,  0,  0 }"/>
+    <define name="PITCH_COEF"  value="{ 0,  0,   -0, -0,  0,    0 }"/>
+    <define name="YAW_COEF"    value="{ 249, -256,  249, -249,  256, -249 }"/>
+    <define name="THRUST_COEF" value="{ 100,  100,  100,  100,  100,  100 }"/>-->
   </section>
 
   <command_laws>
@@ -184,18 +194,17 @@ Radio: FR-Sky CPPM - Turnigy 9x
     <define name="ACCEL_Y_NEUTRAL" value="0"/>
     <define name="ACCEL_Z_NEUTRAL" value="0"/>
 
-<!-- calibrado 23_07_2013 com minha ordem dos eixos-->
-<define name="MAG_X_NEUTRAL" value="262"/>
-<define name="MAG_Y_NEUTRAL" value="17"/>
-<define name="MAG_Z_NEUTRAL" value="178"/>
-<define name="MAG_X_SENS" value="6.97146624516" integer="16"/>
-<define name="MAG_Y_SENS" value="7.35762403435" integer="16"/>
-<define name="MAG_Z_SENS" value="8.12041114717" integer="16"/>
+<!-- calibrado 26_09_2013 -->
+<define name="MAG_X_NEUTRAL" value="-256"/>
+<define name="MAG_Y_NEUTRAL" value="24"/>
+<define name="MAG_Z_NEUTRAL" value="173"/>
+<define name="MAG_X_SENS" value="7.12785329477" integer="16"/>
+<define name="MAG_Y_SENS" value="7.68679815101" integer="16"/>
+<define name="MAG_Z_SENS" value="8.14904308365" integer="16"/>
 
-
-    <define name="BODY_TO_IMU_PHI" value="RadOfDeg(0.)" />
-    <define name="BODY_TO_IMU_THETA" value="RadOfDeg(0.)" />
-    <define name="BODY_TO_IMU_PSI" value="RadOfDeg(0.)" />
+    <define name="BODY_TO_IMU_PHI"  value="RadOfDeg(0.)" />
+    <define name="BODY_TO_IMU_THETA"  value="RadOfDeg(0.)" />
+    <define name="BODY_TO_IMU_PSI"  value="RadOfDeg(0.)" />
   </section>
 
   <section name="AHRS" prefix="AHRS_">
@@ -245,9 +254,9 @@ To increase response time, you can increase the frequency, and the bounds.
 -->
    <section name="STABILIZATION_ATTITUDE" prefix="STABILIZATION_ATTITUDE_">
     <!-- setpoints -->
-    <define name="SP_MAX_PHI"     value="55."  unit="deg"/> <!--45-->
-    <define name="SP_MAX_THETA"   value="55."  unit="deg"/> 
-    <define name="SP_MAX_R"       value="90." unit="deg/s"/>
+    <define name="SP_MAX_PHI"     value="45."  unit="deg"/> <!--45-->
+    <define name="SP_MAX_THETA"   value="45."  unit="deg"/> 
+    <define name="SP_MAX_R"       value="180." unit="deg/s"/>
     <define name="DEADBAND_A"     value="5"/>
     <define name="DEADBAND_E"     value="5"/>
     <define name="DEADBAND_R"     value="600"/><!--600-->
@@ -262,20 +271,20 @@ The response time (95% of the final value when doing a step input): ~ 3/(freq*da
 To increase response time, you can increase the frequency, and the bounds.
 -->
     <!-- reference -->
-    <define name="REF_OMEGA_P"  value="800" unit="deg/s"/><!-- 1400 velocidade do stick-->
+    <define name="REF_OMEGA_P"  value="500" unit="deg/s"/><!-- 800 1400 velocidade do stick-->
     <define name="REF_ZETA_P"   value=".85"/> <!--.8-->
     <define name="REF_MAX_P"    value="600." unit="deg/s"/>   <!--400  800 -->
     <define name="REF_MAX_PDOT" value="RadOfDeg(8000.)"/><!-- 4000 -->
 
-    <define name="REF_OMEGA_Q"  value="800" unit="deg/s"/>
+    <define name="REF_OMEGA_Q"  value="500" unit="deg/s"/>
     <define name="REF_ZETA_Q"   value=".85"/>
     <define name="REF_MAX_Q"    value="600." unit="deg/s"/>
     <define name="REF_MAX_QDOT" value="RadOfDeg(8000.)"/>
 
     <define name="REF_OMEGA_R"  value="500" unit="deg/s"/> <!-- 2200 500-->
     <define name="REF_ZETA_R"   value=".85"/>
-    <define name="REF_MAX_R"    value="180." unit="deg/s"/><!--360  480 180-->
-    <define name="REF_MAX_RDOT" value="RadOfDeg(280.)"/> <!--4000-->
+    <define name="REF_MAX_R"    value="240." unit="deg/s"/><!--360  480 180-->
+    <define name="REF_MAX_RDOT" value="RadOfDeg(480.)"/> <!--4000-->
 
 <!--  KROOZ ORiGiNAL
     <define name="REF_OMEGA_R"  value="500" unit="deg/s"/>
@@ -284,17 +293,17 @@ To increase response time, you can increase the frequency, and the bounds.
     <define name="REF_MAX_RDOT" value="RadOfDeg(180.)"/> -->
 
     <!-- feedback -->
-    <define name="PHI_PGAIN"  value="450"/> <!--320  800   valores bons para 3s-->   
-    <define name="PHI_DGAIN"  value="400"/> <!--300-->
-    <define name="PHI_IGAIN"  value="700"/> <!--950-->
+    <define name="PHI_PGAIN"  value="240"/> <!--208 para 12" - 580 para 11"-->   
+    <define name="PHI_DGAIN"  value="260"/> <!--260 para 12" - 300 para 11" -->
+    <define name="PHI_IGAIN"  value="1400"/> <!--420 para 12" - 2000 para 11"-->
 
-    <define name="THETA_PGAIN"  value="450"/>
-    <define name="THETA_DGAIN"  value="400"/> 
-    <define name="THETA_IGAIN"  value="700"/>
+    <define name="THETA_PGAIN"  value="240"/>
+    <define name="THETA_DGAIN"  value="260"/> 
+    <define name="THETA_IGAIN"  value="1400"/>
 
-    <define name="PSI_PGAIN"  value="2800"/><!-- 2800 2200 1800-->
-    <define name="PSI_DGAIN"  value="1000"/><!-- 800 muito alto deixa sensivel a vibracao.-->
-    <define name="PSI_IGAIN"  value="1000"/> <!-- estava 000 -->
+    <define name="PSI_PGAIN"  value="2200"/><!-- 2200-->
+    <define name="PSI_DGAIN"  value="800"/><!-- 800 muito alto deixa sensivel a vibracao.-->
+    <define name="PSI_IGAIN"  value="1000"/> <!-- 1000 -->
 
     <!-- feedforward -->
     <define name="PHI_DDGAIN"   value="0"/> <!--500-->
@@ -310,14 +319,14 @@ To increase response time, you can increase the frequency, and the bounds.
 
 
   <section name="MISC">
-    <!--<define name="DEFAULT_CIRCLE_RADIUS" value="10."/>
-    define name="IMU_MAG_OFFSET" value="RadOfDeg(-5.8)"/-->
+    <!--<define name="DEFAULT_CIRCLE_RADIUS" value="10."/>-->
   </section>
 
   <section name="GCS">
-    <define name="ALT_SHIFT_PLUS_PLUS" value="5"/>
-    <define name="ALT_SHIFT_PLUS" value="1"/>
-    <define name="ALT_SHIFT_MINUS" value="-1"/>
+    <define name="ALT_SHIFT_PLUS_PLUS" value="30"/>
+    <define name="ALT_SHIFT_PLUS" value="5"/>
+    <define name="ALT_SHIFT_MINUS" value="-5"/>
+    <define name="ALT_SHIFT_MINUS_MINUS" value="-30"/>
   </section>
 
   <section name="SIMULATOR" prefix="NPS_">
@@ -329,7 +338,7 @@ To increase response time, you can increase the frequency, and the bounds.
   <section name="BAT">
     <define name="CATASTROPHIC_BAT_LEVEL" value="12.4" unit="V"/>  <!--3.1v call-->
     <define name="CRITIC_BAT_LEVEL" value="12.8" unit="V"/>   <!--3.2v call-->
-    <define name="LOW_BAT_LEVEL" value="13.2" unit="V"/>   <!--3.3v call-->
+    <define name="LOW_BAT_LEVEL" value="13.6" unit="V"/>   <!--3.4v call-->
     <define name="MAX_BAT_LEVEL" value="16.6" unit="V"/>
   </section>
 
@@ -340,7 +349,7 @@ To increase response time, you can increase the frequency, and the bounds.
  <!--  <load name="sonar_adc_ins.xml"> 
   <configure name="ADC_SONAR" value="ADC_2"/>
    </load> -->
-   <!--<load name="geo_mag.xml"/>-->
+<!--   <load name="geo_mag.xml"/>-->
    <load name="openlog.xml"/>
  <!--  <load name="beeper.xml">
      <define name="AUTOPILOT_BAT_LOW_TIME"  value="200"/>
@@ -350,7 +359,7 @@ To increase response time, you can increase the frequency, and the bounds.
    </load> -->
    <load  name="led_safety_status.xml">
      <define name="SAFETY_WARNING_LED"  value="3"/>
-     <define name="MIN_BAT_LEVEL" value="13.2"/>
+     <define name="MIN_BAT_LEVEL" value="13.6"/>
    </load>
    <!--<load  name="cam_power.xml"/>-->
  </modules>
