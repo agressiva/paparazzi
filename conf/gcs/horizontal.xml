@@ -1,14 +1,34 @@
-<!DOCTYPE layout SYSTEM "layout.dtd">
-
-<layout width="1024" height="768">
- <rows>
-  <widget size="500" name="map2d"/>
-  <columns>
-   <rows size="375">
-    <widget size="200" name="strips"/>
-   </rows>
-   <widget size="400" name="aircraft"/>
-   <widget name="alarms"/>
-  </columns>
- </rows>
+<layout width="1280" height="725">
+  <rows>
+    <widget SIZE="500" NAME="map2d">
+      <papget type="message_field" display="text" x="2" y="172">
+        <property name="scale" value="0.01"/>
+        <property name="field" value="GPS_INT:pacc"/>
+        <property name="format" value="Pacc: %.f"/>
+        <property name="size" value="15."/>
+        <property name="color" value="blue"/>
+      </papget>
+      <papget type="message_field" display="text" x="8" y="132">
+        <property name="scale" value="0.0139882"/>
+        <property name="field" value="ROTORCRAFT_FP:psi"/>
+        <property name="format" value="PSi: %.2f"/>
+        <property name="size" value="15."/>
+        <property name="color" value="blue"/>
+      </papget>
+      <papget type="message_field" display="text" x="4" y="154">
+        <property name="scale" value="1."/>
+        <property name="field" value="GPS_INT:numsv"/>
+        <property name="format" value="Sats: %.f"/>
+        <property name="size" value="15."/>
+        <property name="color" value="blue"/>
+      </papget>
+    </widget>
+    <columns>
+      <rows SIZE="375">
+        <widget SIZE="200" NAME="strips"/>
+      </rows>
+      <widget SIZE="400" NAME="aircraft"/>
+      <widget NAME="alarms"/>
+    </columns>
+  </rows>
 </layout>
