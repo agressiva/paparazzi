@@ -225,7 +225,7 @@ To increase response time, you can increase the frequency, and the bounds.
     <!-- feedforward -->
     <define name="PHI_DDGAIN"   value="300"/>
     <define name="THETA_DDGAIN" value="300"/>
-    <define name="PSI_DDGAIN"   value="3000"/>
+    <define name="PSI_DDGAIN"   value="4000"/>
   </section>
 
   <section name="GUIDANCE_V" prefix="GUIDANCE_V_">
@@ -250,9 +250,9 @@ To increase response time, you can increase the frequency, and the bounds.
     <define name="MAX_BANK" value="27" unit="deg"/>
     <define name="REF_MAX_ACCEL" value="7."/> <!-- max reference horizontal acceleration in m/s2 -->
     <define name="REF_MAX_SPEED" value="3."/> <!-- max reference horizontal speed in m/s -->
-    <define name="PGAIN" value="70"/><!--80 50 100-->
+    <define name="PGAIN" value="100"/><!--70 80 50 100-->
     <define name="DGAIN" value="120"/><!--120-->
-    <define name="IGAIN" value="10"/><!--10-->
+    <define name="IGAIN" value="5"/><!--10-->
     <define name="AGAIN" value="10"/><!--10-->
   </section>
 
