@@ -31,6 +31,9 @@
 #include "autopilot.h"
 #include "generated/flight_plan.h"
 
+// PARA DEBUGAR
+#include <stdio.h>
+
 
 struct Point2D {float x; float y;};
 struct Line {float m;float b;float x;};
@@ -299,7 +302,7 @@ bool_t nav_survey_poly_osam_run(void)
 
     //follow the circle
     nav_circle_XY(C.x, C.y, SurveyRadius);
-
+                // fprintf(stderr,"Entry %f %f\n",(stateGetPositionEnu_f()->z), (waypoints[SurveyEntryWP].a) );
     if(NavQdrCloseTo(SurveyCircleQdr) && NavCircleCountNoRewind() > .1 && stateGetPositionUtm_f()->alt > waypoints[SurveyEntryWP].a-10)
     {
       CSurveyStatus = Sweep;

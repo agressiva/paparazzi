@@ -1,6 +1,7 @@
 <!DOCTYPE flight_plan SYSTEM "flight_plan.dtd">
 
-<flight_plan alt="260" ground_alt="185" lat0="43.46223" lon0="1.27289" max_dist_from_home="1500" name="Basic" security_height="25">
+<flight_plan alt="60" ground_alt="0" lat0="-29.997404" lon0="-51.123225" max_dist_from_home="300" name="AGR_Versatile" security_height="45">
+
   <header>
 #include "subsystems/datalink/datalink.h"
 </header>
@@ -30,16 +31,18 @@
       <call fun="NavSetGroundReferenceHere()"/>
     </block>
     <block name="Holding point">
-      <!--set var="nav_mode" value="NAV_MODE_ROLL"/-->
+      <set value="0" var="kill_throttle"/>
+    </block>
+  <!--  <block name="Holding point">
       <set value="1" var="kill_throttle"/>
       <attitude roll="0" throttle="0" vmode="throttle"/>
-    </block>
-    <block key="t" name="Takeoff" strip_button="Takeoff (wp CLIMB)" strip_icon="takeoff.png" group="home">
+    </block> -->
+   <!-- <block key="t" name="Takeoff" strip_button="Takeoff (wp CLIMB)" strip_icon="takeoff.png" group="home">
       <exception cond="GetPosAlt() > GetAltRef()+25" deroute="Standby"/>
       <set value="0" var="kill_throttle"/>
       <set value="0" var="autopilot_flight_time"/>
       <go from="HOME" throttle="1.0" vmode="throttle" wp="CLIMB" pitch="15"/>
-    </block>
+    </block> -->
     <block key="Ctrl+a" name="Standby" strip_button="Standby" strip_icon="home.png" group="home">
       <circle radius="nav_radius" wp="STDBY"/>
     </block>

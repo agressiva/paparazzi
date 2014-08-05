@@ -53,9 +53,14 @@ float target_x, target_y, target_alt;
 #endif
 
 uint8_t cam_roll_mode;
+bool_t cam_roll_switch;
 
 void cam_init( void ) {
   cam_roll_mode = CAM_ROLL_START_MODE;
+  #if defined VIDEO_SWITCH_PIN && !(defined SITL)
+  IO0DIR |= _BV(VIDEO_SWITCH_PIN);
+  IO0CLR = _BV(VIDEO_SWITCH_PIN);
+#endif
 }
 
 void cam_periodic( void ) {
@@ -70,6 +75,13 @@ void cam_periodic( void ) {
     phi_c = 0;
   }
   ap_state->commands[COMMAND_CAM_ROLL] = TRIM_PPRZ(phi_c * MAX_PPRZ / CAM_PHI_MAX);
+
+#ifdef USE_CAM_DOOR
+  PRINT_CONFIG_MSG("Using CAM_DOOR_CONTROL");  
+  int16_t cam_door_servo;
+  if (GetPosAlt() > ground_alt + 60) cam_door_servo = MAX_PPRZ; else cam_door_servo = -MAX_PPRZ;
+  ap_state->commands[COMMAND_CAM_DOOR] = cam_door_servo;
+  #endif
 }
 
 #endif // MOBILE_CAM
