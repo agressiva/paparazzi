@@ -36,6 +36,7 @@
 #include CTRL_TYPE_H
 #include "firmwares/fixedwing/autopilot.h"
 
+PRINT_CONFIG_MSG("USING ADAPTiVE Stabilization")
 /* outer loop parameters */
 float h_ctl_course_setpoint; /* rad, CW/north */
 float h_ctl_course_pre_bank;
@@ -191,7 +192,6 @@ inline static void h_ctl_pitch_loop( void );
 
 #if PERIODIC_TELEMETRY
 #include "subsystems/datalink/telemetry.h"
-
 static void send_calibration(void) {
   DOWNLINK_SEND_CALIBRATION(DefaultChannel, DefaultDevice,  &v_ctl_auto_throttle_sum_err, &v_ctl_auto_throttle_submode);
 }
