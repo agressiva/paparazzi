@@ -1,0 +1,203 @@
+<!DOCTYPE airframe SYSTEM "../airframe.dtd">
+
+<!-- this is a Talon plane equiped with
+  * Autopilot:   Lisa/M 1.0         http://paparazzi.enac.fr/wiki/Lisa/M_v20
+  * IMU:         Aspirin 1.5        http://paparazzi.enac.fr/wiki/AspirinIMU
+  * GPS:         Ublox              http://paparazzi.enac.fr/wiki/Subsystem/gps
+  * RC:          any PPM system     http://paparazzi.enac.fr/wiki/Subsystem/radio_control#PPM
+  * Modem        transparent mode at 57600 baud
+-->
+
+<airframe name="Talon LisaM 1.0">
+
+  <firmware name="fixedwing">
+    <target name="ap" board="lisa_m_1.0">
+      <!-- higher frequency for aspirin imu, ouputs data at 100Hz -->
+      <configure name="PERIODIC_FREQUENCY" value="120"/>
+      <configure name="AHRS_PROPAGATE_FREQUENCY" value="100"/>
+      <configure name="AHRS_CORRECT_FREQUENCY" value="100"/>
+      <define name="AHRS_TRIGGERED_ATTITUDE_LOOP"/>
+     <!-- <configure name="LISA_M_BARO"  value="BARO_MS5611_I2C"/> -->
+      <define name="MS5611_I2C_DEV" value="i2c2"/>
+     <define name="MS5611_SLAVE_ADDR" value="0xEC"/>
+      <define name="USE_ADC"/>
+      <define name="USE_ADC_2"/>  <!-- current_sensor-->
+   <!--  <define name="USE_ADC_1"/>
+      <define name="USE_ADC_3"/>-->
+      <configure name="RADIO_CONTROL_PPM_PIN" value="UART1_RX"/>
+    </target>
+ 
+   <target name="sim" 			board="pc"/>
+
+   <!-- <define name="PERIODIC_TELEMETRY"/> -->
+
+		    <define name="USE_BAROMETER"/>
+		    <define name="USE_BARO_MS5611"/>
+                  <!--  <define name="INS_BARO_ID"  value="BARO_MS5611_SENDER_ID"/> -->
+    <define name="SENSOR_SYNC_SEND"/>
+    <define name="USE_GYRO_PITCH_RATE"/>
+    <define name="RADIO_FLAP" value="RADIO_CH8"/>
+    <define name="USE_MAGNETOMETER" value="FALSE"/>
+    <subsystem name="radio_control" type="ppm"/>
+    <subsystem name="telemetry" type="transparent"/>
+    <subsystem name="control" type="new"/> 
+    <subsystem name="imu" type="aspirin_v1.5"/>
+    <define name="ASPIRIN_ACCEL_RATE" value="ADXL345_RATE_50HZ"/>  <!--25,50,100,200,400,800,1600,3200-->
+    <define name="ASPIRIN_GYRO_LOWPASS" value="ITG3200_DLPF_20HZ"/>  <!--256,188,98,42,20,10,5 -->
+    <define name="ASPIRIN_GYRO_SMPLRT_DIV"  value="1"/>
+<configure name="USE_MAGNETOMETER" value="0"/>
+<subsystem name="ahrs" type="int_cmpl_quat">   <!--float_dcm   int_cmpl_quat-->
+	<define name="AHRS_USE_GPS_HEADING"/>
+	<define name="AHRS_GRAVITY_UPDATE_COORDINATED_TURN"/>
+	<define name="AHRS_GRAVITY_UPDATE_NORM_HEURISTIC"/>
+   <define name="AHRS_PROPAGATE_LOW_PASS_RATES"/>
+</subsystem>
+    <subsystem name="gps"           type="ublox"/>
+	<configure name="GPS_BAUD"  value="B38400"/>
+        <configure name="GPS_PORT"  value="UART3"/>
+    <subsystem name="navigation"/> <!--  type="extra"/>  -->
+                <subsystem name="ins" type="alt_float"/>
+
+  </firmware>
+
+  <!-- commands section -->
+  <servos>
+    <servo name="THROTTLE"      no="0" min="1000" neutral="1100" max="1900"/>
+    <servo name="RUDDER_RIGHT"  no="1" min="1000" neutral="1500" max="2000"/>
+    <servo name="RUDDER_LEFT"   no="2" min="1000" neutral="1500" max="2000"/>
+    <servo name="AILERON_RIGHT" no="3" min="1000" neutral="1500" max="2000"/>
+    <servo name="AILERON_LEFT"  no="4" min="1000" neutral="1500" max="2000"/>
+  </servos>
+
+  <commands>
+    <axis name="THROTTLE" failsafe_value="0"/>
+    <axis name="ROLL"     failsafe_value="0"/>
+    <axis name="PITCH"    failsafe_value="0"/>
+    <axis name="YAW"      failsafe_value="2000"/>
+    <axis name="FLAP"     failsafe_value="0"/>
+  </commands>
+
+  <rc_commands>
+    <set command="ROLL"      value="@ROLL"/>
+    <set command="PITCH"     value="@PITCH"/>
+    <set command="THROTTLE"  value="@THROTTLE"/>
+    <set command="YAW"       value="@YAW"/>
+    <set command="FLAP"      value="@FLAP"/>
+  </rc_commands>
+
+ <auto_rc_commands>
+   <set command="FLAP" 	    value="@FLAP"/>
+   <set command="YAW"       value="@YAW"/>
+ </auto_rc_commands>
+
+  <section name="MIXER">
+    <define name="RUDDER_YAW_RATE" value="0.30"/>
+    <define name="RUDDER_ELEVATOR_RATE" value="0.70"/>
+    <define name="AILERON_FLAP_RATE" value="0.30"/>
+    <define name="AILERON_RATE" value="0.70"/>
+    <define name="COMBI_SWITCH" value="0.3"/>
+  </section>
+
+  <command_laws>
+    <set servo="THROTTLE"    value="@THROTTLE"/>
+    <let var="yaw"      value="@YAW   * RUDDER_YAW_RATE"/>
+    <let var="elevator" value="@PITCH * RUDDER_ELEVATOR_RATE"/>
+    <let var="flap"     value="@FLAP  * AILERON_FLAP_RATE / 2 - 9600 * AILERON_FLAP_RATE / 2"/>
+    <let var="aileron"  value="@ROLL  * AILERON_RATE"/>
+    <set servo="RUDDER_RIGHT"   value=" $elevator + $yaw"/>
+    <set servo="RUDDER_LEFT"    value="-$elevator + $yaw"/>
+   <!-- <set servo="RUDDER"      value="@YAW + @ROLL*COMBI_SWITCH"/>-->
+    <set servo="AILERON_LEFT"  value=" +$aileron - $flap"/>
+    <set servo="AILERON_RIGHT" value=" +$aileron + $flap"/>
+  </command_laws>
+
+  <section name="AUTO1" prefix="AUTO1_">
+    <define name="MAX_ROLL" value="60" unit="deg"/>
+    <define name="MAX_PITCH" value="45" unit="deg"/>
+  </section>
+
+    <modules>
+	<load name="baro_ms5611_i2c.xml"/>
+		<!--<load name="adc_generic.xml">
+    		<configure name="ADC_CHANNEL_GENERIC1" value="ADC_2"/>
+		</load>-->
+    </modules>
+
+
+  <section name="IMU" prefix="IMU_">
+    <define name="BODY_TO_IMU_PHI"   value="0." unit="deg"/>
+    <define name="BODY_TO_IMU_THETA" value="0." unit="deg"/>
+    <define name="BODY_TO_IMU_PSI"   value="270." unit="deg"/>
+  </section>
+
+  <section name="INS" prefix="INS_">
+    <define name="ROLL_NEUTRAL_DEFAULT"  value="0" unit="deg"/>
+    <define name="PITCH_NEUTRAL_DEFAULT" value="0" unit="deg"/>
+  </section>
+
+  <section name="BAT">
+    <define name="ADC_CHANNEL_CURRENT"   value="ADC_2"/>
+    <define name="MilliAmpereOfAdc(adc)"  value="(20.6*(adc-485))"/>  <!--495-->
+    <define name="CATASTROPHIC_BAT_LEVEL" value="12.4" unit="V"/>
+    <define name="CRITIC_BAT_LEVEL"       value="13.0" unit="V"/>
+    <define name="LOW_BAT_LEVEL"          value="13.8" unit="V"/>
+    <define name="MAX_BAT_LEVEL"          value="16.8" unit="V"/>
+  </section>
+
+  <section name="MISC">
+    <define name="NOMINAL_AIRSPEED" value="15." unit="m/s"/>
+    <define name="CARROT" value="4." unit="s"/>
+    <define name="KILL_MODE_DISTANCE" value="(1.5*MAX_DIST_FROM_HOME)"/>
+    <define name="DEFAULT_CIRCLE_RADIUS" value="80."/>
+  </section>
+
+  <section name="VERTICAL CONTROL" prefix="V_CTL_">
+    <define name="POWER_CTL_BAT_NOMINAL" value="11.0" unit="volt"/>
+    <!-- outer loop -->
+    <define name="ALTITUDE_PGAIN" value="0.075" unit="(m/s)/m"/>
+    <define name="ALTITUDE_MAX_CLIMB" value="4." unit="m/s"/>
+    <!-- auto throttle inner loop -->
+    <define name="AUTO_THROTTLE_NOMINAL_CRUISE_THROTTLE" value="0.5" unit="%"/>
+    <define name="AUTO_THROTTLE_MIN_CRUISE_THROTTLE" value="0.2" unit="%"/>
+    <define name="AUTO_THROTTLE_MAX_CRUISE_THROTTLE" value="1.0" unit="%"/>
+    <define name="AUTO_THROTTLE_LOITER_TRIM" value="1500" unit="pprz_t"/>
+    <define name="AUTO_THROTTLE_DASH_TRIM" value="-1000" unit="pprz_t"/>
+    <define name="AUTO_THROTTLE_CLIMB_THROTTLE_INCREMENT" value="0.1" unit="%/(m/s)"/>
+    <define name="AUTO_THROTTLE_PGAIN" value="0.02" unit="%/(m/s)"/>
+    <define name="AUTO_THROTTLE_IGAIN" value="0.03"/>
+    <define name="AUTO_THROTTLE_PITCH_OF_VZ_PGAIN" value="0.05" unit="rad/(m/s)"/>
+    <define name="AUTO_PITCH_PGAIN" value="0.125"/>
+    <define name="AUTO_PITCH_IGAIN" value="0.025"/>
+    <define name="AUTO_PITCH_MAX_PITCH" value="25" unit="deg"/>
+    <define name="AUTO_PITCH_MIN_PITCH" value="-25" unit="deg"/>
+    <define name="THROTTLE_SLEW" value="1.0"/>
+  </section>
+
+  <section name="HORIZONTAL CONTROL" prefix="H_CTL_">
+    <define name="COURSE_PGAIN" value="1.0"/>
+    <define name="COURSE_DGAIN" value="0.4"/>
+    <define name="ROLL_MAX_SETPOINT" value="35" unit="deg"/>
+    <define name="PITCH_MAX_SETPOINT" value="35" unit="deg"/>
+    <define name="PITCH_MIN_SETPOINT" value="-35" unit="deg"/>
+    <define name="PITCH_PGAIN" value="12000."/> <!--20000-->
+    <define name="PITCH_DGAIN" value="2500."/> <!--1.5-->
+    <define name="ELEVATOR_OF_ROLL" value="2500"/>
+    <define name="ROLL_ATTITUDE_GAIN" value="12000"/>
+    <define name="ROLL_RATE_GAIN" value="1500"/>
+  </section>
+
+  <section name="FAILSAFE" prefix="FAILSAFE_">
+    <define name="DELAY_WITHOUT_GPS" value="3" unit="s"/>
+    <define name="DEFAULT_THROTTLE" value="0.4" unit="%"/>
+    <define name="DEFAULT_ROLL" value="15" unit="deg"/>
+    <define name="DEFAULT_PITCH" value="0" unit="deg"/>
+    <define name="HOME_RADIUS" value="90" unit="m"/>
+  </section>
+
+  <section name="AHRS" prefix="AHRS_">
+    <!-- porto alegre 28_11_2012-->
+    <define name="H_X" value=" 0.75127"/>
+    <define name="H_Y" value=" -0.21477"/>
+    <define name="H_Z" value=" -0.62406"/>
+  </section>
+</airframe>
