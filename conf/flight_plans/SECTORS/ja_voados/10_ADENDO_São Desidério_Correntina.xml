@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE sectors SYSTEM "../sectors.dtd">
+
+<sectors>
+ <sector name="1-10km">
+    <polygon>
+     <point pos="WGS84    -12.7265395238 -44.6997880557"/>
+     <point pos="WGS84    -12.7241194552 -44.7014892164"/>
+     <point pos="WGS84    -12.7209766214 -44.7010899450"/>
+     <point pos="WGS84    -12.7159506940 -44.7000999170"/>
+
+     <point pos="WGS84    -12.7104876581 -44.7011815825"/>
+     <point pos="WGS84    -12.7206501020 -44.7031834679"/>
+     <point pos="WGS84    -12.7245959726 -44.7036847923"/>
+     <point pos="WGS84    -12.7298462895 -44.6994406636"/>
+    </polygon>
+  </sector>
+</sectors>
+
+
