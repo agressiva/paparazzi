@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Gautier Hattenberger
+ * Copyright (C) 2014 Freek van Tienen <freek.v.tienen@gmail.com>
  *
  * This file is part of paparazzi.
  *
@@ -20,15 +20,15 @@
  *
  */
 
-/*
- * Wrapper for UBX gps on uart
+/** @file modules/loggers/file_logger.h
+ *  @brief File logger for Linux based autopilots
  */
 
-#ifndef MODULE_GPS_UBX_UART_H
-#define MODULE_GPS_UBX_UART_H
+#ifndef FILE_LOGGER_H_
+#define FILE_LOGGER_H_
 
-#include "subsystems/gps.h"
-#include "subsystems/gps/gps_ubx.h"
+extern void file_logger_start(void);
+extern void file_logger_stop(void);
+extern void file_logger_periodic(void);
 
-#endif // MODULE_GPS_UBX_UART_H
-
+#endif /* FILE_LOGGER_H_ */

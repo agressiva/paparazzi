@@ -56,7 +56,7 @@ PRINT_CONFIG_MSG("LOW PASS FILTER ON GYRO RATES")
 #endif
 
 #if !USE_MAGNETOMETER && !AHRS_USE_GPS_HEADING
-#error "Please use either USE_MAGNETOMETER or AHRS_USE_GPS_HEADING."
+#warning "Please use either USE_MAGNETOMETER or AHRS_USE_GPS_HEADING."
 #endif
 
 #if AHRS_USE_GPS_HEADING && !USE_GPS
@@ -142,7 +142,7 @@ float ins_pitch_neutral = INS_PITCH_NEUTRAL_DEFAULT;
 struct AhrsIntCmplQuat ahrs_impl;
 
 static inline void set_body_state_from_quat(void);
-static inline void ahrs_update_mag_full(void);
+static inline void UNUSED ahrs_update_mag_full(void);
 static inline void ahrs_update_mag_2d(void);
 
 #if PERIODIC_TELEMETRY

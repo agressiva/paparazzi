@@ -36,6 +36,7 @@
 #include <arpa/inet.h>
 
 
+
 #define DEBUGMESSAGES FALSE
 
 #define MODE_REPLAY 0
@@ -61,8 +62,7 @@ uint16_t airframeID;
 
 
 //function taken from the mplayer project
-void send_udp(const char *send_to_ip, int port, char *mesg)
-{
+void send_udp(const char *send_to_ip, int port, char *mesg) {
   static int16_t sockfd = -1;
   static struct sockaddr_in socketinfo;
 
@@ -97,9 +97,17 @@ void send_udp(const char *send_to_ip, int port, char *mesg)
          sizeof(socketinfo));
 }
 
+int say(const char *message) {
 
-void sendCurrentPlayingTime(void)
-{
+  char *str = malloc(snprintf(NULL, 0, "%s%s%s", "spd-say '", message, "'") + 1);
+
+  sprintf(str, "%s%s%s", "spd-say '", message, "'");
+
+  return system(str);
+
+}
+
+void sendCurrentPlayingTime(void) {
   if (currentMode == MODE_REPLAY) {
     char current_time[256];
 
@@ -114,8 +122,7 @@ void sendCurrentPlayingTime(void)
 }
 
 
-void calcCurrentPlayingTime(void)
-{
+void calcCurrentPlayingTime(void) {
   if (replayMode == MANUAL_REPLAY) {
     float syncTime;
 
@@ -134,8 +141,7 @@ void calcCurrentPlayingTime(void)
 
 
 
-static void on_Message(IvyClientPtr app, void *user_data, int argc, char *argv[])
-{
+static void on_Message(IvyClientPtr app, void *user_data, int argc, char *argv[]) {
   logCurrentTime = atof(argv[1]);
 
   if (videoSyncTagFlag) {
@@ -147,20 +153,17 @@ static void on_Message(IvyClientPtr app, void *user_data, int argc, char *argv[]
   sendCurrentPlayingTime();
 }
 
-static void on_Message_Video(IvyClientPtr app, void *user_data, int argc, char *argv[])
-{
+static void on_Message_Video(IvyClientPtr app, void *user_data, int argc, char *argv[]) {
   videoSyncTagFlag = TRUE;
 }
 
-static void on_Airframe_ID(IvyClientPtr app, void *user_data, int argc, char *argv[])
-{
+static void on_Airframe_ID(IvyClientPtr app, void *user_data, int argc, char *argv[]) {
   airframeID = atoi(argv[0]);
 }
 
 
 
-static gboolean __timeout_func(gpointer data)
-{
+static gboolean __timeout_func(gpointer data) {
 #if DEBUGMESSAGES
   g_print("timeout_callback\n");
 #endif
@@ -170,7 +173,7 @@ static gboolean __timeout_func(gpointer data)
 }
 
 
-static gboolean __timeout_flashing_window(gpointer data){
+static gboolean __timeout_flashing_window(gpointer data) {
 
   static uint8_t i=0;
 
@@ -200,13 +203,12 @@ static gboolean __timeout_flashing_window(gpointer data){
 }
 
 
-static void on_quit(GtkWidget *object, gpointer   user_data)
-{
+static void on_quit(GtkWidget *object, gpointer   user_data) {
   gtk_main_quit();
 }
 
 
-static void on_video_sync_changed(GtkWidget *widget, gpointer data){
+static void on_video_sync_changed(GtkWidget *widget, gpointer data) {
 
   startVideoAfter = gtk_spin_button_get_value_as_float((GtkSpinButton *)spinButton);
 
@@ -214,7 +216,7 @@ static void on_video_sync_changed(GtkWidget *widget, gpointer data){
   sendCurrentPlayingTime();
 }
 
-static void on_video_time_tag_changed(GtkWidget *widget, gpointer data){
+static void on_video_time_tag_changed(GtkWidget *widget, gpointer data) {
 
   timeTagInVideo = gtk_spin_button_get_value_as_float((GtkSpinButton *)spinButtonVideo);
 
@@ -225,9 +227,13 @@ static void on_video_time_tag_changed(GtkWidget *widget, gpointer data){
 
 
 
-static void on_sync_clicked(GtkButton *button, gpointer user_data){
+static void on_sync_clicked(GtkButton *button, gpointer user_data) {
 
   static uint8_t syncID = 1;
+  char *msg = malloc(snprintf(NULL, 0, "%s %d %s %d", "Aircraft", airframeID, ", video synchronisation", syncID) + 1);
+
+  sprintf(msg, "%s %d %s %d", "Aircraft", airframeID, ", video synchronisation", syncID);
+  say(msg);
 
   IvySendMsg("%d VIDEO_SYNC %d", airframeID, syncID);  //TODO : get the current airframe ID
 
@@ -246,23 +252,33 @@ static void on_sync_clicked(GtkButton *button, gpointer user_data){
 
   g_timeout_add(100 , __timeout_flashing_window , ml);
 
-  //TODO : play a sound (the number of the synchronisation). see speech option of the GCS
+  syncID++;
 }
 
-static void on_change_mode(GtkNotebook *notebook, GtkWidget *page, guint page_num, gpointer user_data){
+static void on_change_mode(GtkNotebook *notebook, GtkWidget *page, guint page_num, gpointer user_data) {
 
   currentMode = page_num;
 }
 
-static void on_change_replay(GtkNotebook *notebook, GtkWidget *page, guint page_num, gpointer user_data){
+static void on_change_replay(GtkNotebook *notebook, GtkWidget *page, guint page_num, gpointer user_data) {
 
   replayMode = page_num;
 }
 
+GdkPixbuf *create_pixbuf(const gchar * filename) {
 
+  GdkPixbuf *pixbuf;
+  GError *error = NULL;
+  pixbuf = gdk_pixbuf_new_from_file(filename, &error);
+  if (!pixbuf) {
+    fprintf(stderr, "%s\n", error->message);
+    g_error_free(error);
+  }
 
-int main(int argc, char** argv)
-{
+  return pixbuf;
+}
+
+int main(int argc, char** argv) {
   currentPlayingTime = 0.0;
   startVideoAfter = 0.0;
 
@@ -370,6 +386,7 @@ int main(int argc, char** argv)
   gtk_notebook_append_page(tab, (GtkWidget*)captureBox, gtk_label_new("Capture"));
 
   gtk_container_add(GTK_CONTAINER(window), (GtkWidget*)tab);
+  gtk_window_set_icon(GTK_WINDOW(window), create_pixbuf("data/pictures/penguin_icon_vid.png"));
 
   gtk_widget_show_all(window);
   gtk_main();
