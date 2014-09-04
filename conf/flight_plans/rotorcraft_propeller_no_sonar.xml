@@ -1,6 +1,6 @@
 <!DOCTYPE flight_plan SYSTEM "flight_plan.dtd">
 
-<flight_plan alt="20" ground_alt="0" lat0="-29.997720" lon0="-51.123426" max_dist_from_home="120" name="Propeller AERiAL" security_height="5">
+<flight_plan alt="20" ground_alt="0" lat0="-29.997720" lon0="-51.123426" max_dist_from_home="120" name="NAC-VA Ecoville" security_height="10">
   <header>
 #include "autopilot.h"
 #include "subsystems/ins.h"
@@ -25,7 +25,7 @@
   <blocks>
     <block name="Wait GPS">
       <call fun="NavKillThrottle()"/>
-      <while cond="!(GpsFixValid() && (gps.num_sv > 4))"/>
+      <while cond="!GpsFixValid()  || !(gps.num_sv > 5)"/>
     </block>
     <block name="Geo init">
       <while cond="LessThan(NavBlockTime(), 15)"/>

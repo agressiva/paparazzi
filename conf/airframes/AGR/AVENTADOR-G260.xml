@@ -46,7 +46,7 @@
                     <define name="MS5611_SLAVE_ADDR"  value="0xEE"/>
                 <subsystem name="gps" type="ublox"/>
 		    <configure name="GPS_BAUD" value="B38400"/>
-		<subsystem name="navigation" type="extra"/>
+		<subsystem name="navigation"/>
                 <subsystem name="ins" type="alt_float"/>
 		    <define name="USE_BAROMETER"/>
 		    <define name="USE_BARO_MS5611"/>
@@ -281,13 +281,18 @@
 		<load name="nav_catapult.xml"/>
                 <load name="photogrammetry_calculator.xml" />
 		<load name="digital_cam.xml">
-			<define name="DC_SHUTTER_LED" value="CAM_SWITCH_LED"/> <!--CAM_SWITCH_LED-->
+      		        <define name="DC_SHUTTER_GPIO" value="GPIOB,GPIO22"/><!-- 18:aux 22:camsw-->	
 			<define name="DC_SHUTTER_DELAY"  value="2"/>	<!-- original = 2-->		
-			<define name="DC_PUSH" value="LED_OFF" />
-			<define name="DC_RELEASE" value="LED_ON" />
+			<define name="DC_PUSH" value="gpio_clear" />
+			<define name="DC_RELEASE" value="gpio_set" />
 			<define name="DC_IMAGE_BUFFER" value="16535"/>
 		</load>
                 <load name="trig_test.xml"/>
+
+		<load name="nav_line.xml"/>
+		<load name="nav_line_osam.xml"/>
+		<load name="nav_survey_polygon.xml"/>
+		<load name="nav_survey_poly_osam.xml"/>
 	</modules>
 
   <section name="DIGITAL_CAMERA" prefix="DC_">

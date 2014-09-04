@@ -1,11 +1,11 @@
 <!DOCTYPE flight_plan SYSTEM "../flight_plan.dtd">
 
-<!--<flight_plan alt="100" ground_alt="0" lat0="-29.997404" lon0="-51.123225" max_dist_from_home="3000" name="AGR_Versatile" qfu="270" security_height="45">-->
+<flight_plan alt="200" ground_alt="0" lat0="-29.997404" lon0="-51.123225" max_dist_from_home="30800" name="AGR_Versatile" qfu="270" security_height="100">
 <!--<flight_plan alt="300" ground_alt="0" lat0="-14.75059883799" lon0="-43.93526160752303" max_dist_from_home="55000" name="VALOREM" qfu="270" security_height="50">-->
 <!--<flight_plan NAME="BR135_trecho5 - dolinas" LON0="-44.8945" MAX_DIST_FROM_HOME="55000" GROUND_ALT="0" SECURITY_HEIGHT="100" QFU="270" ALT="320" LAT0="-12.3764">
   <header>-->
 
-<flight_plan NAME="BR135_trecho14 - correntina"  LAT0="-13.012746" LON0="-44.611174" MAX_DIST_FROM_HOME="35000" GROUND_ALT="0" SECURITY_HEIGHT="100" QFU="270" ALT="320">
+<!--<flight_plan NAME="BR135_trecho14 - correntina"  LAT0="-13.012746" LON0="-44.611174" MAX_DIST_FROM_HOME="35000" GROUND_ALT="0" SECURITY_HEIGHT="100" QFU="270" ALT="320"> -->
   <header>
 #include "subsystems/datalink/datalink.h"
 #include "firmwares/fixedwing/guidance/guidance_v_n.h"
@@ -267,8 +267,9 @@
 
   <blocks>
     <block name="Wait GPS">
+      <!--<call fun="NavKillThrottle()"/>-->
       <set value="1" var="kill_throttle"/>
-      <while cond="!(GpsFixValid() && (gps.num_sv > 4))"/>
+      <while cond="!GpsFixValid()  || !(gps.num_sv > 5)"/>
     </block>
     <block name="Geo init">
       <while cond="LessThan(NavBlockTime(), 10)"/>

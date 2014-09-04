@@ -279,7 +279,7 @@
 			<define name="DC_RELEASE" value="gpio_set" />
 			<define name="DC_IMAGE_BUFFER" value="16535"/>
 		</load>
-		<load name="cam_roll.xml"/>
+		<!--<load name="cam_roll.xml"/>-->
     		
 		<load name="nav_line.xml"/>
 		<load name="nav_line_osam.xml"/>

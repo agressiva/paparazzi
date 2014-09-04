@@ -49,7 +49,7 @@
 		    <configure name="GPS_BAUD" value="B38400"/>
                     <configure name="GPS_PORT"  value="UART0"/>
                    <!-- <define name="GPS_TIMESTAMP"/> -->
-		<subsystem name="navigation" type="extra"/>
+		<subsystem name="navigation"/>
                 <subsystem name="ins" type="alt_float"/>
 		    <define name="USE_BAROMETER"/>
 		    <define name="USE_BARO_MS5611"/>
