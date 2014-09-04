@@ -1,0 +1,49 @@
+<layout width="1920" height="1004">
+  <columns>
+    <rows SIZE="400">
+      <widget SIZE="300" NAME="strips"/>
+      <widget SIZE="300" NAME="aircraft"/>
+      <widget NAME="plugin" SIZE="300"/>
+      <widget NAME="alarms"/>
+    </rows>
+    <rows>
+      <widget SIZE="500" NAME="map2d">
+        <papget type="expression" display="text" x="20" y="823">
+          <property name="scale" value="1."/>
+          <property name="expr" value="(NAVIGATION.dist2_wp**0.500000)"/>
+          <property name="format" value="Dist2wp: %.fm"/>
+          <property name="size" value="15."/>
+          <property name="color" value="green"/>
+        </papget>
+        <papget type="expression" display="text" x="3" y="804">
+          <property name="scale" value="1"/>
+          <property name="expr" value="(NAVIGATION.dist2_home**0.500000)"/>
+          <property name="format" value="Dist2home: %.fm"/>
+          <property name="size" value="14."/>
+          <property name="color" value="green"/>
+        </papget>
+        <papget type="expression" display="text" x="23" y="930">
+          <property name="scale" value="1"/>
+          <property name="expr" value="BlockName(ROTORCRAFT_NAV_STATUS.cur_block)"/>
+          <property name="format" value="%.2f"/>
+          <property name="size" value="20."/>
+          <property name="color" value="white"/>
+        </papget>
+        <papget type="message_field" display="text" x="15" y="158">
+          <property name="scale" value="1."/>
+          <property name="field" value="GPS_INT:numsv"/>
+          <property name="format" value="Sats: %.f"/>
+          <property name="size" value="15."/>
+          <property name="color" value="yellow"/>
+        </papget>
+        <papget type="message_field" display="text" x="16" y="362">
+          <property name="scale" value="1."/>
+          <property name="field" value="DC_SHOT:photo_nr"/>
+          <property name="format" value="Shots: %.f"/>
+          <property name="size" value="15."/>
+          <property name="color" value="orange"/>
+        </papget>
+      </widget>
+    </rows>
+  </columns>
+</layout>
