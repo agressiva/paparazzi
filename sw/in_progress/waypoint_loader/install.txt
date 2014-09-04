@@ -1,0 +1,6 @@
+apt-get install libtk-dirselect-perl
+apt-get install libgeo-coordinates-utm-perl
+apt-get install libtk-filedialog-perl
+apt-get install libio-socket-multicast-perl
+
+Put Ivy.pm inside usr/lib/perl5
