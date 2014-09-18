@@ -2084,6 +2084,7 @@
 
   <!-- 245 is free -->
   <!-- 246 is free -->
+  
 
   <message name="PPRZ_DEBUG" id="247">
     <field name="module"   type="uint8"/>
@@ -2144,6 +2145,13 @@
 
   <!-- 251 is free -->
   <!-- 252 is free -->
+  
+   <message name="GASOLINE_METER" id="251" link="broadcasted">
+   <field name="ac_id" 	type="uint8"/>
+   <field name="pulse"  type="uint32" unit="ms"/>
+   <field name="ml"	type="uint32" unit="ml"/>
+ </message>
+  
 
   <message name="I2C_ERRORS" id="253">
     <field name="queue_full_cnt"              type="uint16"/>
