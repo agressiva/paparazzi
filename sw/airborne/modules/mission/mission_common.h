@@ -41,7 +41,8 @@ enum MissionType {
   MissionPath = 4,
   MissionSurvey = 5,
   MissionEight = 6,
-  MissionOval = 7
+  MissionOval = 7,
+  MissionPoligon = 8
 };
 
 enum MissionInsertMode {
@@ -52,6 +53,13 @@ enum MissionInsertMode {
 };
 
 struct _mission_wp {
+  union{
+    struct EnuCoor_f wp_f;
+    struct EnuCoor_i wp_i;
+  } wp;
+};
+
+struct _mission_poligon {
   union{
     struct EnuCoor_f wp_f;
     struct EnuCoor_i wp_i;
@@ -97,6 +105,7 @@ struct _mission_element {
     struct _mission_circle mission_circle;
     struct _mission_segment mission_segment;
     struct _mission_path mission_path;
+    struct _mission_poligon mission_poligon;
   } element;
 
   float duration; ///< time to spend in the element (<= 0 to disable)
@@ -180,6 +189,7 @@ extern int mission_parse_SURVEY_LLA(void);
 extern int mission_parse_GOTO_MISSION(void);
 extern int mission_parse_NEXT_MISSION(void);
 extern int mission_parse_END_MISSION(void);
+extern int mission_parse_POLIGON_WP_LLA(void);
 
 #endif // MISSION_COMMON_H
 

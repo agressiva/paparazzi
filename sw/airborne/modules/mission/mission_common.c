@@ -153,6 +153,25 @@ int mission_parse_GOTO_WP_LLA(void) {
   return mission_insert(insert, &me);
 }
 
+int mission_parse_POLIGON_WP_LLA(void) {
+  if (DL_MISSION_POLIGON_WP_LLA_ac_id(dl_buffer) != AC_ID) return FALSE; // not for this aircraft
+
+  struct LlaCoor_f lla;
+  lla.lat = RadOfDeg(DL_MISSION_POLIGON_WP_LLA_wp_lat(dl_buffer));
+  lla.lon = RadOfDeg(DL_MISSION_POLIGON_WP_LLA_wp_lon(dl_buffer));
+  lla.alt = DL_MISSION_POLIGON_WP_LLA_wp_alt(dl_buffer);
+
+  struct _mission_element me;
+  me.type = MissionPoligon;
+  // if there is no valid local coordinate, do not insert mission element
+  if (!mission_point_of_lla(&me.element.mission_wp.wp.wp_f, &lla)) return FALSE;
+  me.duration = DL_MISSION_POLIGON_WP_LLA_duration(dl_buffer);
+
+  enum MissionInsertMode insert = (enum MissionInsertMode) (DL_MISSION_POLIGON_WP_LLA_insert(dl_buffer));
+
+  return mission_insert(insert, &me);
+}
+
 int mission_parse_CIRCLE(void) {
   if (DL_MISSION_CIRCLE_ac_id(dl_buffer) != AC_ID) return FALSE; // not for this aircraft
 

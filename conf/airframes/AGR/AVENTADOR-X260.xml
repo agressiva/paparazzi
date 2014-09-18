@@ -194,7 +194,7 @@
     <define name="AUTO_PITCH_IGAIN" value="0.002"/>
 
     <!-- airspeed control -->
-    <define name="AUTO_AIRSPEED_SETPOINT" value="29."/>   <!-- 28 voa muito bem -->
+    <define name="AUTO_AIRSPEED_SETPOINT" value="26."/>   <!-- 28 voa muito bem -->
     <define name="AUTO_AIRSPEED_THROTTLE_PGAIN" value="0.003"/> <!--0.002   0.058-->
     <define name="AUTO_AIRSPEED_THROTTLE_DGAIN" value="0.006"/> <!--0.2-->
     <define name="AUTO_AIRSPEED_THROTTLE_IGAIN" value="0.003"/> <!--0.03-->
@@ -205,7 +205,7 @@
     <define name="AIRSPEED_MIN" value="24"/>
 
     <!-- groundspeed control -->
-    <define name="AUTO_GROUNDSPEED_SETPOINT" value="22"/>
+    <define name="AUTO_GROUNDSPEED_SETPOINT" value="10"/>
     <define name="AUTO_GROUNDSPEED_PGAIN" value="0.0466"/> <!--1.0-->
     <define name="AUTO_GROUNDSPEED_IGAIN" value="0.372"/> <!--0.065-->
 
@@ -224,7 +224,7 @@
     <define name="PITCH_MAX_SETPOINT" value="25" unit="deg"/>
     <define name="PITCH_MIN_SETPOINT" value="-25" unit="deg"/>
     <define name="PITCH_PGAIN" value="11000."/> <!--8500-->
-<!--    <define name="PITCH_IGAIN" value="300"/>--> <!-- ------------------------   tirei essa linha em 21/9/2013 - testar -------400 nao tinha -->
+    <define name="PITCH_IGAIN" value="1250"/> <!-- ------- 9 setembro - coloquei 1250 antes estava zero - agora voa novelado sem trimm ------- -->
     <define name="PITCH_DGAIN" value="15.0"/>  <!-- 10.0 -->
     <define name="PITCH_OF_ROLL" value="RadOfDeg(5.0)"/> <!-- 10 nao tinha -->
     <define name="AILERON_OF_THROTTLE" value="0.0"/> <!-- nao tinha -->

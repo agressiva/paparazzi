@@ -236,8 +236,8 @@
     <define name="PITCH_MAX_SETPOINT" value="25" unit="deg"/>
     <define name="PITCH_MIN_SETPOINT" value="-25" unit="deg"/>
     <define name="PITCH_PGAIN" value="6500."/> <!--11000 8500-->
-<!--    <define name="PITCH_IGAIN" value="300"/>--> <!-- ------------------------   tirei essa linha em 21/9/2013 - testar -------400 nao tinha -->
-    <define name="PITCH_DGAIN" value="30.0"/>  <!-- 10.0 -->
+    <define name="PITCH_IGAIN" value="200"/> <!-- -------adicionado em 9 setembro 2014 - antes estava zerado ------- -->
+    <define name="PITCH_DGAIN" value="15.0"/>  <!-- 10.0 -->
     <define name="PITCH_OF_ROLL" value="RadOfDeg(5.0)"/> <!-- 10 nao tinha -->
     <define name="AILERON_OF_THROTTLE" value="0.0"/> <!-- nao tinha -->
     <define name="ELEVATOR_OF_ROLL" value="500"/>  <!-- quanto de elevador quando se da comando de aileron -->

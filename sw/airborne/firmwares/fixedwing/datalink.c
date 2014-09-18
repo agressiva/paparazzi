@@ -105,6 +105,19 @@ void dl_parse_msg(void) {
   if (msg_id == DL_PING) {
     DOWNLINK_SEND_PONG(DefaultChannel, DefaultDevice)
   } else
+    
+  if (msg_id == DL_WAYPOINT_REQUEST && DL_WAYPOINT_REQUEST_ac_id(dl_buffer) == AC_ID) {
+    uint8_t wp_id = DL_WAYPOINT_REQUEST_wp_id(dl_buffer);
+    if (wp_id == 0) {
+      for (uint8_t i=1; i < nb_waypoint; i++) {
+	DownlinkSendWp(DefaultChannel, DefaultDevice, i);
+      }
+    } else 
+      if (wp_id < nb_waypoint) {
+	DownlinkSendWp(DefaultChannel, DefaultDevice, wp_id);
+      }
+  } else
+    
 #ifdef TRAFFIC_INFO
   if (msg_id == DL_ACINFO && DL_ACINFO_ac_id(dl_buffer) != AC_ID) {
     uint8_t id = DL_ACINFO_ac_id(dl_buffer);

@@ -2418,7 +2418,21 @@
   <message name="END_MISSION" id="32" link="forwarded">
     <field name="ac_id" type="uint8"/>
   </message>
+  
+  <message name="MISSION_POLIGON_WP_LLA" id="33" link="forwarded">
+    <field name="ac_id" type="uint8"/>
+    <field name="insert" type="uint8" values="APPEND|PREPEND|REPLACE_CURRENT|REPLACE_ALL"/>
+    <field name="wp_lat" type="float" unit="deg"/>
+    <field name="wp_lon" type="float" unit="deg"/>
+    <field name="wp_alt" type="float" unit="m"/>
+    <field name="duration" type="float" unit="s"/>
+  </message>
 
+  
+   <message name="WAYPOINT_REQUEST" id="49" link="forwarded">
+    <field name="ac_id" type="uint8"/>
+    <field name="wp_id" type="uint8"/>
+ </message>
 
  <message name="WINDTURBINE_STATUS" id="50" link="broadcasted">
    <field name="ac_id" type="uint8"/>
