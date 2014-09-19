@@ -1,0 +1,23 @@
+<!DOCTYPE module SYSTEM "module.dtd">
+
+<module name="gasoline_meter" dir="sensors">
+  <doc>
+    <description>
+      gasoline meter using trigger_ext
+      (lpc only)
+    </description>
+  </doc>
+  <header>
+    <file name="gasoline_hw.h"/>
+    <file name="gasoline.h"/>
+  </header>
+  <init fun="gasoline_hw_init()"/>
+  <periodic fun="gasoline_periodic()" freq="10"/>
+  <makefile>
+    <file_arch name="gasoline_hw.c"/>
+    <file name="gasoline.c"/>
+    <define name="TRIGGER_EXT"/>
+    <define name="GASOLINE_PULSE_TYPE_FALLING"/>
+  </makefile>
+</module>
+
