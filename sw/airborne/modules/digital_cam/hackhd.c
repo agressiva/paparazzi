@@ -114,7 +114,6 @@ static inline void hackhd_send_shot_position(void)
 #include "subsystems/chibios-libopencm3/chibios_sdlog.h"
 #include "state.h"
 #include "subsystems/gps.h"
-#include "subsystems/ahrs.h"
 
 static inline void hackhd_log_shot_position(void)
 {
@@ -122,10 +121,6 @@ static inline void hackhd_log_shot_position(void)
   // so we start logging at photo_nr = 1
   if (pprzLogFile.fs != NULL && hackhd.photo_nr > 0) {
     struct FloatEulers att = *stateGetNedToBodyEulers_f();
-#if INS_UPDATE_FW_ESTIMATOR
-    att.phi += ins_roll_neutral;
-    att.theta += ins_pitch_neutral;
-#endif
     struct EnuCoor_f pos = *stateGetPositionEnu_f();
     uint32_t time = get_sys_time_msec();
     sdLogWriteLog(&pprzLogFile, "%d %d %d %d %d %d %d %u\n",
@@ -229,7 +224,7 @@ void hackhd_autoshoot(void) {
     struct FloatVect2 d_pos;
     d_pos.x = pos.x - hackhd.last_shot_pos.x;
     d_pos.y = pos.y - hackhd.last_shot_pos.y;
-    if (FLOAT_VECT2_NORM2(d_pos) > (HACKHD_AUTOSHOOT_DIST*HACKHD_AUTOSHOOT_DIST)
+    if (VECT2_NORM2(d_pos) > (HACKHD_AUTOSHOOT_DIST*HACKHD_AUTOSHOOT_DIST)
         || hackhd.status == HACKHD_AUTOSHOOT_START) {
 #endif
       // take a picture
