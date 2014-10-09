@@ -266,6 +266,7 @@
 <!--############################################################################################################-->
 
 	<modules>
+<load name="ground_ant_track.xml"/>
     <load name="baro_sim.xml"/>
 		<load name="airspeed_ets.xml"/>
 		<load name="openlog.xml"/>

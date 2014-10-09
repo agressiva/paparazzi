@@ -3,11 +3,9 @@
 
 #include "std.h"
 
-//#define GASOLINE_PULSE_TYPE_RISING 1
-//#define GASOLINE_PULSE_TYPE_FALLING 0
-
 extern uint32_t gas_pulse;
 extern volatile bool_t gas_valid;
+
 
 // Default trigger Pin is PPM pin (Tiny2/Twog)
 // To use a custom trigger, you must set the flag USE_CUSTOM_TRIGGER
@@ -16,11 +14,11 @@ extern volatile bool_t gas_valid;
 // - PINSEL_VAL
 // - PINSEL_BIT
 // - input capture CHANNEL
-#ifndef USE_CUSTOM_GASOLINE_INPUT
-#define GASOLINE_PINSEL     PPM_PINSEL
-#define GASOLINE_PINSEL_VAL PPM_PINSEL_VAL
-#define GASOLINE_PINSEL_BIT PPM_PINSEL_BIT
-#define GASOLINE_CHANNEL    2
+#ifndef USE_CUSTOM_TRIGGER
+#define TRIG_EXT_PINSEL     PPM_PINSEL
+#define TRIG_EXT_PINSEL_VAL PPM_PINSEL_VAL
+#define TRIG_EXT_PINSEL_BIT PPM_PINSEL_BIT
+#define TRIG_EXT_CHANNEL    2
 #endif
 
 #define __SelectCapReg(_c) T0CR ## _c
@@ -43,11 +41,12 @@ extern volatile bool_t gas_valid;
 #define _EnableInt(_c) __EnableInt(_c)
 #define EnableInt(_c) _EnableInt(_c)
 
-#define GASOLINE_CR SelectCapReg(GASOLINE_CHANNEL)
-#define GASOLINE_IT SetIntFlag(GASOLINE_CHANNEL)
-#define GASOLINE_CRR EnableRise(GASOLINE_CHANNEL)
-#define GASOLINE_CRF EnableFall(GASOLINE_CHANNEL)
-#define GASOLINE_CRI EnableInt(GASOLINE_CHANNEL)
+#define TRIGGER_CR SelectCapReg(TRIG_EXT_CHANNEL)
+#define TRIGGER_IT SetIntFlag(TRIG_EXT_CHANNEL)
+#define TRIGGER_CRR EnableRise(TRIG_EXT_CHANNEL)
+#define TRIGGER_CRF EnableFall(TRIG_EXT_CHANNEL)
+#define TRIGGER_CRI EnableInt(TRIG_EXT_CHANNEL)
+
 
 void TRIG_ISR(void);
 void gasoline_hw_init ( void );

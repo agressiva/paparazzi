@@ -5,10 +5,10 @@
     TWOG board
     MPU6000 - HMC5883 - MS5611 IMU
     AiRSPEED_ETS
-    Teemetry RFD900 transparent mode
+    Teemetry transparent
 -->
 
-<airframe name="AVENTADOR X260 FLYWING - TWOG">
+<airframe name="AVENTADOR G260 FLYWING - TWOG">
 	<firmware name="fixedwing">
 		<target name="ap" board="twog_1.0"/>
 		<target name="sim" board="pc"/>
@@ -51,21 +51,6 @@
 		    <define name="USE_BAROMETER"/>
 		    <define name="USE_BARO_MS5611"/>
                     <define name="INS_BARO_ID"  value="BARO_MS5611_SENDER_ID"/>
-
-              <!-- medidor de gasolina
-/* PPM : rc rx on P0.28 ( CAP0.2 ) */
-#define PPM_PINSEL PINSEL1
-#define PPM_PINSEL_VAL 0x02
-#define PPM_PINSEL_BIT 24 -->
-              <define name="USE_CUSTOM_TRIGGER"/>
-              <define name="TRIG_EXT_PINSEL"  value="PINSEL1"/>
-              <define name="TRIG_EXT_PINSEL_VAL"  value="0x02"/>
-              <define name="TRIG_EXT_PINSEL_BIT"  value="24"/>
-              <define name="TRIG_EXT_CHANNEL"  value="2"/>
-	</firmware>
-
-	<firmware name="setup">
-		<target name="tunnel" board="twog_1.0"/>
 	</firmware>
 
 <!-- commands section -->
@@ -131,8 +116,8 @@
     <define name="GYRO_R_NEUTRAL" value="0"/>
 
 <!-- daqui para baixo esta certo-->
-    <define name="ACCEL_X_NEUTRAL" value="-710"/> <!--tilt -->
-    <define name="ACCEL_Y_NEUTRAL" value="-43"/> <!--roll -->
+    <define name="ACCEL_X_NEUTRAL" value="-550"/> <!--tilt -->
+    <define name="ACCEL_Y_NEUTRAL" value="-10"/> <!--roll -->
     <define name="ACCEL_Z_NEUTRAL" value="0"/>
 
     <define name="MAG_X_NEUTRAL"   value="0"/>
@@ -163,15 +148,15 @@
 
   <section name="MISC">
     <define name="SENSOR_SYNC_SEND"/>
-    <define name="MINIMUM_AIRSPEED" value="22." unit="m/s"/> <!-- nao tinha -->
-    <define name="NOMINAL_AIRSPEED" value="28." unit="m/s"/> <!--28.muito bom - nao cai nas curvas a 50º --> 
-    <define name="MAXIMUM_AIRSPEED" value="32." unit="m/s"/> <!-- nao tinha -->
+    <define name="MINIMUM_AIRSPEED" value="18." unit="m/s"/> <!-- nao tinha -->
+    <define name="NOMINAL_AIRSPEED" value="26." unit="m/s"/> <!--28.muito bom - nao cai nas curvas a 50º --> 
+    <define name="MAXIMUM_AIRSPEED" value="40." unit="m/s"/> <!-- nao tinha -->
     <define name="CARROT"           value="4."   unit="s"/>
     <define name="KILL_MODE_DISTANCE" value="(1.5*MAX_DIST_FROM_HOME)"/>
 <!--    <define name="CONTROL_RATE"       value="60" unit="Hz"/> -->
     <define name="NO_XBEE_API_INIT"   value="TRUE"/>
     <define name="TRIGGER_DELAY"      value="1."/>
-    <define name="DEFAULT_CIRCLE_RADIUS" value="60."/>
+    <define name="DEFAULT_CIRCLE_RADIUS" value="80."/>
     <define name="UNLOCKED_HOME_MODE" value="TRUE"/>
     <define name="RC_LOST_MODE"       value="PPRZ_MODE_AUTO2"/>
   </section>
@@ -192,18 +177,18 @@
 
     <!-- Climb loop (throttle) -->
     <define name="AUTO_THROTTLE_CLIMB_THROTTLE_INCREMENT" value="0.1" unit="%/(m/s)"/> <!--0.1-->
-    <define name="AUTO_THROTTLE_PGAIN" value="0.004"/> <!-- -0.005 -->
+    <define name="AUTO_THROTTLE_PGAIN" value="0.021"/> <!-- -0.005 -->
     <define name="AUTO_THROTTLE_DGAIN" value="0.01"/> <!-- 0.005 -->
-    <define name="AUTO_THROTTLE_IGAIN" value="0.004"/> <!-- 0.005 -->
+    <define name="AUTO_THROTTLE_IGAIN" value="0.0"/> <!-- 0.005 -->
 
     <!-- Climb loop (pitch) -->
     <define name="AUTO_THROTTLE_PITCH_OF_VZ_PGAIN" value="0.02"/>
-    <define name="AUTO_PITCH_PGAIN" value="0.01"/> <!-- 0.018  0.028    -0.038 -->
+    <define name="AUTO_PITCH_PGAIN" value="0.005"/> <!-- 0.018  0.028    -0.038 -->
     <define name="AUTO_PITCH_DGAIN" value="0.006"/> <!-- 0.050 0.030    -0.036 -->
     <define name="AUTO_PITCH_IGAIN" value="0.002"/>
 
     <!-- airspeed control -->
-    <define name="AUTO_AIRSPEED_SETPOINT" value="28."/>   <!-- 28 voa muito bem -->
+    <define name="AUTO_AIRSPEED_SETPOINT" value="26."/>   <!-- 28 voa muito bem -->
     <define name="AUTO_AIRSPEED_THROTTLE_PGAIN" value="0.005"/> <!--0.002   0.058-->
     <define name="AUTO_AIRSPEED_THROTTLE_DGAIN" value="0.006"/> <!--0.2-->
     <define name="AUTO_AIRSPEED_THROTTLE_IGAIN" value="0.005"/> <!--0.03-->
@@ -211,10 +196,10 @@
     <define name="AUTO_AIRSPEED_PITCH_DGAIN" value="0.001"/> <!--0.01-->
     <define name="AUTO_AIRSPEED_PITCH_IGAIN" value="0.0"/> <!--0.022-->
     <define name="AIRSPEED_MAX" value="52"/>
-    <define name="AIRSPEED_MIN" value="29"/>
+    <define name="AIRSPEED_MIN" value="20"/>
 
     <!-- groundspeed control -->
-    <define name="AUTO_GROUNDSPEED_SETPOINT" value="22"/>
+    <define name="AUTO_GROUNDSPEED_SETPOINT" value="18"/>
     <define name="AUTO_GROUNDSPEED_PGAIN" value="0.0466"/> <!--1.0-->
     <define name="AUTO_GROUNDSPEED_IGAIN" value="0.372"/> <!--0.065-->
 
@@ -226,20 +211,20 @@
   </section>
 
   <section name="HORIZONTAL CONTROL" prefix="H_CTL_">
-    <define name="COURSE_PGAIN" value="2.100"/> <!--1.880 nao faz scan encima das linhas -->	
+    <define name="COURSE_PGAIN" value="1.800"/> <!--1.880 nao faz scan encima das linhas -->	
     <define name="COURSE_DGAIN" value="0.300"/> <!--0.400 -->
     <define name="COURSE_PRE_BANK_CORRECTION" value=".7"/>  <!-- nao tinha -->
     <define name="ROLL_MAX_SETPOINT" value="45" unit="deg"/>
     <define name="PITCH_MAX_SETPOINT" value="25" unit="deg"/>
     <define name="PITCH_MIN_SETPOINT" value="-25" unit="deg"/>
-    <define name="PITCH_PGAIN" value="11000."/> <!--8500-->
-    <define name="PITCH_IGAIN" value="300"/> <!-- 400 nao tinha -->
+    <define name="PITCH_PGAIN" value="6000."/> <!--8500-->
+    <define name="PITCH_IGAIN" value="50"/> <!-- 400 nao tinha -->
     <define name="PITCH_DGAIN" value="3.0"/>
     <define name="PITCH_OF_ROLL" value="RadOfDeg(10.0)"/> <!-- nao tinha -->
     <define name="AILERON_OF_THROTTLE" value="0.0"/> <!-- nao tinha -->
     <define name="ELEVATOR_OF_ROLL" value="500"/>  <!-- quanto de elevador quando se da comando de aileron -->
-    <define name="ROLL_ATTITUDE_GAIN" value="16000"/> <!-- 10000 -->
-    <define name="ROLL_RATE_GAIN" value="3500"/> <!-- 600 -->
+    <define name="ROLL_ATTITUDE_GAIN" value="17000"/> <!-- 10000 -->
+    <define name="ROLL_RATE_GAIN" value="3000"/> <!-- 600 -->
   </section>
 
   <section name="AHRS" prefix="AHRS_">
@@ -287,7 +272,14 @@
 			<define name="DC_RELEASE" value="gpio_set" />
 			<define name="DC_IMAGE_BUFFER" value="16535"/>
 		</load>
-                <load name="trig_test.xml"/>
+
+		<load name="gasoline.xml">
+			<define name="USE_CUSTOM_TRIGGER"/>  <!-- IRH1 - p0.22 -->
+			<define name="TRIG_EXT_PINSEL"  	value="PINSEL1"/>
+			<define name="TRIG_EXT_PINSEL_VAL"  	value="0x02"/> 
+			<define name="TRIG_EXT_PINSEL_BIT" 	value="12"/> 	
+			<define name="TRIG_EXT_CHANNEL"  	value="0"/>
+		</load>
 
 		<load name="nav_line.xml"/>
 		<load name="nav_line_osam.xml"/>

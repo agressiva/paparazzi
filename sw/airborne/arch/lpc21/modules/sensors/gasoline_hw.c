@@ -18,14 +18,14 @@ void TRIG_ISR() {
 
 void gasoline_hw_init ( void ) {
   /* select pin for capture */
-  GASOLINE_PINSEL |= GASOLINE_PINSEL_VAL << GASOLINE_PINSEL_BIT;
+  TRIG_EXT_PINSEL |= TRIG_EXT_PINSEL_VAL << TRIG_EXT_PINSEL_BIT;
   /* enable capture 0.2 on falling or rising edge + trigger interrupt */
 #if defined GASOLINE_PULSE_TYPE_RISING
 PRINT_CONFIG_MSG( "gasoline_hw: PULSE_TYPE RISING")
-  T0CCR = GASOLINE_CRR | GASOLINE_CRI;
+  T0CCR |= TRIGGER_CRR | TRIGGER_CRI;
 #elif defined GASOLINE_PULSE_TYPE_FALLING
 PRINT_CONFIG_MSG( "gasoline_hw: PULSE_TYPE FALLING")
-  T0CCR = GASOLINE_CRF | GASOLINE_CRI;
+  T0CCR |= TRIGGER_CRF | TRIGGER_CRI;
 #else
 #error "gasoline_hw: Unknown PULSE_TYPE"
 #endif
