@@ -7,6 +7,7 @@
 
     <subsystem name="actuators"     type="pwm">
       <define name="SERVO_HZ" value="490"/>
+      <!--<define name="TIM1_SERVO_HZ" value="60"/>-->
     </subsystem>
     
       <subsystem name="radio_control" type="sbus">
@@ -23,7 +24,6 @@
     <subsystem name="ins_extended"/>
 
 <define name="IMU_KROOZ_USE_ACCEL_MEDIAN_FILTER"/>
-<!--<define name="TIM5_SERVO_HZ" value="40"/>-->
 <define name="RADIO_CAM" value="RADIO_CH8"/>
     <define name="RADIO_KILL_SWITCH" value="RADIO_CH6"/>
     <define name="NO_RC_THRUST_LIMIT"/>
@@ -78,13 +78,16 @@
     <servo name="REAR_LEFT"       no="3" min="1000" neutral="1100" max="1900"/>
     <servo name="MID_LEFT"        no="4" min="1000" neutral="1100" max="1900"/>
     <servo name="FRONT_LEFT"      no="5" min="1000" neutral="1100" max="1900"/>
+    <servo name="YAW_SERVO"       no="6" min="1000" neutral="1500" max="2000"/>
+    <servo name="YAW_SERVO2"      no="7" min="1000" neutral="1500" max="2000"/>
   </servos>
   
   <commands>
-    <axis name="ROLL"   failsafe_value="0"/>
-    <axis name="PITCH"  failsafe_value="0"/>
-    <axis name="YAW"    failsafe_value="0"/>
-    <axis name="THRUST" failsafe_value="0"/>
+    <axis name="ROLL"       failsafe_value="0"/>
+    <axis name="PITCH"      failsafe_value="0"/>
+    <axis name="YAW"        failsafe_value="0"/>
+    <axis name="THRUST"     failsafe_value="0"/>
+    <axis name="RADIO_CH8"  failsafe_value="0"/>
   </commands>
 
   <section name="ACTUATORS_MKK" prefix="ACTUATORS_MKK_">
@@ -100,7 +103,8 @@
     <define name="SCALE" value="256"/>
     <define name="ROLL_COEF"   value="{-256, -256, -256,  256,  256,  256 }"/>
     <define name="PITCH_COEF"  value="{ 256,    0, -256, -256,    0,  256 }"/>
-    <define name="YAW_COEF"    value="{-256,  256, -256,  256, -256,  256 }"/>
+   <!-- <define name="YAW_COEF"    value="{-128,  128, -128,  128, -128,  128 }"/> -->
+    <define name="YAW_COEF"    value="{ -30,   30,  -30,   30,  -30,   30 }"/>
     <define name="THRUST_COEF" value="{ 256,  256,  256,  256,  256,  256 }"/>
   </section>
 
@@ -112,6 +116,8 @@
     <set servo="REAR_LEFT"    value="motor_mixing.commands[SERVO_REAR_LEFT]"/>
     <set servo="MID_RIGHT"    value="motor_mixing.commands[SERVO_MID_RIGHT]"/>
     <set servo="MID_LEFT"     value="motor_mixing.commands[SERVO_MID_LEFT]"/>
+    <set servo="YAW_SERVO"    value="@YAW"/>
+    <set servo="YAW_SERVO2"    value="@THRUST"/>
   </command_laws>
   
   <section name="IMU" prefix="IMU_">
@@ -195,26 +201,26 @@ To increase response time, you can increase the frequency, and the bounds.
     <!-- setpoints -->
     <define name="SP_MAX_PHI"     value="45." unit="deg"/>
     <define name="SP_MAX_THETA"   value="45." unit="deg"/>
-    <define name="SP_MAX_R"       value="220." unit="deg/s"/> <!--50 -->
+    <define name="SP_MAX_R"       value="360." unit="deg/s"/> <!--220 -->
     <define name="DEADBAND_A"     value="0"/>
     <define name="DEADBAND_E"     value="0"/>
     <define name="DEADBAND_R"     value="250"/>
 
     <!-- reference -->
-    <define name="REF_OMEGA_P"  value="425" unit="deg/s"/> <!--225-->
-    <define name="REF_ZETA_P"   value="0.85"/> <!--85-->
-    <define name="REF_MAX_P"    value="400." unit="deg/s"/> <!--280-->
-    <define name="REF_MAX_PDOT" value="RadOfDeg(800.)"/><!--400-->
+    <define name="REF_OMEGA_P"  value="800" unit="deg/s"/> <!--425-->
+    <define name="REF_ZETA_P"   value="0.9"/> <!--85-->
+    <define name="REF_MAX_P"    value="300." unit="deg/s"/> <!--400-->
+    <define name="REF_MAX_PDOT" value="RadOfDeg(7000.)"/><!--800-->
 
-    <define name="REF_OMEGA_Q"  value="425" unit="deg/s"/>
-    <define name="REF_ZETA_Q"   value="0.85"/>
-    <define name="REF_MAX_Q"    value="400." unit="deg/s"/>
-    <define name="REF_MAX_QDOT" value="RadOfDeg(800.)"/>
+    <define name="REF_OMEGA_Q"  value="800" unit="deg/s"/>
+    <define name="REF_ZETA_Q"   value="0.9"/>
+    <define name="REF_MAX_Q"    value="300." unit="deg/s"/>
+    <define name="REF_MAX_QDOT" value="RadOfDeg(7000.)"/>
 
-    <define name="REF_OMEGA_R"  value="360" unit="deg/s"/>
+    <define name="REF_OMEGA_R"  value="1200" unit="deg/s"/> <!--360-->
     <define name="REF_ZETA_R"   value="0.85"/>
-    <define name="REF_MAX_R"    value="280." unit="deg/s"/> <!--180 70 -->
-    <define name="REF_MAX_RDOT" value="RadOfDeg(420.)"/>
+    <define name="REF_MAX_R"    value="600." unit="deg/s"/> <!--280 70 -->
+    <define name="REF_MAX_RDOT" value="RadOfDeg(1600.)"/> <!--420-->
 
     <!-- feedback -->
     <define name="PHI_PGAIN"  value="1500"/>
@@ -225,14 +231,14 @@ To increase response time, you can increase the frequency, and the bounds.
     <define name="THETA_DGAIN"  value="600"/>
     <define name="THETA_IGAIN"  value="550"/>
 
-    <define name="PSI_PGAIN"  value="4000"/>
-    <define name="PSI_DGAIN"  value="1500"/>
+    <define name="PSI_PGAIN"  value="3000"/>
+    <define name="PSI_DGAIN"  value="1200"/>
     <define name="PSI_IGAIN"  value="300"/>
 
     <!-- feedforward -->
     <define name="PHI_DDGAIN"   value="300"/>
     <define name="THETA_DDGAIN" value="300"/>
-    <define name="PSI_DDGAIN"   value="4000"/>
+    <define name="PSI_DDGAIN"   value="300"/>
   </section>
 
   <section name="GUIDANCE_V" prefix="GUIDANCE_V_">

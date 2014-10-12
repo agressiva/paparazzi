@@ -81,7 +81,7 @@
 		<set command="THROTTLE"  value="@THROTTLE"/>
 		<set command="ROLL"      value="@ROLL"/>
 		<set command="PITCH"     value="@PITCH"/>
-		<set command="CAM_DOOR"  value=" @CH8"/>		
+		<set command="CAM_DOOR"  value="@CH8"/>		
 	</rc_commands>
  
 	<auto_rc_commands>
@@ -263,6 +263,12 @@
 <!--############################################################################################################-->
 
 	<modules>
+ 		<load name="airspeed_ms45xx_i2c.xml">
+			<define name="USE_AIRSPEED_MS45XX"/>
+			<define name="MS45XX_SYNC_SEND"/>
+    			<define name="MS45XX_I2C_DEV" value="i2c0"/>
+			<define name="MS45XX_PRESSURE_RANGE" value="1"/>
+		</load>
 		<load name="baro_ms5611_i2c.xml"/>
 		<load name="airspeed_ets.xml"/>
 		<load name="openlog.xml"/>
@@ -275,7 +281,7 @@
 			<define name="DC_RELEASE" value="gpio_set" />
 			<define name="DC_IMAGE_BUFFER" value="16535"/>
 		</load>
-		<load name="cam_roll.xml"/>
+		<!--<load name="cam_roll.xml"/>-->
     		
 		<load name="nav_line.xml"/>
 		<load name="nav_line_osam.xml"/>
