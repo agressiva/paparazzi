@@ -116,7 +116,7 @@
 
 /** Time constant for second order Butterworth low pass filter */
 #ifndef MS45XX_LOWPASS_TAU
-#define MS45XX_LOWPASS_TAU 0.22
+#define MS45XX_LOWPASS_TAU 0.20
 #endif
 
 struct AirspeedMs45xx ms45xx;
@@ -143,10 +143,11 @@ void ms45xx_i2c_init(void)
 
   ms45xx_trans.status = I2CTransDone;
   // setup low pass filter with time constant and 100Hz sampling freq
-  init_butterworth_2_low_pass(&ms45xx_filter, MS45XX_LOWPASS_TAU, 0.01, 0);
+  init_butterworth_2_low_pass(&ms45xx_filter, MS45XX_LOWPASS_TAU,
+                              MS45XX_I2C_PERIODIC_PERIOD, 0);
 
 #if PERIODIC_TELEMETRY
-  register_periodic_telemetry(DefaultPeriodic, "AIRSPEED_MS45XX", ms45xx_downlink);
+  register_periodic_telemetry(DefaultPeriodic, "MS45XX_AIRSPEED", ms45xx_downlink);
 #endif
 }
 
@@ -187,10 +188,8 @@ void ms45xx_i2c_event(void)
        */
       ms45xx.temperature = ((uint32_t)temp_raw * 2000) / 2047 - 500;
 
-      ms45xx.diff_pressure = Max( ms45xx.diff_pressure,0);
-
       // Compute airspeed
-      ms45xx.airspeed = sqrtf(ms45xx.diff_pressure * ms45xx.airspeed_scale);
+      ms45xx.airspeed = sqrtf(Max(ms45xx.diff_pressure * ms45xx.airspeed_scale, 0));
 #if USE_AIRSPEED
       stateSetAirspeed_f(&ms45xx.airspeed);
 #endif
