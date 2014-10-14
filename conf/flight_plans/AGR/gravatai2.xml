@@ -3,8 +3,8 @@
 <flight_plan alt="60" ground_alt="0" lat0="-29.963060" lon0="-50.912957" max_dist_from_home="350" name="Basic" security_height="20">
   <header>
 #include "firmwares/fixedwing/guidance/guidance_v_n.h"
-#include "subsystems/navigation/nav_line.h"
-#include "subsystems/navigation/OSAMNav.h"
+#include "subsystems/nav/nav_line.h"
+#include "subsystems/nav/OSAMNav.h"
 #include "subsystems/datalink/datalink.h"
 #define LINE_START_FUNCTION dc_survey(80,DC_IGNORE,DC_IGNORE)
 //#define LINE_START_FUNCTION dc_autoshoot = DC_AUTOSHOOT_PERIODIC;

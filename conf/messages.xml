@@ -1171,30 +1171,12 @@
     <field name="cnt"    type="int32"/>
     <field name="status" type="uint8" values="UNINIT|RUNNING|LOCKED"/>
   </message>
-
   
-  <message name="MS45XX_AIRSPEED" id="138">
-    <field name="ms45xxadc" type="uint16"/>
-    <field name="pressOffset" type="uint16"/>
+  <message name="AIRSPEED_MS45XX" id="138">
     <field name="diffPress" type="float" unit="Pa"/>
     <field name="temperature" type="int16" unit="0.1 deg_celcius" alt_unit="deg_celcius" alt_unit_coef="0.1"/>
     <field name="airspeed" type="float" unit="m/s"/>
   </message>
-  
-  
-  <!--
-  <message name="MS45XX_AIRSPEED" id="138">
-    <field name="diffpress" type="uint16"/>
-    <field name="pressOffset" type="uint16"/>
-    <field name="airspeed" type="float" unit="m/s"/>
-    <field name="temperature" type="uint16"/>
-  </message>
-        
-<message name="MS45XX_AIRSPEED" id="138">
-    <field name="diffPress" type="float" unit="Pa"/>
-    <field name="temperature" type="int16" unit="0.1 deg_celcius" alt_unit="deg_celcius" alt_unit_coef="0.1"/>
-    <field name="airspeed" type="float" unit="m/s"/>
-  </message>-->
 
   <message name="FILTER_COR" id="139">
     <field name="mphi"   type="int32"/>
@@ -1333,8 +1315,12 @@
     <field name="thrust"        type="int32"/>
     <field name="flight_time"   type="uint16" unit="s"/>
   </message>
-
-  <!-- 148 is free -->
+  
+  <message name="ADC_TEMP" id="148">
+    <field name="temp1"   type="float" unit="deg_celsius" format="%.2f"/>
+    <field name="temp2"   type="float" unit="deg_celsius" format="%.2f"/>
+    <field name="temp3"   type="float" unit="deg_celsius" format="%.2f"/>
+  </message>
 
   <message name="GUIDANCE_H_REF_INT" id="149">
     <field name="sp_x"    type="int32" alt_unit="m"     alt_unit_coef="0.0039063"/>

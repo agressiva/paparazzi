@@ -184,7 +184,7 @@ void airspeed_ets_read_event( void ) {
     for (n = 0; n < AIRSPEED_ETS_NBSAMPLES_AVRG; ++n)
       airspeed_ets += airspeed_ets_buffer[n];
     airspeed_ets = airspeed_ets / (float)AIRSPEED_ETS_NBSAMPLES_AVRG;
-#if USE_AIRSPEED
+#if USE_AIRSPEED_ETS
     stateSetAirspeed_f(&airspeed_ets);
 #endif
 #ifdef AIRSPEED_ETS_SYNC_SEND

@@ -37,6 +37,7 @@
 #ifndef DC_H
 #define DC_H
 
+#include "inter_mcu.h" //to use radio channels
 #include "float.h"
 #include "std.h"
 #include "led.h"
@@ -230,6 +231,24 @@ static inline void dc_periodic_4Hz( void )
 {
   static uint8_t dc_shutter_timer = 0;
 
+  #ifdef RADIO_SHOOT
+  static uint8_t rd_shoot = 0;
+  static uint8_t rd_num = 0;
+  
+  if ( (rd_shoot == 0) && (((float)(*fbw_state).channels[RADIO_SHOOT])  > 3000) )
+    {
+      dc_send_command(DC_SHOOT);
+      rd_shoot=1;
+    }
+  if ((rd_shoot == 1) && (rd_num < 4))  //FIX-IT using timer 
+    {rd_num = rd_num +1;}
+    else
+    {
+      rd_num =0;
+      rd_shoot =0;
+    }
+  #endif  
+  
   switch (dc_autoshoot) {
 
   case DC_AUTOSHOOT_PERIODIC:

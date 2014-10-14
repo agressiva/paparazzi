@@ -23,6 +23,7 @@
     <waypoint alt="30.0" name="AF" x="120.1" y="-33.8"/>
     <waypoint alt="0.0" name="TD" x="59.0" y="-21.0"/>
     <waypoint name="_BASELEG" x="88.1" y="-27.1"/>
+    <waypoint name="TO" x="110.1" y="-62.5"/>
     <waypoint name="CLIMB" x="117.1" y="-72.5"/>
     <waypoint name="S1" x="191.5" y="-139.7"/>
     <waypoint name="S2" x="-382.1" y="-530.4"/>
@@ -253,6 +254,21 @@
     <block group="home" key="<Control>c" name="Standby 80" strip_button="Sby80">
       <circle radius="80" wp="STDBY"/>
     </block>
+
+    <block group="home" key="t" name="Takeoff" strip_button="Takeoff (wp CLIMB)" strip_icon="takeoff.png">
+      <exception cond="GetPosAlt() > GetAltRef()+35" deroute="Standby"/>
+      <set value="0" var="kill_throttle"/>
+      <set value="0" var="autopilot_flight_time"/>
+      <go from="HOME" pitch="15" throttle="1.0" vmode="throttle" wp="CLIMB"/>
+    </block>
+
+    <block group="home" name="Arm Catapult" strip_button="Takeoff (wp CLIMB)" strip_icon="bungee_launch.png">
+      <exception cond="GetPosAlt() > GetAltRef()+25" deroute="Takeoff"/>
+      <set value="0" var="kill_throttle"/>
+      <call fun="nav_catapult_setup()"/>
+      <call fun="nav_catapult_run(WP_TO, WP_CLIMB)"/>
+    </block>
+
     <block group="extra_pattern1" name="NAV ROUTE 1-70,STBY" strip_button="Path ROUTE(1,70,STDBY)" strip_icon="path.png">
       <go wp="inicio"/>
       <set value="DC_AUTOSHOOT_PERIODIC" var="dc_autoshoot"/>

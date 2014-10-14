@@ -1,6 +1,6 @@
-<!DOCTYPE module SYSTEM "./module.dtd">
+<!DOCTYPE module SYSTEM "module.dtd">
 
-<module name="digital_cam">
+<module name="digital_cam" dir="digital_cam">
   <doc>
     <description>Digital camera control (trigger using GPIO)</description>
     <define name="DC_SHOOT_ON_BUTTON_RELEASE" description="if defined, call dc_send_shot_postion on button release instead of on push"/>
@@ -11,14 +11,13 @@
     <define name="DC_POWER_OFF_GPIO" value="GPIOC,GPIO1" description="optional, gpio to turn power off"/>
     <define name="DC_PUSH" value="gpio_set|gpio_clear" description="specifies whether to set or clear gpio to push the shutter (default: gpio_set)"/>
     <define name="DC_RELEASE" value="gpio_clear|gpio_set" description="specifies whether to set or clear gpio to release the shutter (default: gpio_clear)"/>
-
     <define name="DC_AUTOSHOOT_QUARTERSEC_PERIOD" value="6" description="quarter_second"/>
     <define name="DC_AUTOSHOOT_METER_GRID" value="50" description="grid in meters"/>
   </doc>
+  
   <settings>
     <dl_settings name="control">
       <dl_settings name="dc">
-
         <dl_setting max="255" min="0" step="1" module="digital_cam/dc" var="0" handler="send_command" shortname="Shutter">
           <strip_button name="Photo" icon="digital-camera.png" value="32" group="maindc"/>
           <strip_button name="Power" icon="off.png" value="111" group="maindc"/>
@@ -26,7 +25,7 @@
           <strip_button name="ZoomOut" icon="zoom.png" value="119" group="dczoom"/>
         </dl_setting>
 
-        <dl_setting max="3" min="0" step="1" var="dc_autoshoot" >
+        <dl_setting max="3" min="0" step="1" var="dc_autoshoot">
           <strip_button name="Start Autoshoot" icon="on.png" value="1" group="dcauto"/>
           <strip_button name="Stop Autoshoot" icon="off.png" value="0" group="dcauto"/>
         </dl_setting>
@@ -49,7 +48,7 @@
 
   <periodic fun="gpio_cam_ctrl_periodic()" freq="4" autorun="TRUE"/>
 
-  <makefile >
+  <makefile target="ap|sim|jsbsim|nps">
     <define name="DIGITAL_CAM" />
     <file name="gpio_cam_ctrl.c"/>
     <file name="dc.c"/>
