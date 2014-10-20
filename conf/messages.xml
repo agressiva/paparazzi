@@ -1171,7 +1171,7 @@
     <field name="cnt"    type="int32"/>
     <field name="status" type="uint8" values="UNINIT|RUNNING|LOCKED"/>
   </message>
-  
+
   <message name="AIRSPEED_MS45XX" id="138">
     <field name="diffPress" type="float" unit="Pa"/>
     <field name="temperature" type="int16" unit="0.1 deg_celcius" alt_unit="deg_celcius" alt_unit_coef="0.1"/>
@@ -1297,7 +1297,6 @@
     <field name="cmd_heading" type="int32"/>
   </message>
 
-
   <message name="ROTORCRAFT_FP" id="147">
     <field name="east"     type="int32" alt_unit="m" alt_unit_coef="0.0039063"/>
     <field name="north"    type="int32" alt_unit="m" alt_unit_coef="0.0039063"/>
@@ -1315,7 +1314,7 @@
     <field name="thrust"        type="int32"/>
     <field name="flight_time"   type="uint16" unit="s"/>
   </message>
-  
+
   <message name="TEMP_ADC" id="148">
     <field name="temp1"   type="float" unit="deg_celsius" format="%.2f"/>
     <field name="temp2"   type="float" unit="deg_celsius" format="%.2f"/>

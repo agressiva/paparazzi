@@ -98,7 +98,7 @@
 #endif
 #endif
 
-/** Send a MS45XX_AIRSPEED message with every new measurement.
+/** Send a AIRSPEED_MS45XX message with every new measurement.
  * Mainly for debug, use with caution, sends message at ~100Hz.
  */
 #ifndef MS45XX_SYNC_SEND
@@ -114,9 +114,11 @@
 #define MS45XX_AIRSPEED_SCALE 1.6327
 #endif
 
-/** Time constant for second order Butterworth low pass filter */
+/** Time constant for second order Butterworth low pass filter
+ * Default of 0.15 should give cut-off freq of 1/(2*pi*tau) ~= 1Hz
+ */
 #ifndef MS45XX_LOWPASS_TAU
-#define MS45XX_LOWPASS_TAU 0.20
+#define MS45XX_LOWPASS_TAU 0.15
 #endif
 
 struct AirspeedMs45xx ms45xx;
@@ -147,7 +149,7 @@ void ms45xx_i2c_init(void)
                               MS45XX_I2C_PERIODIC_PERIOD, 0);
 
 #if PERIODIC_TELEMETRY
-  register_periodic_telemetry(DefaultPeriodic, "MS45XX_AIRSPEED", ms45xx_downlink);
+  register_periodic_telemetry(DefaultPeriodic, "AIRSPEED_MS45XX", ms45xx_downlink);
 #endif
 }
 

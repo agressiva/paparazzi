@@ -24,7 +24,7 @@
  */
 
 #include "std.h"
-#include "temp_adc.h"
+#include "modules/sensors/temp_adc.h"
 #include "mcu_periph/adc.h"
 #include "mcu_periph/uart.h"
 #include "messages.h"
@@ -44,14 +44,6 @@ float temp_c1, temp_c2, temp_c3;
 #ifndef TEMP_ADC_CHANNEL2
 #ifndef TEMP_ADC_CHANNEL3
 #error "at least one TEMP_ADC_CHANNEL1/2/3 needs to be defined to use the temp_adc module"
-#endif
-#endif
-#endif
-
-#ifndef TEMP_ADC_CHANNEL1_TYPE
-#ifndef TEMP_ADC_CHANNEL2_TYPE
-#ifndef TEMP_ADC_CHANNEL3_TYPE
-#error "at least one TEMP_ADC_CHANNELX_TYPE needs to be defined to use the temp_adc module"
 #endif
 #endif
 #endif
@@ -113,7 +105,7 @@ static void temp_adc_downlink(void)
 
 void temp_adc_init(void)
 {
-  temp_adc_sync_send = TEMP_ADC_SYNC_SEND;      ///< flag to enable sending every new measurement via telemetry
+  temp_adc_sync_send = TEMP_ADC_SYNC_SEND;
 
 #ifdef TEMP_ADC_CHANNEL1
   adc_buf_channel(TEMP_ADC_CHANNEL1, &temp_buf1, TEMP_ADC_NB_SAMPLES);
@@ -126,16 +118,16 @@ void temp_adc_init(void)
 #ifdef TEMP_ADC_CHANNEL3
   adc_buf_channel(TEMP_ADC_CHANNEL3, &temp_buf3, TEMP_ADC_NB_SAMPLES);
 #endif
-  
+
 #if PERIODIC_TELEMETRY
   register_periodic_telemetry(DefaultPeriodic, "TEMP_ADC", temp_adc_downlink);
-#endif  
+#endif
 }
 
 
 void temp_adc_periodic(void)
 {
-uint16_t adc_raw;
+  uint16_t adc_raw;
 
 #ifdef TEMP_ADC_CHANNEL1
   adc_raw = temp_buf1.sum / temp_buf1.av_nb_sample;
@@ -163,9 +155,9 @@ uint16_t adc_raw;
   temp_c3 = calc_ntc(adc_raw);
 #endif
 #endif
-  
-  if (temp_adc_sync_send){
+
+  if (temp_adc_sync_send) {
     temp_adc_downlink();
   }
- 
+
 }

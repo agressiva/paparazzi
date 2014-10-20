@@ -28,12 +28,13 @@
 
 #include "std.h"
 
-bool_t temp_adc_sync_send;      ///< flag to enable sending every new measurement via telemetry
+/// flag to enable sending every new measurement via telemetry
+bool_t temp_adc_sync_send;
 
 float calc_ntc(int16_t raw_temp);
 float calc_lm35(int16_t raw_temp);
 
-void temp_adc_init( void );
-void temp_adc_periodic( void );
+void temp_adc_init(void);
+void temp_adc_periodic(void);
 
 #endif /* TEMP_ADC_H */
