@@ -43,9 +43,9 @@ float dc_gps_y = 0;
 
 bool_t dc_probing = FALSE;
 
-  #ifdef USE_RADIO_SHOOT
+#ifdef USE_RADIO_SHOOT
   PRINT_CONFIG_MSG("Using RADIO SHOOT"); 
-  #endif
+#endif
 
 #ifdef SENSOR_SYNC_SEND
 

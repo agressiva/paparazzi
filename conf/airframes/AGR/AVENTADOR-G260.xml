@@ -273,7 +273,7 @@
 			<define name="DC_IMAGE_BUFFER" value="16535"/>
 		</load>
 
-		<load name="gasoline.xml">
+		<load name="gas_meter.xml">
 			<define name="USE_CUSTOM_TRIGGER"/>  <!-- IRH1 - p0.22 -->
 			<define name="TRIG_EXT_PINSEL"  	value="PINSEL1"/>
 			<define name="TRIG_EXT_PINSEL_VAL"  	value="0x02"/> 

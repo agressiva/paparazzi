@@ -19,13 +19,16 @@
 		<!--    <define name="WIND_INFO"/>    -->
 		<!--    <define name="WIND_INFO_RET"/>-->
 		<!--    <define name="STRONG_WIND"/>  -->
-                <define name="USE_CAM_DOOR"/>
+ <define name="DEBUG_AGR"/>
+		<define name="USE_CAM_DOOR"/>
 		<define name="RADIO_SHOOT"  value="RADIO_CH7"/>
 		<define name="USE_I2C0"/>
 		<define name="USE_ADC"/>
 		<define name="USE_ADC_0"/>  <!-- temp_sensor-->
+		<define name="USE_ADC_1"/>  <!-- esc_temp_sensor-->
 		<define name="USE_ADC_6"/>  <!-- current_sensor-->
-                <define name="USE_AIRSPEED"/>		
+                <define name="USE_AIRSPEED"/>
+		<define name="USE_AIRSPEED_ETS"/>	
                 <define name="AIRSPEED_ETS_SYNC_SEND"/>
 		<define name="SENSOR_SYNC_SEND"/>
 		<configure name="AHRS_ALIGNER_LED" value="3"/>
@@ -95,7 +98,7 @@
 
 	<section name="MIXER">
 		<define name="AILEVON_AILERON_RATE"  value="0.75"/>
-		<define name="AILEVON_ELEVATOR_RATE" value="0.75"/>
+		<define name="AILEVON_ELEVATOR_RATE" value="0.50"/>
 		<define name="DOOR_CLOSE_TIME" value="2.0" /> <!-- seconds -->
 		<define name="MAX_DOOR_RATE" value="(MAX_PPRZ / (60 * DOOR_CLOSE_TIME ))" />
                 <define name="AILERON_DIFF" value="0.8"/>
@@ -168,8 +171,8 @@
 
   <section name="MISC">
     <define name="SENSOR_SYNC_SEND"/>
-    <define name="MINIMUM_AIRSPEED"      value="20." unit="m/s"/> <!-- nao tinha -->
-    <define name="NOMINAL_AIRSPEED"      value="27." unit="m/s"/> <!--28.muito bom - nao cai nas curvas a 50º --> 
+    <define name="MINIMUM_AIRSPEED"      value="16." unit="m/s"/> <!-- nao tinha -->
+    <define name="NOMINAL_AIRSPEED"      value="24." unit="m/s"/> <!--28.muito bom - nao cai nas curvas a 50º --> 
     <define name="MAXIMUM_AIRSPEED"      value="40." unit="m/s"/> <!-- nao tinha -->
     <define name="CARROT"                value="4."   unit="s"/>
     <define name="KILL_MODE_DISTANCE"    value="(1.5*MAX_DIST_FROM_HOME)"/>
@@ -209,15 +212,15 @@
     <define name="AUTO_PITCH_IGAIN" value="0.002"/> <!-- 0.002 -->
 
     <!-- airspeed control -->
-    <define name="AUTO_AIRSPEED_SETPOINT" value="26."/>   <!-- 28 voa muito bem -->
+    <define name="AUTO_AIRSPEED_SETPOINT" value="24."/>   <!-- 28 voa muito bem -->
     <define name="AUTO_AIRSPEED_THROTTLE_PGAIN" value="0.003"/> <!--0.002   0.058-->
     <define name="AUTO_AIRSPEED_THROTTLE_DGAIN" value="0.006"/> <!--0.2-->
     <define name="AUTO_AIRSPEED_THROTTLE_IGAIN" value="0.003"/> <!--0.03-->
     <define name="AUTO_AIRSPEED_PITCH_PGAIN" value="0.04"/> <!-- 0.04 -->
     <define name="AUTO_AIRSPEED_PITCH_DGAIN" value="0.029"/> <!--0.005-->
     <define name="AUTO_AIRSPEED_PITCH_IGAIN" value="0.0"/> <!--0.0-->
-    <define name="AIRSPEED_MAX" value="52"/>
-    <define name="AIRSPEED_MIN" value="24"/>
+    <define name="AIRSPEED_MAX" value="52"/> <!-- bound setpoint -->
+    <define name="AIRSPEED_MIN" value="16"/>
 
     <!-- groundspeed control -->
     <define name="AUTO_GROUNDSPEED_SETPOINT" value="12"/>
@@ -228,7 +231,7 @@
     <define name="PITCH_LOITER_TRIM" value="RadOfDeg(0.)"/>
     <define name="PITCH_DASH_TRIM" value="RadOfDeg(-0.)"/>
 
-    <define name="THROTTLE_SLEW" value="0.3"/>
+    <!--<define name="THROTTLE_SLEW" value="0.1"/>-->
   </section>
 
   <section name="HORIZONTAL CONTROL" prefix="H_CTL_">
@@ -238,7 +241,7 @@
     <define name="ROLL_MAX_SETPOINT" value="45" unit="deg"/>   <!-- 45 -->
     <define name="PITCH_MAX_SETPOINT" value="25" unit="deg"/>
     <define name="PITCH_MIN_SETPOINT" value="-25" unit="deg"/>
-    <define name="PITCH_PGAIN" value="6500."/> <!--11000 8500-->
+    <define name="PITCH_PGAIN" value="5500."/> <!--11000 8500-->
     <define name="PITCH_IGAIN" value="200"/> <!-- -------adicionado em 9 setembro 2014 - antes estava zerado ------- -->
     <define name="PITCH_DGAIN" value="15.0"/>  <!-- 10.0 -->
     <define name="PITCH_OF_ROLL" value="RadOfDeg(5.0)"/> <!-- 10 nao tinha -->
@@ -282,27 +285,32 @@
 
 		<load name="baro_ms5611_i2c.xml"/>
 		<load name="airspeed_ms45xx_i2c.xml">
-			<define name="USE_AIRSPEED_MS45XX"/>
-			<define name="MS45XX_SYNC_SEND"/>
+			<!--<define name="MS45XX_SYNC_SEND"/>-->
     			<define name="MS45XX_I2C_DEV" value="i2c0"/>
 			<define name="MS45XX_PRESSURE_RANGE" value="1"/>
-			<define name="MS45XX_PRESSURE_OFFSET" value="8544.0"/>
+			<define name="MS45XX_OUTPUT_TYPE" value="0"/>
+			<define name="MS45XX_PRESSURE_OFFSET" value="8540.0"/> <!-- 8540.0 para tipo 0-->
 		</load>
+
 		<load name="airspeed_ets.xml"/>
 
 		<load name="temp_adc.xml">
     			<define name="TEMP_ADC_CHANNEL1" value="ADC_0"/>
-			<define name="TEMP_ADC_CHANNEL1_TYPE_LM35"/>
+			<define name="TEMP_ADC_CHANNEL1_TYPE" value="LM35"/>
+    			<define name="TEMP_ADC_CHANNEL2" value="ADC_1"/>
+			<define name="TEMP_ADC_CHANNEL2_TYPE_LM35"/>
 		</load>
 
               <!--  <load name="photogrammetry_calculator.xml" /> -->
+
 		<load name="digital_cam.xml">
       		<define name="DC_SHUTTER_GPIO" value="GPIOB,GPIO22"/><!-- 18:aux 22:camsw-->		
 			<define name="DC_SHUTTER_DELAY"  value="2"/>	<!-- original = 2-->		
-			<define name="DC_PUSH" value="gpio_clear" />
-			<define name="DC_RELEASE" value="gpio_set" />
+			<define name="DC_PUSH" value="gpio_set" />
+			<define name="DC_RELEASE" value="gpio_clear" />
 			<define name="DC_IMAGE_BUFFER" value="16535"/>
 		</load>
+
 		<!--<load name="cam_roll.xml"/> -->
 
 		<load name="nav_catapult.xml"/>    		
@@ -328,20 +336,20 @@
 
  <section name="Photogrammetry" prefix="PHOTOGRAMMETRY_">
     <!-- Camera Parameters -->
-    <define name="FOCAL_LENGTH" value="16" unit="mm"/>			<!-- valores sony NEX-F3 -->
-    <define name="SENSOR_WIDTH" value="23.4" unit="mm"/>                <!-- In direction of the plane's wings -->
-    <define name="SENSOR_HEIGHT" value="15.6" unit="mm"/>               <!-- In direction of the plane's nose -->
-    <define name="PIXELS_WIDTH" value="4912" unit=""/>
+    <define name="FOCAL_LENGTH" value="16" unit="mm"/>			<!-- valores NX1000 -->
+    <define name="SENSOR_WIDTH" value="23.5" unit="mm"/>                <!-- In direction of the plane's wings -->
+    <define name="SENSOR_HEIGHT" value="15.7" unit="mm"/>               <!-- In direction of the plane's nose -->
+    <define name="PIXELS_WIDTH" value="5472" unit=""/>
 
     <!-- Photogrammetry Parameters : defined per flightplan -->
-    <define name="OVERLAP" value="60" unit="PROCENT"/>
-    <define name="SIDELAP" value="40" unit="PROCENT"/>
+    <define name="OVERLAP" value="70" unit="PROCENT"/>
+    <define name="SIDELAP" value="50" unit="PROCENT"/>
     <define name="RESOLUTION" value="100" unit="mm pixel projection"/>
 
     <!-- Flight Safety Parameters -->
-    <define name="HEIGHT_MIN" value="150" unit="m"/>
-    <define name="HEIGHT_MAX" value="500" unit="m"/>
-    <define name="RADIUS_MIN" value="70" unit="m"/>
+    <define name="HEIGHT_MIN" value="100" unit="m"/>
+    <define name="HEIGHT_MAX" value="400" unit="m"/>
+    <define name="RADIUS_MIN" value="80" unit="m"/>
   </section>
 
   <section name="FAILSAFE" prefix="FAILSAFE_">

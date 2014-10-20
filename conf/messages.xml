@@ -1316,7 +1316,7 @@
     <field name="flight_time"   type="uint16" unit="s"/>
   </message>
   
-  <message name="ADC_TEMP" id="148">
+  <message name="TEMP_ADC" id="148">
     <field name="temp1"   type="float" unit="deg_celsius" format="%.2f"/>
     <field name="temp2"   type="float" unit="deg_celsius" format="%.2f"/>
     <field name="temp3"   type="float" unit="deg_celsius" format="%.2f"/>
@@ -1924,8 +1924,40 @@
     <field name="wn"          type="float"/>
   </message>
 
- <!--215 is free -->
- <!--216 is free -->
+  <message name="V_CTL_N_PITCH" id="215">
+    <field name="v_ctl_pitch_setpoint" type="float"/>
+    <field name="v_ctl_climb_setpoint" type="float"/>
+    <field name="v_ctl_pitch_trim" type="float"/>
+    <field name="err_vz" type="float"/>
+    <field name="d_err_vz" type="float"/>
+    <field name="ctl_auto_pitch_sum_err" type="float"/>
+    <field name="err_airspeed" type="float"/>
+    <field name="d_err_airspeed" type="float"/>
+    <field name="v_ctl_auto_airspeed_pitch_sum_err" type="float"/>
+  </message>
+    
+  <message name="V_CTL_N_THROT" id="216">
+    <field name="controlled_throttle"  type="float"/>
+    <field name="v_ctl_auto_throttle_cruise_throttle" type="float"/>
+    <field name="v_ctl_climb_setpoint" type="float"/>
+    <field name="err_vz" type="float"/>
+    <field name="d_err_vz" type="float"/>
+    <field name="v_ctl_auto_throttle_sum_err" type="float"/>
+    <field name="err_airspeed" type="float"/>
+    <field name="d_err_airspeed" type="float"/>
+    <field name="v_ctl_auto_airspeed_throttle_sum_err" type="float"/>
+  </message>
+    
+    <!-- USADO PARA DEBUGAT POLYGON SURVEY ENTRY -->
+  <message name="DEBUG_POLYSURVEY" id="217">
+    <field name="NavQdrClose"     type="uint8"/>
+    <field name="SurveyCircleQdr" type="float"/>
+    <field name="NavCirQdr"       type="float"/>
+    <field name="NavCircNoRev"    type="float"/>
+    <field name="StateGetpos"     type="float"/>
+    <field name="WaypointEntry"   type="float"/>
+  </message>
+  
  <!--217 is free -->
  <!--218 is free -->
   <message name="WEATHER" id="219">
@@ -2151,9 +2183,9 @@
       <field name="yaw_c"  type="float"/>
   </message>
 
-  <message name="GASOLINE_METER" id="251">
+  <message name="FLOW_METER" id="251">
    <field name="pulses"  type="uint16"/>
-   <field name="ml"	type="uint16" unit="ml"/>
+   <field name="ml"	 type="uint16" unit="ml"/>
   </message>
   
   <!-- 252 is free -->

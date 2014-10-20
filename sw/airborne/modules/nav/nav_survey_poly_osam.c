@@ -32,8 +32,12 @@
 #include "generated/flight_plan.h"
 
 // PARA DEBUGAR
+#ifdef DEBUG_AGR
 #include <stdio.h>
-
+#include "mcu_periph/uart.h"
+#include "messages.h"
+#include "subsystems/datalink/downlink.h"
+#endif
 
 struct Point2D {float x; float y;};
 struct Line {float m;float b;float x;};
@@ -302,7 +306,20 @@ bool_t nav_survey_poly_osam_run(void)
 
     //follow the circle
     nav_circle_XY(C.x, C.y, SurveyRadius);
-                // fprintf(stderr,"Entry %f %f\n",(stateGetPositionEnu_f()->z), (waypoints[SurveyEntryWP].a) );
+    
+    // -- ========================================================================================
+    #ifdef DEBUG_AGR
+    //fprintf(stderr,"Entry %f %f\n",(stateGetPositionUtm_f()->alt), (waypoints[SurveyEntryWP].a) );
+    uint8_t NavQdrClose = NavQdrCloseTo(SurveyCircleQdr);
+    float NavCirQdr = NavCircleQdr();
+    float NavCircNoRev = NavCircleCountNoRewind();
+    float StateGetpos = stateGetPositionUtm_f()->alt;
+    float WaypointEntry = waypoints[SurveyEntryWP].a-10;
+    
+    DOWNLINK_SEND_DEBUG_POLYSURVEY(DefaultChannel, DefaultDevice, &NavQdrClose, &SurveyCircleQdr, &NavCirQdr, &NavCircNoRev, &StateGetpos, &WaypointEntry);
+    #endif
+    //-- ========================================================================================
+
     if(NavQdrCloseTo(SurveyCircleQdr) && NavCircleCountNoRewind() > .1 && stateGetPositionUtm_f()->alt > waypoints[SurveyEntryWP].a-10)
     {
       CSurveyStatus = Sweep;

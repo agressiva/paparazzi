@@ -25,6 +25,14 @@
  *
  */
 
+// PARA DEBUGAR
+#ifdef DEBUG_AGR
+#include <stdio.h>
+#include "mcu_periph/uart.h"
+#include "messages.h"
+#include "subsystems/datalink/downlink.h"
+#endif
+
 #include "firmwares/fixedwing/guidance/guidance_v.h"
 #include "firmwares/fixedwing/guidance/guidance_v_n.h"
 #include "state.h"
@@ -116,6 +124,39 @@ float v_ctl_auto_groundspeed_sum_err;
 #define V_CTL_AUTO_AIRSPEED_PITCH_MAX_SUM_ERR (RadOfDeg(15.))
 #define V_CTL_AUTO_AIRSPEED_THROTTLE_MAX_SUM_ERR 0.2
 #define V_CTL_AUTO_GROUNDSPEED_MAX_SUM_ERR 100
+  float err_vz;
+  float d_err_vz;
+  float err_airspeed;
+  float d_err_airspeed;
+#endif
+
+#if PERIODIC_TELEMETRY
+#include "subsystems/datalink/telemetry.h"
+static void send_throttle(void) {
+    DOWNLINK_SEND_V_CTL_N_THROT(DefaultChannel, DefaultDevice,
+				 &controlled_throttle,
+				 &v_ctl_auto_throttle_cruise_throttle,
+				 &v_ctl_climb_setpoint,
+				 &err_vz,
+				 &d_err_vz,
+				 &v_ctl_auto_throttle_sum_err,
+				 &err_airspeed,
+				 &d_err_airspeed,
+				 &v_ctl_auto_airspeed_throttle_sum_err);
+}
+
+static void send_pitch(void) {
+    DOWNLINK_SEND_V_CTL_N_PITCH(DefaultChannel, DefaultDevice,
+				 &v_ctl_pitch_setpoint,
+				 &v_ctl_climb_setpoint,
+				 &v_ctl_pitch_trim,
+				 &err_vz,
+				 &d_err_vz,
+				 &v_ctl_auto_pitch_sum_err,
+				 &err_airspeed,
+				 &d_err_airspeed,
+				 &v_ctl_auto_airspeed_pitch_sum_err);
+}
 #endif
 
 void v_ctl_init( void ) {
@@ -172,6 +213,10 @@ void v_ctl_init( void ) {
   v_ctl_auto_groundspeed_pgain = V_CTL_AUTO_GROUNDSPEED_PGAIN;
   v_ctl_auto_groundspeed_igain = V_CTL_AUTO_GROUNDSPEED_IGAIN;
   v_ctl_auto_groundspeed_sum_err = 0.;
+#if PERIODIC_TELEMETRY
+  register_periodic_telemetry(DefaultPeriodic, "V_CTL_N_THROT", send_throttle);
+  register_periodic_telemetry(DefaultPeriodic, "V_CTL_N_PITCH", send_pitch);
+#endif  
 #endif
 
   controlled_throttle = 0.;
@@ -273,8 +318,8 @@ static inline void v_ctl_set_airspeed( void ) {
   Bound(v_ctl_auto_airspeed_setpoint, V_CTL_AIRSPEED_MIN, V_CTL_AIRSPEED_MAX);
 
   // Compute errors
-  float err_vz = v_ctl_climb_setpoint - stateGetSpeedEnu_f()->z;
-  float d_err_vz = (err_vz - last_err_vz)*AIRSPEED_LOOP_PERIOD;
+  err_vz = v_ctl_climb_setpoint - stateGetSpeedEnu_f()->z;
+  d_err_vz = (err_vz - last_err_vz)*AIRSPEED_LOOP_PERIOD;
   last_err_vz = err_vz;
   if (v_ctl_auto_throttle_igain > 0.) {
     v_ctl_auto_throttle_sum_err += err_vz*AIRSPEED_LOOP_PERIOD;
@@ -285,8 +330,8 @@ static inline void v_ctl_set_airspeed( void ) {
     BoundAbs(v_ctl_auto_pitch_sum_err, V_CTL_AUTO_PITCH_MAX_SUM_ERR / v_ctl_auto_pitch_igain);
   }
 
-  float err_airspeed = v_ctl_auto_airspeed_setpoint - *stateGetAirspeed_f();
-  float d_err_airspeed = (err_airspeed - last_err_as)*AIRSPEED_LOOP_PERIOD;
+  err_airspeed = v_ctl_auto_airspeed_setpoint - *stateGetAirspeed_f();
+  d_err_airspeed = (err_airspeed - last_err_as)*AIRSPEED_LOOP_PERIOD;
   last_err_as = err_airspeed;
   if (v_ctl_auto_airspeed_throttle_igain > 0.) {
     v_ctl_auto_airspeed_throttle_sum_err += err_airspeed*AIRSPEED_LOOP_PERIOD;
@@ -326,8 +371,20 @@ static inline void v_ctl_set_airspeed( void ) {
     + v_ctl_auto_airspeed_throttle_pgain * err_airspeed
     + v_ctl_auto_airspeed_throttle_dgain * d_err_airspeed
     + v_ctl_auto_airspeed_throttle_igain * v_ctl_auto_airspeed_throttle_sum_err;
-
+  
+    // -- ========================================================================================
+    #ifdef DEBUG_AGR
+    //fprintf(stderr,"Entry %f %f\n",(stateGetPositionUtm_f()->alt), (waypoints[SurveyEntryWP].a) );
+    send_pitch();
+    send_throttle();
+    //-- ========================================================================================
+    #endif
+    
 }
+
+
+
+
 
 static inline void v_ctl_set_groundspeed( void ) {
   // Ground speed control loop (input: groundspeed error, output: airspeed controlled)

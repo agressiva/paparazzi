@@ -17,7 +17,6 @@
       <message name="DESIRED"             period="0.2"/>
       <message name="BAT"                 period="1.1"/>
       <message name="SEGMENT"             period="1.2"/>
-      <message name="CALIBRATION"         period="2.1"/>
       <message name="NAVIGATION_REF"      period="9."/>
       <message name="PPRZ_MODE"           period="4.9"/>
       <message name="SETTINGS"            period="5."/>
@@ -27,7 +26,12 @@
       <message name="SURVEY"              period="2.1"/>
       <message name="GPS_SOL"             period="2.0"/>
       <message name="FBW_STATUS"          period="2"/>
+      
+      <message name="CALIBRATION"         period="2.1"/>
+      <message name="TUNE_ROLL"        	  period="0.5"/>
       <message name="H_CTL_A"        	  period="0.05"/>
+      <message name="V_CTL_N_PITCH"    	  period="0.5"/>
+      <message name="V_CTL_N_THROTH"   	  period="0.5"/>
     </mode>
 
     <mode name="debug_agr">
