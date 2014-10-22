@@ -133,7 +133,7 @@
     <define name="GYRO_Q_NEUTRAL" value="0"/>
     <define name="GYRO_R_NEUTRAL" value="0"/>
 
-    <define name="ACCEL_X_NEUTRAL" value="0"/> <!--tilt -->
+    <define name="ACCEL_X_NEUTRAL" value="-40"/> <!--tilt -->
     <define name="ACCEL_Y_NEUTRAL" value="0"/> <!--roll -->
     <define name="ACCEL_Z_NEUTRAL" value="0"/>
     
@@ -165,9 +165,9 @@
 
   <section name="MISC">
     <define name="SENSOR_SYNC_SEND"/>
-    <define name="MINIMUM_AIRSPEED"      value="14." unit="m/s"/> <!-- nao tinha -->
-    <define name="NOMINAL_AIRSPEED"      value="18." unit="m/s"/> <!--28.muito bom - nao cai nas curvas a 50º --> 
-    <define name="MAXIMUM_AIRSPEED"      value="40." unit="m/s"/> <!-- nao tinha -->
+    <define name="MINIMUM_AIRSPEED"      value="20." unit="m/s"/> <!-- nao tinha -->
+    <define name="NOMINAL_AIRSPEED"      value="24." unit="m/s"/> <!--28.muito bom - nao cai nas curvas a 50º --> 
+    <define name="MAXIMUM_AIRSPEED"      value="60." unit="m/s"/> <!-- nao tinha -->
     <define name="CARROT"                value="4."   unit="s"/>
     <define name="KILL_MODE_DISTANCE"    value="(1.2*MAX_DIST_FROM_HOME)"/>
     <define name="NO_XBEE_API_INIT"      value="TRUE"/>
@@ -182,7 +182,7 @@
   <section name="VERTICAL CONTROL" prefix="V_CTL_">
     <!--define name="POWER_CTL_BAT_NOMINAL" value="11.1" unit="volt"/-->
     <!-- outer loop proportional gain -->
-    <define name="ALTITUDE_PGAIN" value="0.05"/> <!-- 0.08 site 0.15  0.1 -->
+    <define name="ALTITUDE_PGAIN" value="0.07"/> <!-- 0.08 site 0.15  0.1 -->
     <!-- outer loop saturation -->
     <define name="ALTITUDE_MAX_CLIMB" value="2.0"/> <!--2.0  3.5-->
 
@@ -200,13 +200,13 @@
     <define name="AUTO_THROTTLE_IGAIN" value="0.002"/> <!-- 0.005 -->
 
     <!-- Climb loop (pitch) -->
-    <define name="AUTO_THROTTLE_PITCH_OF_VZ_PGAIN" value="0.1"/> <!-- site diz 0.15 estava 0.02-->
+    <define name="AUTO_THROTTLE_PITCH_OF_VZ_PGAIN" value="0.15"/> <!-- site diz 0.15 estava 0.02-->
     <define name="AUTO_PITCH_PGAIN" value="0.02"/> <!-- 0.018  0.028    -0.038 -->
     <define name="AUTO_PITCH_DGAIN" value="0.004"/> <!-- 0.050 0.030    -0.036 -->
     <define name="AUTO_PITCH_IGAIN" value="0.000"/> <!-- 0.002 -->
 
     <!-- airspeed control -->
-    <define name="AUTO_AIRSPEED_SETPOINT" value="20.0"/>   <!-- 28 voa muito bem -->
+    <define name="AUTO_AIRSPEED_SETPOINT" value="24.0"/>   <!-- 28 voa muito bem -->
     <define name="AUTO_AIRSPEED_THROTTLE_PGAIN" value="0.01"/> <!--0.025 0.002   0.058-->
     <define name="AUTO_AIRSPEED_THROTTLE_DGAIN" value="0.02"/> <!--0.2-->
     <define name="AUTO_AIRSPEED_THROTTLE_IGAIN" value="0.01"/> <!--0.05-->
@@ -214,10 +214,10 @@
     <define name="AUTO_AIRSPEED_PITCH_DGAIN" value="0.0"/> <!--0.023 0.008 0.005 0.01-->
     <define name="AUTO_AIRSPEED_PITCH_IGAIN" value="0.0"/> <!-- 0.011 0.0103  0.003 0.022-->
     <define name="AIRSPEED_MAX" value="52"/>
-    <define name="AIRSPEED_MIN" value="14"/>
+    <define name="AIRSPEED_MIN" value="20"/>
 
     <!-- groundspeed control -->
-    <define name="AUTO_GROUNDSPEED_SETPOINT" value="18"/>
+    <define name="AUTO_GROUNDSPEED_SETPOINT" value="14"/>
     <define name="AUTO_GROUNDSPEED_PGAIN" value="0.0466"/> <!--1.0-->
     <define name="AUTO_GROUNDSPEED_IGAIN" value="0.372"/> <!--0.065-->
 
