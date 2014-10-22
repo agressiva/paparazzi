@@ -24,7 +24,8 @@
 		<define name="USE_ADC_0"/>  <!-- motor_temp_sensor-->
 		<define name="USE_ADC_1"/>  <!-- esc_temp_sensor-->
 		<define name="USE_ADC_6"/>  <!-- current_sensor-->
-                <define name="USE_AIRSPEED"/>		
+                <define name="USE_AIRSPEED_ETS"/>
+	        <!--<define name="USE_AIRSPEED_MS45XX"/> -->		
                 <define name="AIRSPEED_ETS_SYNC_SEND"/>
 		<define name="SENSOR_SYNC_SEND"/>
 		<configure name="AHRS_ALIGNER_LED" value="3"/>
@@ -151,8 +152,8 @@
 
   <section name="MISC">
     <define name="SENSOR_SYNC_SEND"/>
-    <define name="MINIMUM_AIRSPEED"      value="20." unit="m/s"/> <!-- nao tinha -->
-    <define name="NOMINAL_AIRSPEED"      value="27." unit="m/s"/> <!--28.muito bom - nao cai nas curvas a 50º --> 
+    <define name="MINIMUM_AIRSPEED"      value="16." unit="m/s"/> <!-- nao tinha -->
+    <define name="NOMINAL_AIRSPEED"      value="24." unit="m/s"/> <!--28.muito bom - nao cai nas curvas a 50º --> 
     <define name="MAXIMUM_AIRSPEED"      value="40." unit="m/s"/> <!-- nao tinha -->
     <define name="CARROT"                value="4."   unit="s"/>
     <define name="KILL_MODE_DISTANCE"    value="(1.5*MAX_DIST_FROM_HOME)"/>
@@ -180,7 +181,7 @@
     <define name="AUTO_PITCH_MIN_PITCH" value="-RadOfDeg(25.)"/>
 
     <!-- Climb loop (throttle) -->
-    <define name="AUTO_THROTTLE_CLIMB_THROTTLE_INCREMENT" value="0.20" unit="%/(m/s)"/> <!--site diz 0.25 - estava 0.1-->
+    <define name="AUTO_THROTTLE_CLIMB_THROTTLE_INCREMENT" value="0.1" unit="%/(m/s)"/> <!-- -0.2  0.1 site diz 0.25 -->
     <define name="AUTO_THROTTLE_PGAIN" value="0.004"/> <!-- -0.005 -->
     <define name="AUTO_THROTTLE_DGAIN" value="0.01"/> <!-- 0.005 -->
     <define name="AUTO_THROTTLE_IGAIN" value="0.004"/> <!-- 0.005 -->
@@ -192,7 +193,7 @@
     <define name="AUTO_PITCH_IGAIN" value="0.002"/>
 
     <!-- airspeed control -->
-    <define name="AUTO_AIRSPEED_SETPOINT" value="26."/>   <!-- 28 voa muito bem -->
+    <define name="AUTO_AIRSPEED_SETPOINT" value="24."/>   <!-- 28 voa muito bem -->
     <define name="AUTO_AIRSPEED_THROTTLE_PGAIN" value="0.003"/> <!--0.002   0.058-->
     <define name="AUTO_AIRSPEED_THROTTLE_DGAIN" value="0.006"/> <!--0.2-->
     <define name="AUTO_AIRSPEED_THROTTLE_IGAIN" value="0.003"/> <!--0.03-->
@@ -200,7 +201,7 @@
     <define name="AUTO_AIRSPEED_PITCH_DGAIN" value="0.005"/> <!--0.01-->
     <define name="AUTO_AIRSPEED_PITCH_IGAIN" value="0.0"/> <!--0.022-->
     <define name="AIRSPEED_MAX" value="52"/>
-    <define name="AIRSPEED_MIN" value="24"/>
+    <define name="AIRSPEED_MIN" value="16"/>
 
     <!-- groundspeed control -->
     <define name="AUTO_GROUNDSPEED_SETPOINT" value="10"/>
@@ -264,7 +265,6 @@
 		<load name="openlog.xml"/>
  		
 		<load name="airspeed_ms45xx_i2c.xml">
-			<define name="USE_AIRSPEED_MS45XX"/>
 			<define name="MS45XX_SYNC_SEND"/>
     			<define name="MS45XX_I2C_DEV" value="i2c0"/>
 			<define name="MS45XX_PRESSURE_RANGE" value="1"/>

@@ -96,7 +96,7 @@
         </papget>
         <papget type="message_field" display="text" x="5" y="129">
           <property name="scale" value="1."/>
-          <property name="field" value="ADC_TEMP:temp1"/>
+          <property name="field" value="TEMP_ADC:temp1"/>
           <property name="format" value="Temp engine: %.1f"/>
           <property name="size" value="15."/>
           <property name="color" value="orange"/>
@@ -164,7 +164,7 @@
         </papget>
         <papget type="message_field" display="text" x="5" y="108">
           <property name="scale" value="1."/>
-          <property name="field" value="ADC_TEMP:temp2"/>
+          <property name="field" value="TEMP_ADC:temp2"/>
           <property name="format" value="Temp ESC: %.1f"/>
           <property name="size" value="15."/>
           <property name="color" value="orange"/>
@@ -238,13 +238,6 @@
           <property name="format" value="Temp baro: %.1fc"/>
           <property name="size" value="15."/>
           <property name="color" value="orange"/>
-        </papget>
-        <papget type="message_field" display="text" x="5" y="136">
-          <property name="scale" value="1."/>
-          <property name="field" value="TMP_STATUS:temp"/>
-          <property name="format" value="Eng. Temp: %.1fc"/>
-          <property name="size" value="15."/>
-          <property name="color" value="yellow"/>
         </papget>
         <papget type="message_field" display="text" x="16" y="297">
           <property name="scale" value="1."/>
