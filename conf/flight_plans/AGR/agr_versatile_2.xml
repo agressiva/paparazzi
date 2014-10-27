@@ -292,6 +292,8 @@
       <call fun="nav_line_osam_block_run(7,8,nav_radius,50,50)"/>
       <deroute block="Standby"/>
     </block>
+<!-- ========================================= POLIGONO SURVEY ===================================== -->
+<!-- ======================================= 300m altura  10pts ================================== -->
     <block group="Psurvey" name="P-Survey1-10 230m 0deg" strip_button="PSurv1-10-230M0d">
       <set value="80" var="dc_gps_dist"/>
       <call fun="nav_survey_poly_osam_setup(WP_S1_1, 10, 230, 0)"/>
@@ -307,6 +309,8 @@
       <call fun="nav_survey_poly_osam_setup(WP_S1_1, 10, 230, 90)"/>
       <call fun="nav_survey_poly_osam_run()"/>
     </block>
+
+<!-- ======================================= 300m altura  15pts ================================== -->
     <block group="Psurvey" name="P-Survey1-15 230m 0deg" strip_button="PSurv1-15-230M0d">
       <set value="80" var="dc_gps_dist"/>
       <call fun="nav_survey_poly_osam_setup(WP_S1_1, 15, 230, 0)"/>
@@ -322,6 +326,27 @@
       <call fun="nav_survey_poly_osam_setup(WP_S1_1, 15, 230, 90)"/>
       <call fun="nav_survey_poly_osam_run()"/>
     </block>
+
+<!-- =========================================== 150m altura ===================================== -->
+    <block group="Psurvey" name="P-Survey1-10 150m 0deg" strip_button="PSurv1-10-150m0d">
+      <set value="44" var="dc_gps_dist"/>
+      <call fun="nav_survey_poly_osam_setup(WP_S1_1, 10, 110, 0)"/>
+      <call fun="nav_survey_poly_osam_run()"/>
+    </block>
+ 
+    <block group="Psurvey" name="P-Survey2-15 150m 10pt 45deg" strip_button="PSurv1-10-150m45d">
+      <set value="44" var="dc_gps_dist"/>
+      <call fun="nav_survey_poly_osam_setup(WP_S1_1, 10, 110, 45)"/>
+      <call fun="nav_survey_poly_osam_run()"/>
+    </block>
+
+    <block group="Psurvey" name="P-Survey2-15 150m 90deg" strip_button="PSurv1-10-150m90d">
+      <set value="44" var="dc_gps_dist"/>
+      <call fun="nav_survey_poly_osam_setup(WP_S1_1, 10, 110, 90)"/>
+      <call fun="nav_survey_poly_osam_run()"/>
+    </block>
+
+<!-- =========================================== 100m altura ===================================== -->
     <block group="Psurvey" name="P-Survey1-10 100m 0deg" strip_button="PSurv1-10-100M0d">
       <set value="28" var="dc_gps_dist"/>
       <call fun="nav_survey_poly_osam_setup(WP_S1_1, 10, 70, 0)"/>
@@ -337,21 +362,9 @@
       <call fun="nav_survey_poly_osam_setup(WP_S1_1, 10, 70, 90)"/>
       <call fun="nav_survey_poly_osam_run()"/>
     </block>
-    <block group="Psurvey" name="P-Survey1-10 150m 0deg" strip_button="PSurv1-10-150m0d">
-      <set value="44" var="dc_gps_dist"/>
-      <call fun="nav_survey_poly_osam_setup(WP_S1_1, 10, 110, 0)"/>
-      <call fun="nav_survey_poly_osam_run()"/>
-    </block>
-    <block group="Psurvey" name="P-Survey2-15 150m 90deg" strip_button="PSurv1-10-150m90d">
-      <set value="44" var="dc_gps_dist"/>
-      <call fun="nav_survey_poly_osam_setup(WP_S1_1, 10, 110, 90)"/>
-      <call fun="nav_survey_poly_osam_run()"/>
-    </block>
-    <block group="Psurvey" name="P-Survey2-15 150m 10pt 45deg" strip_button="PSurv1-10-150m45d">
-      <set value="44" var="dc_gps_dist"/>
-      <call fun="nav_survey_poly_osam_setup(WP_S1_1, 10, 110, 45)"/>
-      <call fun="nav_survey_poly_osam_run()"/>
-    </block>
+
+<!-- ========================================= =============== ===================================== -->
+
     <block group="extra_pattern" name="Survey S1-S2 230m LO" strip_button="Svy230-LO">
       <survey_rectangle grid="230" orientation="WE" wp1="S1" wp2="S2"/>
     </block>

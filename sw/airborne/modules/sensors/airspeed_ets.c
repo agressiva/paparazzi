@@ -55,7 +55,7 @@
 
 #define AIRSPEED_ETS_ADDR 0xEA
 #ifndef AIRSPEED_ETS_SCALE
-#define AIRSPEED_ETS_SCALE 1.8
+#define AIRSPEED_ETS_SCALE 1.6327 // original era 1.8
 #endif
 #ifndef AIRSPEED_ETS_OFFSET
 #define AIRSPEED_ETS_OFFSET 0
@@ -81,6 +81,7 @@ PRINT_CONFIG_VAR(AIRSPEED_ETS_START_DELAY)
 // Global variables
 uint16_t airspeed_ets_raw;
 uint16_t airspeed_ets_offset;
+float airspeed_ets_scale;
 bool_t airspeed_ets_valid;
 float airspeed_ets;
 int airspeed_ets_buffer_idx;
@@ -98,6 +99,7 @@ bool_t   airspeed_ets_delay_done;
 
 void airspeed_ets_init( void ) {
   int n;
+  airspeed_ets_scale = AIRSPEED_ETS_SCALE;
   airspeed_ets_raw = 0;
   airspeed_ets = 0.0;
   airspeed_ets_offset = 0;
@@ -166,10 +168,10 @@ void airspeed_ets_read_event( void ) {
     // Convert raw to m/s
 #ifdef AIRSPEED_ETS_REVERSE
     if (airspeed_ets_offset_init && airspeed_ets_raw < airspeed_ets_offset)
-      airspeed_tmp = AIRSPEED_ETS_SCALE * sqrtf( (float)(airspeed_ets_offset-airspeed_ets_raw) ) - AIRSPEED_ETS_OFFSET;
+      airspeed_tmp = airspeed_ets_scale * sqrtf( (float)(airspeed_ets_offset-airspeed_ets_raw) ) - AIRSPEED_ETS_OFFSET;
 #else
     if (airspeed_ets_offset_init && airspeed_ets_raw > airspeed_ets_offset)
-      airspeed_tmp = AIRSPEED_ETS_SCALE * sqrtf( (float)(airspeed_ets_raw-airspeed_ets_offset) ) - AIRSPEED_ETS_OFFSET;
+      airspeed_tmp = airspeed_ets_scale * sqrtf( (float)(airspeed_ets_raw-airspeed_ets_offset) ) - AIRSPEED_ETS_OFFSET;
 #endif
     else
       airspeed_tmp = 0.0;

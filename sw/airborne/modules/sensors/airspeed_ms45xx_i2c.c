@@ -118,7 +118,7 @@
  * Default of 0.15 should give cut-off freq of 1/(2*pi*tau) ~= 1Hz
  */
 #ifndef MS45XX_LOWPASS_TAU
-#define MS45XX_LOWPASS_TAU 0.15
+#define MS45XX_LOWPASS_TAU 0.25
 #endif
 
 struct AirspeedMs45xx ms45xx;

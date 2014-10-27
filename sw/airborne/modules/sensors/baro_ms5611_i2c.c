@@ -46,6 +46,10 @@
 #define MS5611_SLAVE_ADDR 0xEE
 #endif
 
+#if PERIODIC_TELEMETRY
+#include "subsystems/datalink/telemetry.h"
+#endif
+
 struct Ms5611_I2c baro_ms5611;
 
 float fbaroms, ftempms;
@@ -56,6 +60,13 @@ bool_t baro_ms5611_enabled;
 float baro_ms5611_r;
 float baro_ms5611_sigma2;
 
+static void baro_ms5611_downlink(void) {
+    ftempms = baro_ms5611.data.temperature / 100.;
+    fbaroms = baro_ms5611.data.pressure / 100.;
+    DOWNLINK_SEND_BARO_MS5611(DefaultChannel, DefaultDevice,
+                              &baro_ms5611.data.d1, &baro_ms5611.data.d2,
+                              &fbaroms, &ftempms);
+}
 
 void baro_ms5611_init(void) {
   ms5611_i2c_init(&baro_ms5611, &MS5611_I2C_DEV, MS5611_SLAVE_ADDR);
@@ -65,13 +76,16 @@ void baro_ms5611_init(void) {
 
   baro_ms5611_r = BARO_MS5611_R;
   baro_ms5611_sigma2 = BARO_MS5611_SIGMA2;
+#if PERIODIC_TELEMETRY
+  register_periodic_telemetry(DefaultPeriodic, "BARO_MS5611", baro_ms5611_downlink);
+#endif
 }
 
 void baro_ms5611_periodic_check( void ) {
 
   ms5611_i2c_periodic_check(&baro_ms5611);
 
-#if SENSOR_SYNC_SEND
+#if MS5611_SYNC_SEND
   // send coeff every 30s
   RunOnceEvery((30*BARO_MS5611_PERIODIC_CHECK_FREQ), baro_ms5611_send_coeff());
 #endif
@@ -96,12 +110,8 @@ void baro_ms5611_event( void ) {
     baro_ms5611_alt = pprz_isa_altitude_of_pressure(pressure);
     baro_ms5611_alt_valid = TRUE;
 
-#ifdef SENSOR_SYNC_SEND
-    ftempms = baro_ms5611.data.temperature / 100.;
-    fbaroms = baro_ms5611.data.pressure / 100.;
-    DOWNLINK_SEND_BARO_MS5611(DefaultChannel, DefaultDevice,
-                              &baro_ms5611.data.d1, &baro_ms5611.data.d2,
-                              &fbaroms, &ftempms);
+#ifdef MS5611_SYNC_SEND
+    baro_ms5611_downlink();
 #endif
   }
 }

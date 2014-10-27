@@ -25,6 +25,16 @@
     <define name="AIRSPEED_ETS_SYNC_SEND" description="flag to transmit the data as it is acquired"/>
   </doc>
 
+    <settings>
+    <dl_settings>
+      <dl_settings NAME="AIRSPEED_ETS">
+        <dl_setting min="1450" max="1750" step="1" var="airspeed_ets_offset" type="uint16" shortname="Offset" module="modules/sensors/airspeed_ets" param="OFFSET" persistent="true"/>
+        <dl_setting min="1.0" max="3.0" step="0.01" var="airspeed_ets_scale" type="float" shortname="AirScale" module="modules/sensors/airspeed_ets" param="AIRSPEED_SCALE" persistent="true"/>
+      </dl_settings>
+    </dl_settings>
+  </settings>
+  
+  
   <header>
     <file name="airspeed_ets.h"/>
   </header>

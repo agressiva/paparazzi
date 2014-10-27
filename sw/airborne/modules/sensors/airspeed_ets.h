@@ -46,6 +46,7 @@
 
 extern uint16_t airspeed_ets_raw;
 extern uint16_t airspeed_ets_offset;
+extern float airspeed_ets_scale;
 extern bool_t airspeed_ets_valid;
 extern float airspeed_ets;
 

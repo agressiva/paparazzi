@@ -28,7 +28,8 @@
       <message name="SURVEY"              period="2.1"/>
       <message name="GPS_SOL"             period="2.0"/>
       <message name="FBW_STATUS"          period="2"/>
-      <message name="AIRSPEED_MS45XX"     period="1.0"/>
+      <message name="AIRSPEED_MS45XX"     period="0.3"/>
+      <message name="BARO_MS5611"         period="0.5"/>
       <message name="TEMP_ADC"            period="1.0"/>
       <message name="CALIBRATION"         period="2.1"/>
     </mode>
@@ -59,13 +60,14 @@
       <message name="SURVEY"              period="2.1"/>
       <message name="GPS_SOL"             period="2.0"/>
       <message name="FBW_STATUS"          period="2"/>
-      <message name="AIRSPEED_MS45XX"      period="1.0"/>
+      <message name="AIRSPEED_MS45XX"     period="1.0"/>
+      <message name="BARO_MS5611"         period="1.0"/>
       <message name="TEMP_ADC"            period="1.0"/>
       <message name="CALIBRATION"         period="2.1"/>
-      <message name="TUNE_ROLL"        	  period="0.5"/>
-      <message name="H_CTL_A"        	  period="0.5"/>
-      <message name="V_CTL_N_PITCH"    	  period="0.5"/>
-      <message name="V_CTL_N_THROT"   	  period="0.5"/>
+      <message name="TUNE_ROLL"        	  period="0.8"/>
+      <message name="H_CTL_A"        	  period="0.7"/>
+      <message name="V_CTL_N_PITCH"    	  period="0.7"/>
+      <message name="V_CTL_N_THROT"   	  period="0.7"/>
     </mode>
 
     <mode name="minimal">

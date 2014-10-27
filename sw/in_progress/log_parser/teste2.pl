@@ -39,7 +39,7 @@ use Time::localtime;
 use Time::Piece;
 
 use Geo::Coordinates::UTM;
-#require "distance.pl";
+require "distance.pl";
 
 my $utw=0;
 my $cnt=0;
@@ -282,30 +282,30 @@ close GPXFILE;
 
 
 
-print "/n veio dos arrays /n";
-for ($n=0; $n < $size; $n = $n + 1){
-$timet= getnmeatime();
-	print $n, " ", @timet[$n], " ", @longitude[$n], " ", @latitude[$n], " ", @altitude[$n], "\n";
-   }
+#print "/n veio dos arrays /n";
+#for ($n=0; $n < $size; $n = $n + 1){
+#$timet= getnmeatime();
+#	print $n, " ", @timet[$n], " ", @longitude[$n], " ", @latitude[$n], " ", @altitude[$n], "\n";
+#   }
 
    
    
 #funciona
-opendir(DIR, $path) ;
-@arr = readdir(DIR);
-closedir(DIR);
-$index = 1;
-foreach(@arr) {
-$f = $_;
-@filename[$index]=$f;
-$f1= $path.$f;
-  $file = $f1;
- $sb = stat($file);
- $lt = localtime $sb->mtime;
- @lt[$index] = $lt;
- #print "filename: $f MTIME: " . localtime $sb->mtime;
- print "filename: $f MTIME: " . $lt;
- print "\n";
+#opendir(DIR, $path) ;
+#@arr = readdir(DIR);
+#closedir(DIR);
+#$index = 1;
+#foreach(@arr) {
+#$f = $_;
+#@filename[$index]=$f;
+#$f1= $path.$f;
+#  $file = $f1;
+# $sb = stat($file);
+# $lt = localtime $sb->mtime;
+# @lt[$index] = $lt;
+# #print "filename: $f MTIME: " . localtime $sb->mtime;
+# print "filename: $f MTIME: " . $lt;
+# print "\n";
  
 # my($se,$min,$hour,$mday,$mon,$year,$wday,$yday) = localtime $sb->mtime;
 #        print $file, " ", $loc, "\n";
@@ -314,15 +314,15 @@ $f1= $path.$f;
 #print $f, "     ",$hour," ",$min," ", $se," ",$mday," ",$mon," ",$year;
 #  print "\n";
 #}
-$index = $index + 1;
-}
+#$index = $index + 1;
+#}
 
 # funciona
-print "  \n\n\n\n\n\nveio do array\n";
-for ($n=0; $n < $index; $n = $n + 1){
+#print "  \n\n\n\n\n\nveio do array\n";
+#for ($n=0; $n < $index; $n = $n + 1){
 #$timet= getnmeatime();
-	print $n, " ", @filename[$n], "          ", @lt[$n], "\n";
-   }
+#	print $n, " ", @filename[$n], "          ", @lt[$n], "\n";
+#   }
 
 
 

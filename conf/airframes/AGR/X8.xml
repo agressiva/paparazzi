@@ -12,19 +12,18 @@
 	<firmware name="fixedwing">
 		<target name="ap" board="yapa_2.0"/>
 		<target name="sim" board="pc"/>
-    		<define name="AGR_CLIMB"/>
+    <define name="AGR_CLIMB"/>
 		<!--    <define name="LOITER_TRIM"/> -->
 		<!--    <define name="WIND_INFO"/> -->
 		<!--	<define name="WIND_INFO_RET"/>-->
 		<!--    <define name="STRONG_WIND"/> -->
                 <!--<define name="USE_CAM_DOOR"/> -->
-
-<define name="RADIO_DIFF"  value="RADIO_CH6"/>
+                <define name="RADIO_DIFF"  value="RADIO_CH6"/>
 		<define name="RADIO_SHOOT"  value="RADIO_CH7"/>		
 		<define name="USE_I2C0"/>
 		<define name="USE_ADC"/>
 		<define name="USE_ADC_0"/>  <!-- temp_sensor-->
-		<define name="USE_ADC_5"/>  <!-- extra bat sensor-->
+		<define name="USE_ADC_1"/>  <!-- temp_sensor-->
 		<define name="USE_ADC_6"/> <!-- current_sensor-->
                 <define name="USE_AIRSPEED"/>		
                 <define name="USE_AIRSPEED_ETS"/>		
@@ -99,7 +98,7 @@
 		<define name="AILEVON_ELEVATOR_RATE" value="0.70"/>
      		<define name="BRAKE_DEFLECTION_TIME" value="2.0" /> <!-- seconds -->
      		<define name="MAX_BRAKE_RATE" value="(MAX_PPRZ / (60 * BRAKE_DEFLECTION_TIME ))" />
-                <define name="AILERON_DIFF" value="0.4"/>
+                <define name="AILERON_DIFF" value="0.5"/>
 	</section>
 
   <command_laws>
@@ -110,8 +109,7 @@
     <let var="roll_diff_right" value="($roll > 0 ? 1 : AILERON_DIFF) * -$roll"/>
     <let var="roll_diff_left"  value="($roll > 0 ? AILERON_DIFF : 1) *  $roll"/>
  
-	<let var="diff" value="@DIFF_SW"/>
-
+   <let var="diff" value="@DIFF_SW"/>
    <set servo="AILEVON_RIGHT"  value="($diff >0 ? -$roll : $roll_diff_right) -$pitch "/>
    <set servo="AILEVON_LEFT"   value="($diff >0 ?  $roll : $roll_diff_left)  -$pitch "/>
  
@@ -124,7 +122,7 @@
   </command_laws>
 
   <section name="AUTO1" prefix="AUTO1_">
-    <define name="MAX_ROLL" value="45" unit="deg"/>  <!-- 50 -->
+    <define name="MAX_ROLL" value="60" unit="deg"/>  <!-- 50 -->
     <define name="MAX_PITCH" value="40" unit="deg"/> <!-- 35-->
   </section>
 
@@ -133,7 +131,7 @@
     <define name="GYRO_Q_NEUTRAL" value="0"/>
     <define name="GYRO_R_NEUTRAL" value="0"/>
 
-    <define name="ACCEL_X_NEUTRAL" value="-40"/> <!--tilt -->
+    <define name="ACCEL_X_NEUTRAL" value="280"/> <!--tilt -->
     <define name="ACCEL_Y_NEUTRAL" value="0"/> <!--roll -->
     <define name="ACCEL_Z_NEUTRAL" value="0"/>
     
@@ -157,21 +155,20 @@
   <section name="BAT">
     <define name="ADC_CHANNEL_CURRENT"   value="ADC_6"/>
     <define name="MilliAmpereOfAdc(adc)" value="(128*(adc-119))"/> <!-- sensor 100amp  -->
-    <define name="CATASTROPHIC_BAT_LEVEL" value="9.4" unit="V"/><!--12.4-->
-    <define name="CRITIC_BAT_LEVEL"       value="9.9" unit="V"/><!--10.0-->
-    <define name="LOW_BAT_LEVEL"          value="10.2" unit="V"/><!--13.8-->
-    <define name="MAX_BAT_LEVEL"          value="12.6" unit="V"/> <!--16.8-->
+    <define name="CATASTROPHIC_BAT_LEVEL" value="12.4" unit="V"/><!--12.4-->
+    <define name="CRITIC_BAT_LEVEL"       value="13.0" unit="V"/><!--10.0-->
+    <define name="LOW_BAT_LEVEL"          value="13.8" unit="V"/><!--13.8-->
+    <define name="MAX_BAT_LEVEL"          value="16.6" unit="V"/> <!--16.8-->
   </section>
 
   <section name="MISC">
     <define name="SENSOR_SYNC_SEND"/>
-    <define name="MINIMUM_AIRSPEED"      value="20." unit="m/s"/> <!-- nao tinha -->
-    <define name="NOMINAL_AIRSPEED"      value="24." unit="m/s"/> <!--28.muito bom - nao cai nas curvas a 50º --> 
+    <define name="MINIMUM_AIRSPEED"      value="16." unit="m/s"/> <!-- nao tinha -->
+    <define name="NOMINAL_AIRSPEED"      value="20." unit="m/s"/> <!--28.muito bom - nao cai nas curvas a 50º --> 
     <define name="MAXIMUM_AIRSPEED"      value="60." unit="m/s"/> <!-- nao tinha -->
-    <define name="CARROT"                value="4."   unit="s"/>
+    <define name="CARROT"                value="3."   unit="s"/>  <!-- era 4 em 23_10_2014 -->
     <define name="KILL_MODE_DISTANCE"    value="(1.2*MAX_DIST_FROM_HOME)"/>
     <define name="NO_XBEE_API_INIT"      value="TRUE"/>
-    <define name="TRIGGER_DELAY"         value="1."/> <!-- usado em nav_bomb-->
     <define name="DEFAULT_CIRCLE_RADIUS" value="80."/>
     <define name="UNLOCKED_HOME_MODE"    value="TRUE"/>
     <define name="RC_LOST_MODE"          value="PPRZ_MODE_AUTO2"/>
@@ -194,19 +191,22 @@
     <define name="AUTO_PITCH_MIN_PITCH" value="-RadOfDeg(25.)"/>
 
     <!-- Climb loop (throttle) -->
-    <define name="AUTO_THROTTLE_CLIMB_THROTTLE_INCREMENT" value="0.008" unit="%/(m/s)"/> <!-- 0.20 site 0.25 - estava 0.1-->
-    <define name="AUTO_THROTTLE_PGAIN" value="0.003"/> <!-- -0.005 -->
+    <define name="AUTO_THROTTLE_CLIMB_THROTTLE_INCREMENT" value="0.02" unit="%/(m/s)"/> <!-- 0.008 0.20 site 0.25 - estava 0.1-->
+    <define name="AUTO_THROTTLE_PGAIN" value="0.008"/> <!-- 0.08 0.008  0.005 -->
     <define name="AUTO_THROTTLE_DGAIN" value="0.01"/> <!-- 0.005 -->
-    <define name="AUTO_THROTTLE_IGAIN" value="0.002"/> <!-- 0.005 -->
+    <define name="AUTO_THROTTLE_IGAIN" value="0.001"/> <!-- 0.005 -->
 
     <!-- Climb loop (pitch) -->
     <define name="AUTO_THROTTLE_PITCH_OF_VZ_PGAIN" value="0.15"/> <!-- site diz 0.15 estava 0.02-->
-    <define name="AUTO_PITCH_PGAIN" value="0.02"/> <!-- 0.018  0.028    -0.038 -->
-    <define name="AUTO_PITCH_DGAIN" value="0.004"/> <!-- 0.050 0.030    -0.036 -->
-    <define name="AUTO_PITCH_IGAIN" value="0.000"/> <!-- 0.002 -->
+    <define name="AUTO_PITCH_PGAIN" value="0.012"/> <!-- 0.03 0.018  0.028    -0.038 -->
+    <define name="AUTO_PITCH_DGAIN" value="0.009"/> <!-- 0.015 0.050 0.030    -0.036 -->
+    <define name="AUTO_PITCH_IGAIN" value="0.012"/> <!-- 0.02  0.002 -->
+ 
+    <define name="PITCH_TRIM" value="0.0523600000001"/>
+   <!-- <define name="PITCH_TRIM" value="3"/> -->
 
     <!-- airspeed control -->
-    <define name="AUTO_AIRSPEED_SETPOINT" value="24.0"/>   <!-- 28 voa muito bem -->
+    <define name="AUTO_AIRSPEED_SETPOINT" value="20.0"/>   <!-- 28 voa muito bem -->
     <define name="AUTO_AIRSPEED_THROTTLE_PGAIN" value="0.01"/> <!--0.025 0.002   0.058-->
     <define name="AUTO_AIRSPEED_THROTTLE_DGAIN" value="0.02"/> <!--0.2-->
     <define name="AUTO_AIRSPEED_THROTTLE_IGAIN" value="0.01"/> <!--0.05-->
@@ -214,7 +214,7 @@
     <define name="AUTO_AIRSPEED_PITCH_DGAIN" value="0.0"/> <!--0.023 0.008 0.005 0.01-->
     <define name="AUTO_AIRSPEED_PITCH_IGAIN" value="0.0"/> <!-- 0.011 0.0103  0.003 0.022-->
     <define name="AIRSPEED_MAX" value="52"/>
-    <define name="AIRSPEED_MIN" value="20"/>
+    <define name="AIRSPEED_MIN" value="16"/>
 
     <!-- groundspeed control -->
     <define name="AUTO_GROUNDSPEED_SETPOINT" value="14"/>
@@ -235,14 +235,14 @@
     <define name="ROLL_MAX_SETPOINT" value="45" unit="deg"/>
     <define name="PITCH_MAX_SETPOINT" value="25" unit="deg"/>
     <define name="PITCH_MIN_SETPOINT" value="-25" unit="deg"/>
-    <define name="PITCH_PGAIN" value="6000."/> <!--8000 11000 8500-->
-    <define name="PITCH_IGAIN" value="50"/>
-    <define name="PITCH_DGAIN" value="400"/> <!-- 500 250 3.0-->
+    <define name="PITCH_PGAIN" value="5500."/> <!--6000 11000 8500-->
+    <define name="PITCH_IGAIN" value="0"/>
+    <define name="PITCH_DGAIN" value="300"/> <!-- 400 250 3.0-->
     <define name="PITCH_OF_ROLL" value="RadOfDeg(2.0)"/> <!-- nao tinha -->
     <define name="AILERON_OF_THROTTLE" value="0.0"/> <!-- nao tinha -->
     <define name="ELEVATOR_OF_ROLL" value="500"/>  <!-- quanto de elevador quando se da comando de aileron -->
-    <define name="ROLL_ATTITUDE_GAIN" value="10000"/> <!-- 13000 -->
-    <define name="ROLL_RATE_GAIN" value="2000"/> <!-- 600 -->
+    <define name="ROLL_ATTITUDE_GAIN" value="8600"/> <!-- 13000 -->
+    <define name="ROLL_RATE_GAIN" value="1600"/> <!-- 600 -->
     <define name="ROLL_IGAIN" value="50"/>
   </section>
 
@@ -267,7 +267,7 @@
     <define name="CLIMB_PITCH" value="RadOfDeg(15)"/>   <!-- 20 --> <!-- Pitch for Aggressive Climb -->
     <define name="DESCENT_THROTTLE" value="0.35"/><!-- Gaz for Aggressive Decent -->
     <define name="DESCENT_PITCH" value="RadOfDeg(-20)"/><!-- Pitch for Aggressive Decent -->
-    <define name="CLIMB_NAV_RATIO" value="0.3"/><!-- 0.8 Percent Navigation for Altitude Error Equal to Start Altitude -->
+    <define name="CLIMB_NAV_RATIO" value="0.7"/><!-- 0.8 Percent Navigation for Altitude Error Equal to Start Altitude -->
     <define name="DESCENT_NAV_RATIO" value="1.0"/>
   </section>
 
@@ -276,17 +276,12 @@
 <!--############################################################################################################-->
 
 	<modules>
-		<!--<load name="gasoline.xml">
-			<define name="USE_CUSTOM_TRIGGER"/>
-			<define name="TRIG_EXT_PINSEL"  	value="PINSEL1"/>
-			<define name="TRIG_EXT_PINSEL_VAL"  	value="0x02"/> 
-			<define name="TRIG_EXT_PINSEL_BIT" 	value="12"/> 	
-			<define name="TRIG_EXT_CHANNEL"  	value="0"/>
-		</load> -->
+	  	<load name="openlog.xml"/>
 		<load name="baro_ms5611_i2c.xml"/>
-		<load name="airspeed_ets.xml"/>
-		<load name="openlog.xml"/>
-		<load name="nav_catapult.xml"/>
+		<load name="airspeed_ets.xml">
+			<define name="AIRSPEED_ETS_OFFSET" value="5"/>
+		</load>
+
                 <load name="photogrammetry_calculator.xml" />
 		<load name="digital_cam.xml">
       		<define name="DC_SHUTTER_GPIO" value="GPIOB,GPIO22"/><!-- 18:aux 22:camsw-->		
@@ -296,7 +291,8 @@
 			<define name="DC_IMAGE_BUFFER" value="16535"/>
 		</load>
 		<!--<load name="cam_roll.xml"/>-->
-    		
+
+		<load name="nav_catapult.xml"/>
 		<load name="nav_line.xml"/>
 		<load name="nav_line_osam.xml"/>
 		<load name="nav_survey_polygon.xml"/>

@@ -25,14 +25,6 @@
  *
  */
 
-// PARA DEBUGAR
-#ifdef DEBUG_AGR
-#include <stdio.h>
-#include "mcu_periph/uart.h"
-#include "messages.h"
-#include "subsystems/datalink/downlink.h"
-#endif
-
 #include "firmwares/fixedwing/guidance/guidance_v.h"
 #include "firmwares/fixedwing/guidance/guidance_v_n.h"
 #include "state.h"
@@ -371,19 +363,8 @@ static inline void v_ctl_set_airspeed( void ) {
     + v_ctl_auto_airspeed_throttle_pgain * err_airspeed
     + v_ctl_auto_airspeed_throttle_dgain * d_err_airspeed
     + v_ctl_auto_airspeed_throttle_igain * v_ctl_auto_airspeed_throttle_sum_err;
-  
-    // -- ========================================================================================
-    #ifdef DEBUG_AGR
-    //fprintf(stderr,"Entry %f %f\n",(stateGetPositionUtm_f()->alt), (waypoints[SurveyEntryWP].a) );
-    send_pitch();
-    send_throttle();
-    //-- ========================================================================================
-    #endif
     
 }
-
-
-
 
 
 static inline void v_ctl_set_groundspeed( void ) {

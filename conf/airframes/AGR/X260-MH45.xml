@@ -19,7 +19,6 @@
 		<!--    <define name="WIND_INFO"/>    -->
 		<!--    <define name="WIND_INFO_RET"/>-->
 		<!--    <define name="STRONG_WIND"/>  -->
- <define name="DEBUG_AGR"/>
 		<define name="USE_CAM_DOOR"/>
 		<define name="RADIO_SHOOT"  value="RADIO_CH7"/>
 		<define name="USE_I2C0"/>
@@ -152,10 +151,13 @@
     <define name="BODY_TO_IMU_PSI"   value="RadOfDeg(0.)"/>
   </section>
 
+
+<!-- ======================================================================== -->
   <section name="INS" prefix="INS_">
     <define name="ROLL_NEUTRAL_DEFAULT"  value="0" unit="deg"/>
     <define name="PITCH_NEUTRAL_DEFAULT" value="8" unit="deg"/>
   </section>
+<!-- ======================================================================== -->
 
   <section name="BAT">
     <define name="ADC_CHANNEL_CURRENT"   value="ADC_6"/>
@@ -209,7 +211,7 @@
     <define name="AUTO_PITCH_IGAIN" value="0.003"/> <!-- 0.002 -->
 
     <!-- airspeed control -->
-    <define name="AUTO_AIRSPEED_SETPOINT" value="22."/>   <!-- 28 voa muito bem -->
+    <define name="AUTO_AIRSPEED_SETPOINT" value="22.0"/>   <!-- 28 voa muito bem -->
     <define name="AUTO_AIRSPEED_THROTTLE_PGAIN" value="0.003"/> <!--0.002   0.058-->
     <define name="AUTO_AIRSPEED_THROTTLE_DGAIN" value="0.006"/> <!--0.2-->
     <define name="AUTO_AIRSPEED_THROTTLE_IGAIN" value="0.003"/> <!--0.03-->
@@ -285,9 +287,8 @@
     			<define name="MS45XX_I2C_DEV" value="i2c0"/>
 			<define name="MS45XX_PRESSURE_RANGE" value="1"/>
 			<define name="MS45XX_OUTPUT_TYPE" value="0"/>
-			<define name="MS45XX_PRESSURE_OFFSET" value="8540.0"/> <!-- 8540.0 para tipo 0-->
+			<define name="MS45XX_PRESSURE_OFFSET" value="8542.0"/> <!-- 8540.0 para tipo 0-->
 		</load>
-
 		<load name="airspeed_ets.xml"/>
 
 		<load name="temp_adc.xml">
