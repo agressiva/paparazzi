@@ -26,10 +26,10 @@
  */
 
 #include "std.h"
-#include "state.h"
 #include "mcu_periph/i2c.h"
 #include "modules/sensors/airspeed_ms45xx_i2c.h"
 #include "filters/low_pass_filter.h"
+#include "subsystems/abi.h"
 
 #include "mcu_periph/uart.h"
 #include "messages.h"
@@ -37,6 +37,17 @@
 
 #if PERIODIC_TELEMETRY
 #include "subsystems/datalink/telemetry.h"
+#endif
+
+#ifndef USE_AIRSPEED_MS45XX
+#if USE_AIRSPEED
+#define USE_AIRSPEED_MS45XX TRUE
+PRINT_CONFIG_MSG("USE_AIRSPEED_MS45XX automatically set to TRUE")
+#endif
+#endif
+
+#if USE_AIRSPEED_MS45XX
+#include "state.h"
 #endif
 
 /** Default I2C device
@@ -189,6 +200,12 @@ void ms45xx_i2c_event(void)
        * ms45xx_temperature in 0.1 deg Celcius
        */
       ms45xx.temperature = ((uint32_t)temp_raw * 2000) / 2047 - 500;
+
+      // Send differential pressure via ABI
+      AbiSendMsgBARO_DIFF(MS45XX_SENDER_ID, &ms45xx.diff_pressure);
+      // Send temperature as float in deg Celcius via ABI
+      float temp = ms45xx.temperature / 10.0f;
+      AbiSendMsgTEMPERATURE(MS45XX_SENDER_ID, &temp);
 
       // Compute airspeed
       ms45xx.airspeed = sqrtf(Max(ms45xx.diff_pressure * ms45xx.airspeed_scale, 0));

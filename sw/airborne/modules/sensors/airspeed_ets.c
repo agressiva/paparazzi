@@ -47,10 +47,15 @@
 #include "subsystems/datalink/downlink.h"
 #include <math.h>
 
-#if !USE_AIRSPEED
-#ifndef AIRSPEED_ETS_SYNC_SEND
-#warning either set USE_AIRSPEED or AIRSPEED_ETS_SYNC_SEND to use ets_airspeed
+#ifndef USE_AIRSPEED_ETS
+#if USE_AIRSPEED
+#define USE_AIRSPEED_ETS TRUE
+PRINT_CONFIG_MSG("USE_AIRSPEED_ETS automatically set to TRUE")
 #endif
+#endif
+
+#if !USE_AIRSPEED_ETS && !AIRSPEED_ETS_SYNC_SEND
+#warning either set USE_AIRSPEED_ETS or AIRSPEED_ETS_SYNC_SEND to use airspeed_ets
 #endif
 
 #define AIRSPEED_ETS_ADDR 0xEA
@@ -189,7 +194,7 @@ void airspeed_ets_read_event( void ) {
 #if USE_AIRSPEED_ETS
     stateSetAirspeed_f(&airspeed_ets);
 #endif
-#ifdef AIRSPEED_ETS_SYNC_SEND
+#if AIRSPEED_ETS_SYNC_SEND
     DOWNLINK_SEND_AIRSPEED_ETS(DefaultChannel, DefaultDevice, &airspeed_ets_raw, &airspeed_ets_offset, &airspeed_ets);
 #endif
   } else {
