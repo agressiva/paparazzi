@@ -121,7 +121,7 @@ float v_ctl_auto_groundspeed_sum_err;
   float err_airspeed;
   float d_err_airspeed;
 #endif
-
+/*
 #if PERIODIC_TELEMETRY
 #include "subsystems/datalink/telemetry.h"
 static void send_throttle(void) {
@@ -150,7 +150,7 @@ static void send_pitch(void) {
 				 &v_ctl_auto_airspeed_pitch_sum_err);
 }
 #endif
-
+*/
 void v_ctl_init( void ) {
   /* mode */
   v_ctl_mode = V_CTL_MODE_MANUAL;
@@ -205,10 +205,12 @@ void v_ctl_init( void ) {
   v_ctl_auto_groundspeed_pgain = V_CTL_AUTO_GROUNDSPEED_PGAIN;
   v_ctl_auto_groundspeed_igain = V_CTL_AUTO_GROUNDSPEED_IGAIN;
   v_ctl_auto_groundspeed_sum_err = 0.;
-#if PERIODIC_TELEMETRY
+/*
+  #if PERIODIC_TELEMETRY
   register_periodic_telemetry(DefaultPeriodic, "V_CTL_N_THROT", send_throttle);
   register_periodic_telemetry(DefaultPeriodic, "V_CTL_N_PITCH", send_pitch);
 #endif  
+*/
 #endif
 
   controlled_throttle = 0.;

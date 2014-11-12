@@ -98,7 +98,7 @@ float calc_lm35(int16_t raw_temp)
   return ((float)raw_temp * (3300.0f / 1024.0f) / 10.0f);
 }
 
-static void temp_adc_downlink(void)
+static void temp_adc_downlink(struct transport_tx *trans, struct device *dev)
 {
   pprz_msg_send_TEMP_ADC(trans, dev, AC_ID, &temp_c1, &temp_c2, &temp_c3);
 }
