@@ -1923,7 +1923,11 @@
     <field name="wn"          type="float"/>
   </message>
 
-  <message name="V_CTL_N_PITCH" id="215">
+  <message name="INFO_MSG" id="215">
+    <field name="msg" type="char[]"/>
+  </message>
+
+  <message name="V_CTL_N_PITCH" id="216">
     <field name="v_ctl_pitch_setpoint" type="float"/>
     <field name="v_ctl_climb_setpoint" type="float"/>
     <field name="v_ctl_pitch_trim" type="float"/>
@@ -1935,7 +1939,7 @@
     <field name="v_ctl_auto_airspeed_pitch_sum_err" type="float"/>
   </message>
     
-  <message name="V_CTL_N_THROT" id="216">
+  <message name="V_CTL_N_THROT" id="217">
     <field name="controlled_throttle"  type="float"/>
     <field name="v_ctl_auto_throttle_cruise_throttle" type="float"/>
     <field name="v_ctl_climb_setpoint" type="float"/>
@@ -1946,19 +1950,9 @@
     <field name="d_err_airspeed" type="float"/>
     <field name="v_ctl_auto_airspeed_throttle_sum_err" type="float"/>
   </message>
-    
-    <!-- USADO PARA DEBUGAT POLYGON SURVEY ENTRY -->
-  <message name="DEBUG_POLYSURVEY" id="217">
-    <field name="NavQdrClose"     type="uint8"/>
-    <field name="SurveyCircleQdr" type="float"/>
-    <field name="NavCirQdr"       type="float"/>
-    <field name="NavCircNoRev"    type="float"/>
-    <field name="StateGetpos"     type="float"/>
-    <field name="WaypointEntry"   type="float"/>
-  </message>
-  
- <!--217 is free -->
- <!--218 is free -->
+
+  <!--218 is free -->
+
   <message name="WEATHER" id="219">
     <field name="p_amb" type="float" unit="Pa" alt_unit="mBar" alt_unit_coef="0.01"/>
     <field name="t_amb" type="float" unit="deg C"/>
