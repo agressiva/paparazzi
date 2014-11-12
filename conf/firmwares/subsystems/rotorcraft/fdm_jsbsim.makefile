@@ -58,18 +58,13 @@ nps.srcs += $(NPSDIR)/nps_main.c                 \
        $(NPSDIR)/nps_ivy_common.c                \
        $(NPSDIR)/nps_ivy_rotorcraft.c            \
        $(NPSDIR)/nps_flightgear.c                \
+       $(NPSDIR)/nps_ivy_mission_commands.c
 
 # for geo mag calculation
 nps.srcs += math/pprz_geodetic_wmm2010.c
 
-nps.CFLAGS += -DDOWNLINK -DPERIODIC_TELEMETRY -DDOWNLINK_TRANSPORT=IvyTransport -DDefaultPeriodic='&telemetry_Main'
-nps.srcs += $(SRC_ARCH)/ivy_transport.c
+nps.CFLAGS += -DDOWNLINK -DPERIODIC_TELEMETRY -DDOWNLINK_TRANSPORT=ivy_tp -DDOWNLINK_DEVICE=ivy_tp -DDefaultPeriodic='&telemetry_Main'
+nps.srcs += subsystems/datalink/ivy_transport.c
 nps.srcs += subsystems/datalink/downlink.c subsystems/datalink/telemetry.c
 nps.srcs += $(SRC_FIRMWARE)/rotorcraft_telemetry.c
 nps.srcs += $(SRC_FIRMWARE)/datalink.c
-
-USE_MISSION_COMMANDS_IN_NPS ?= 0
-ifeq ($(USE_MISSION_COMMANDS_IN_NPS), 1)
-nps.srcs += $(NPSDIR)/nps_ivy_mission_commands.c
-nps.CFLAGS += -DUSE_MISSION_COMMANDS_IN_NPS
-endif
