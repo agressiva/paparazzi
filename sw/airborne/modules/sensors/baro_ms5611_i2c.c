@@ -60,10 +60,10 @@ bool_t baro_ms5611_enabled;
 float baro_ms5611_r;
 float baro_ms5611_sigma2;
 
-static void baro_ms5611_downlink(void) {
+static void baro_ms5611_downlink(struct transport_tx *trans, struct link_device *dev) {
     ftempms = baro_ms5611.data.temperature / 100.;
     fbaroms = baro_ms5611.data.pressure / 100.;
-    DOWNLINK_SEND_BARO_MS5611(DefaultChannel, DefaultDevice,
+    pprz_msg_send_BARO_MS5611(trans, dev, AC_ID, 
                               &baro_ms5611.data.d1, &baro_ms5611.data.d2,
                               &fbaroms, &ftempms);
 }
@@ -113,7 +113,7 @@ void baro_ms5611_event( void ) {
     baro_ms5611_alt_valid = TRUE;
 
 #ifdef MS5611_SYNC_SEND
-    baro_ms5611_downlink();
+   baro_ms5611_downlink(&(DefaultChannel).trans_tx, &(DefaultDevice).device);
 #endif
   }
 }
