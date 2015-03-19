@@ -261,7 +261,7 @@
     <define name="ALT_SHIFT_PLUS_PLUS" value="5"/>
     <define name="ALT_SHIFT_PLUS" value="1"/>
     <define name="ALT_SHIFT_MINUS" value="-1"/>
-    <define name="SPEECH_NAME" value="Quad NavGo"/>
+    <define name="SPEECH_NAME" value="Quad"/>
   </section>
 
   <section name="SIMULATOR" prefix="NPS_">

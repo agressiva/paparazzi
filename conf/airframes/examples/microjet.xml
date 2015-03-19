@@ -160,6 +160,9 @@
     <target name="sim" 			board="pc" />
     <target name="ap" 			board="tiny_1.1"/>
 
+    <define name="WIND_INFO"/>
+    <define name="WIND_INFO_RET"/>
+
     <define name="AGR_CLIMB" />
     <define name="LOITER_TRIM" />
 
