@@ -53,9 +53,7 @@ static inline void on_gyro_event(void);
 static inline void on_accel_event(void);
 static inline void on_mag_event(void);
 
-#define __DefaultAhrsRegister(_x) _x ## _register()
-#define _DefaultAhrsRegister(_x) __DefaultAhrsRegister(_x)
-#define DefaultAhrsRegister() _DefaultAhrsRegister(DefaultAhrsImpl)
+uint16_t datalink_time = 0;
 
 int main(void)
 {
@@ -80,8 +78,6 @@ static inline void main_init(void)
   ahrs_init();
   downlink_init();
 
-  DefaultAhrsRegister();
-
   mcu_int_enable();
 }
 
@@ -91,6 +87,7 @@ static inline void main_periodic_task(void)
     imu_periodic();
   }
   RunOnceEvery(10, { LED_PERIODIC();});
+  RunOnceEvery(PERIODIC_FREQUENCY, { datalink_time++; });
   main_report();
 }
 
@@ -142,5 +139,5 @@ static inline void main_report(void)
 {
   RunOnceEvery(512, DOWNLINK_SEND_ALIVE(DefaultChannel, DefaultDevice, 16, MD5SUM));
 
-  periodic_telemetry_send_Main(&(DefaultChannel).trans_tx, &(DefaultDevice).device);
+  periodic_telemetry_send_Main(DefaultPeriodic, &(DefaultChannel).trans_tx, &(DefaultDevice).device);
 }

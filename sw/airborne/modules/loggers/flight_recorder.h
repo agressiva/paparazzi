@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2015 Felix Ruess <felix.ruess@gmail.com>
+ * Copyright (C) 2015 Gautier Hattenberger <gautier.hattenberger@enac.fr>
  *
- * This file is part of paparazzi.
+ * This file is part of paparazzi
  *
  * paparazzi is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,25 +14,27 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Paparazzi; see the file COPYING.  If not, see
+ * along with paparazzi; see the file COPYING.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 /**
- * @file subsystems/ahrs/ahrs_float_cmpl_wrapper.h
- *
- * Paparazzi specific wrapper to run floating point complementary filter.
+ * @file "modules/loggers/flight_recorder.h"
+ * @author Gautier Hattenberger <gautier.hattenberger@enac.fr>
+ * Record flight data according to your telemetry file
  */
 
-#ifndef AHRS_FLOAT_CMPL_WRAPPER_H
-#define AHRS_FLOAT_CMPL_WRAPPER_H
+#ifndef FLIGHT_RECORDER_H
+#define FLIGHT_RECORDER_H
 
-#include "subsystems/ahrs/ahrs_float_cmpl.h"
+/** Init function
+ */
+extern void flight_recorder_init(void);
 
-#ifndef PRIMARY_AHRS
-#define PRIMARY_AHRS ahrs_fc
+/** Periodic function
+ *
+ * should be called at TELEMETRY_FREQUENCY
+ */
+extern void flight_recorder_periodic(void);
+
 #endif
 
-extern void ahrs_fc_register(void);
-
-#endif /* AHRS_FLOAT_CMPL_WRAPPER_H */
