@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE sectors SYSTEM "../sectors.dtd">
+
+<sectors>
+ <sector name="trevo_extra">
+    <polygon>
+     <point pos="WGS84    -12.3567041125 -44.9848850242"/>
+     <point pos="WGS84    -12.3564683562 -44.9869961762"/>
+     <point pos="WGS84    -12.3804664406 -44.9860632739"/>
+     <point pos="WGS84    -12.3805259271 -44.9642912057"/>
+     <point pos="WGS84    -12.3761536675 -44.9706860071"/>
+     <point pos="WGS84    -12.3730901114 -44.9731546979"/>
+     <point pos="WGS84    -12.3680946239 -44.9757710360"/>
+     <point pos="WGS84    -12.3632217377 -44.9765102781"/>
+     <point pos="WGS84    -12.3613000381 -44.9770395376"/>
+     <point pos="WGS84    -12.3595721667 -44.9785876143"/>
+     <point pos="WGS84    -12.3576716159 -44.9820002180"/>
+     <point pos="WGS84    -12.3567041125 -44.9848850242"/>
+    </polygon>
+  </sector>
+</sectors>

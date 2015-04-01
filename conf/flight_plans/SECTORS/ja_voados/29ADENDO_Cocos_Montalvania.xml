@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE sectors SYSTEM "../sectors.dtd">
+
+<sectors>
+ <sector name="adendo 29">
+    <polygon>  
+     <point pos="WGS84    -14.2504238082 -44.5228399507"/>
+     <point pos="WGS84    -14.2698969193 -44.5211795402"/>
+
+     <point pos="WGS84    -14.2697419059 -44.5190531453"/>
+     <point pos="WGS84    -14.2502514632 -44.5207152158"/>
+    </polygon>
+  </sector>
+</sectors>

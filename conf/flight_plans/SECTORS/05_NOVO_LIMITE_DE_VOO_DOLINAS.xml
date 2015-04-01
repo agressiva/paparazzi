@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE sectors SYSTEM "../sectors.dtd">
+
+<sectors>
+ <sector name="42">
+    <polygon>
+     <point pos="WGS84    -12.3879994687 -44.8745145554"/>
+     <point pos="WGS84    -12.3664655005 -44.8745248385"/>
+     <point pos="WGS84    -12.3664820454 -44.9179082166"/>
+     <point pos="WGS84    -12.3880160433 -44.9179014889"/>
+     <point pos="WGS84    -12.3879994687 -44.8745145554"/>
+    </polygon>
+  </sector>
+</sectors>
