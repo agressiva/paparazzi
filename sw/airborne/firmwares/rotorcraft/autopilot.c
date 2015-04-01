@@ -453,10 +453,11 @@ void autopilot_set_mode(uint8_t new_autopilot_mode)
         break;
       case AP_MODE_RATE_RC_CLIMB:
       case AP_MODE_ATTITUDE_RC_CLIMB:
+      case AP_MODE_HOVER_CLIMB:
         guidance_v_mode_changed(GUIDANCE_V_MODE_RC_CLIMB);
         break;
       case AP_MODE_ATTITUDE_CLIMB:
-      case AP_MODE_HOVER_CLIMB:
+      //case AP_MODE_HOVER_CLIMB:
         guidance_v_mode_changed(GUIDANCE_V_MODE_CLIMB);
         break;
       case AP_MODE_RATE_Z_HOLD:

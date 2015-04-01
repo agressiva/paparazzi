@@ -24,6 +24,12 @@
  *
  */
 
+#include "std.h"
+#include "mcu_periph/uart.h"
+#include "messages.h"
+#include "subsystems/datalink/downlink.h"
+
+
 #include "modules/nav/nav_survey_poly_osam.h"
 
 #include "firmwares/fixedwing/nav.h"
@@ -77,10 +83,27 @@ bool_t nav_survey_poly_osam_setup_towards(uint8_t FirstWP, uint8_t Size, float S
   float dy = waypoints[SecondWP].y - waypoints[FirstWP].y;
   if (dx == 0.0f) { dx = 0.000000001; }
   float ang = atan(dy / dx);
+  ang = DegOfRad(ang);
+  
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++  
+
+  float wind_ang;
+  struct FloatVect2 *wind = stateGetHorizontalWindspeed_f();
+  wind_ang = atan(wind->y / wind->x);// + M_PI;  
+  wind_ang = DegOfRad(wind_ang) ;
+ 
+
+  uint32_t t1 = 1;
+  int32_t t2 =2;
+  
+    DOWNLINK_SEND_BARO_BMP85(DefaultChannel, DefaultDevice,&t2,&t2,&t1, &ang,  &wind_ang);
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++  
+  
   //if values passed, use it.
   if (Size == 0) {Size = Poly_Size;}
   if (Sweep == 0) {Sweep = Poly_Sweep;}
-  return nav_survey_poly_osam_setup(FirstWP, Size, Sweep, DegOfRad(ang));
+  return nav_survey_poly_osam_setup(FirstWP, Size, Sweep, ang);
 }
 
 struct Point2D {float x; float y;};
