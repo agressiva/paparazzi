@@ -90,9 +90,7 @@ void led_safety_status_periodic(void) {
   if (!stateIsAttitudeValid()) {
     RunOnceEvery(5, {beep=3;});
   }
-  else
-  #ifdef MIN_BAT_LEVEL
-  if  ((autopilot_mode != AP_MODE_KILL) && (electrical.vsupply < ((LOW_BAT_LEVEL) * 10))){  //bateria no nivel minimo
+  else if  ((autopilot_mode != AP_MODE_KILL) && (electrical.vsupply < ((LOW_BAT_LEVEL) * 10))){  //bateria no nivel minimo
     RunOnceEvery(5, {LED_TOGGLE(SAFETY_WARNING_LED);beep=4;});
   }
   else if  ((autopilot_mode != AP_MODE_KILL) && (electrical.vsupply < ((CRITIC_BAT_LEVEL) * 10))){  //bateria no nivel minimo
@@ -101,9 +99,7 @@ void led_safety_status_periodic(void) {
   else if  ((autopilot_mode != AP_MODE_KILL) && (electrical.vsupply < ((CRITIC_BAT_LEVEL - 0.4) * 10))){ // bateria no nivel critico
      RunOnceEvery(20, {LED_TOGGLE(SAFETY_WARNING_LED);beep=4;});
   }
-  else
-#endif
-  if (radio_control.status == RC_LOST || radio_control.status == RC_REALLY_LOST){ //radio desligado
+  else if (radio_control.status == RC_LOST || radio_control.status == RC_REALLY_LOST){ //radio desligado
   //  RunXTimesEvery(  0,  60, 30, 2, {LED_TOGGLE(SAFETY_WARNING_LED);BEEPER_TOGGLE;});  //0,60,30,7
   //  RunXTimesEvery(130, 130, 60, 1, {LED_TOGGLE(SAFETY_WARNING_LED);BEEPER_TOGGLE;}); //130,130,60,6
    RunXTimesEvery(  0,  60, 30, 2, { beep = 40;});
