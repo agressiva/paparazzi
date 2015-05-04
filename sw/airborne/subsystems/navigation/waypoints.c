@@ -87,7 +87,7 @@ void nav_move_waypoint_enu_i(uint8_t wp_id, struct EnuCoor_i *new_pos)
 
 /**
  * Set only local XY coordinates of waypoint without update altitude.
- * @TODO: how to handle global waypoints?
+ * @todo: how to handle global waypoints?
  */
 void nav_set_waypoint_xy_i(uint8_t wp_id, int32_t x, int32_t y)
 {
@@ -97,6 +97,26 @@ void nav_set_waypoint_xy_i(uint8_t wp_id, int32_t x, int32_t y)
     /* also update ENU float representation */
     waypoints[wp_id].enu_f.x = POS_FLOAT_OF_BFP(waypoints[wp_id].enu_i.x);
     waypoints[wp_id].enu_f.y = POS_FLOAT_OF_BFP(waypoints[wp_id].enu_i.y);
+    nav_globalize_local_wp(wp_id);
+  }
+}
+
+void nav_set_waypoint_alt_i(uint8_t wp_id, int32_t alt)
+{
+  if (wp_id < nb_waypoint) {
+    waypoints[wp_id].enu_i.z = alt;
+    /* also update ENU float representation */
+    waypoints[wp_id].enu_f.z = POS_FLOAT_OF_BFP(waypoints[wp_id].enu_i.z);
+    nav_globalize_local_wp(wp_id);
+  }
+}
+
+void nav_set_waypoint_alt_f(uint8_t wp_id, float alt)
+{
+  if (wp_id < nb_waypoint) {
+    waypoints[wp_id].enu_f.z = alt;
+    /* also update ENU fixed point representation */
+    waypoints[wp_id].enu_i.z = POS_BFP_OF_REAL(waypoints[wp_id].enu_f.z);
     nav_globalize_local_wp(wp_id);
   }
 }
