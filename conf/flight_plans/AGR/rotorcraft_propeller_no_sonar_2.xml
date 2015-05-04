@@ -1,0 +1,116 @@
+<!DOCTYPE flight_plan SYSTEM "../flight_plan.dtd">
+
+<flight_plan alt="25" ground_alt="0" lat0="-29.997720" lon0="-51.123426" max_dist_from_home="200" name="Propeller AERiAL" security_height="5">
+  <header>
+#include "autopilot.h"
+#include "subsystems/ins.h"
+#include "subsystems/ahrs.h"
+#include "subsystems/datalink/datalink.h"
+</header>
+  <waypoints>
+    <waypoint name="HOME" x="0.0" y="0.0"/>
+    <waypoint name="CLIMB" x="0.0" y="5.0"/>
+    <waypoint name="STDBY" x="0.1" y="6.3"/>
+    <waypoint name="CAM" x="29.1" y="-1.7"/>
+    <waypoint name="p1" x="9.4" y="4.7"/>
+    <waypoint name="p2" x="15.9" y="7.4"/>
+    <waypoint name="p3" x="10.7" y="9.9"/>
+    <waypoint name="p4" x="5.3" y="11.3"/>
+    <waypoint name="p5" x="0.3" y="12.3"/>
+    <waypoint name="p6" x="-5.1" y="13.4"/>
+    <waypoint alt="20.0" name="p7" x="0.6" y="13.5"/>
+    <waypoint alt="20.0" name="p8" x="11.2" y="11.1"/>
+    <waypoint name="p9" x="19.0" y="13.9"/>
+    <waypoint name="p10" x="24.7" y="6.5"/>
+    <waypoint name="TD" x="5.6" y="-10.9"/>
+  </waypoints>
+  <blocks>
+    <block name="Wait GPS">
+      <call fun="NavKillThrottle()"/>
+      <while cond="((!GpsFixValid()) || (gps.pacc > 1600))"/>
+    </block>
+    <block name="Geo init">
+      <while cond="LessThan(NavBlockTime(), 15)"/>
+      <call fun="NavSetGroundReferenceHere()"/>
+    </block>
+    <block name="Holding point">
+      <call fun="NavKillThrottle()"/>
+      <attitude pitch="0" roll="0" throttle="0" until="FALSE" vmode="throttle"/>
+    </block>
+    <block name="Start Engine">
+      <call fun="NavResurrect()"/>
+      <attitude pitch="0" roll="0" throttle="0" until="stage_time > 5" vmode="throttle"/>
+    </block>
+    <block name="Takeoff" strip_button="Takeoff" strip_icon="takeoff.png">
+      <exception cond="stateGetPositionEnu_f()->z > 5.0" deroute="Standby"/>
+      <call fun="NavSetAltitudeReferenceHere()"/>
+      <call fun="NavSetWaypointHere(WP_STDBY)"/>
+      <call fun="NavSetWaypointHere(WP_CLIMB)"/>
+      <set value="0" var="autopilot_flight_time"/>
+      <exception cond="block_time > 30" deroute="land here"/>
+      <stay climb="0.9" vmode="climb" wp="CLIMB"/>
+    </block>
+    <block name="Standby" strip_button="Standby" strip_icon="home.png">
+      <stay wp="STDBY"/>
+    </block>
+    <block name="stay_p1">
+      <stay wp="p1"/>
+    </block>
+    <block name="go_p2">
+      <go wp="p2"/>
+      <deroute block="stay_p1"/>
+    </block>
+    <block name="line_p1_p2">
+      <go from="p1" hmode="route" wp="p2"/>
+      <stay until="stage_time>10" wp="p2"/>
+      <go from="p2" hmode="route" wp="p1"/>
+      <deroute block="stay_p1"/>
+    </block>
+    <block name="route" strip_button="Route" strip_icon="path.png">
+      <go wp="STDBY"/>
+      <stay until="stage_time>5" wp="STDBY"/>
+      <go wp="p1"/>
+      <stay until="stage_time>3" wp="p1"/>
+      <go from="p1" hmode="route" wp="p2"/>
+      <stay until="stage_time>3" wp="p2"/>
+      <go from="p2" hmode="route" wp="p3"/>
+      <stay until="stage_time>3" wp="p3"/>
+      <go from="p3" hmode="route" wp="p4"/>
+      <stay until="stage_time>3" wp="p4"/>
+      <go from="p4" hmode="route" wp="p5"/>
+      <stay until="stage_time>3" wp="p5"/>
+      <go from="p5" hmode="route" wp="p6"/>
+      <stay until="stage_time>3" wp="p6"/>
+      <go from="p6" hmode="route" wp="p7"/>
+      <circle radius="8" until="stage_time>30" wp="p7"/>
+      <circle radius="8" until="stage_time>30" wp="p8"/>
+      <go wp="STDBY"/>
+      <stay until="stage_time>10" wp="STDBY"/>
+      <deroute block="land here"/>
+    </block>
+    <block name="circle">
+      <circle radius="nav_radius" wp="CAM"/>
+    </block>
+    <block name="circle CAM" pre_call="nav_set_heading_towards_waypoint(WP_CAM)">
+      <circle radius="nav_radius" wp="CAM"/>
+    </block>
+    <block name="land here" strip_button="Land Here" strip_icon="land-right.png">
+      <call fun="NavSetWaypointHere(WP_TD)"/>
+    </block>
+    <block name="land">
+      <go wp="TD"/>
+    </block>
+    <block name="flare">
+      <exception cond="NavDetectGround()" deroute="Holding point"/>
+      <exception cond="!nav_is_in_flight()" deroute="landed"/>
+      <call fun="NavStartDetectGround()"/>
+      <stay climb="-1.2" vmode="climb" wp="TD"/>
+    </block>
+    <block name="landed">
+      <attitude pitch="0" roll="0" throttle="0" until="FALSE" vmode="throttle"/>
+    </block>
+    <block name="final">
+      <while cond="TRUE"/>
+    </block>
+  </blocks>
+</flight_plan>

@@ -1,0 +1,57 @@
+<!DOCTYPE settings SYSTEM "../settings.dtd">
+
+<settings>
+  <dl_settings>
+  
+    <dl_settings name="Survey">
+
+      <dl_settings NAME="Survey">
+        <dl_setting min="10" max="500" step="1" var="sweep" type="float" shortname="Sweep" module="modules/nav/nav_survey_rectangle_rotorcraft"/>
+	<dl_setting max="255" min="0" step="1" var="dc_distance_interval" shortname="dist" param="DC_AUTOSHOOT_DISTANCE_INTERVAL" unit="meter"/>
+<!--	<dl_setting min="0" max="20" step="1" var="Poly_Size" type="uint8_t" shortname="Size" module="modules/nav/nav_survey_poly_osam"/>
+	<dl_setting var="rotorcraft_cam_mode" MIN="0" STEP="1" MAX="1" module="cam_control/rotorcraft_cam" shortname="mode" values="NS|WE" handler="SetCamMode"/> -->
+      </dl_settings>
+      
+      <dl_settings name="dc">
+        <dl_setting max="255" min="0" step="1" module="digital_cam/dc" var="0" handler="send_command" shortname="Shutter">
+          <strip_button name="Photo" icon="digital-camera.png" value="32" group="maindc"/>
+          <strip_button name="Power" icon="off.png" value="111" group="maindc"/>
+          <strip_button name="ZoomIn" icon="zoom.png" value="116" group="dczoom"/>
+          <strip_button name="ZoomOut" icon="zoom.png" value="119" group="dczoom"/>
+        </dl_setting>
+
+        <dl_setting max="3" min="0" step="1" var="dc_autoshoot" values="STOP|PERIODIC|DISTANCE|EXT_TRIG">
+          <strip_button name="Start Autoshoot" icon="on.png" value="1" group="dcauto"/>
+          <strip_button name="Stop Autoshoot" icon="off.png" value="0" group="dcauto"/>
+        </dl_setting>
+
+        <dl_setting max="255" min="1" step="1" var="dc_autoshoot_quartersec_period" shortname="Periodic" param="DC_AUTOSHOOT_QUARTERSEC_PERIOD" unit="quarter-sec"/>
+        <dl_setting max="255" min="0" step="1" var="dc_distance_interval" shortname="dist" param="DC_AUTOSHOOT_DISTANCE_INTERVAL" unit="meter"/>
+
+        <dl_setting max="250" min="0" step="5" module="digital_cam/dc" var="dc_survey_interval" handler="Survey" shortname="Survey-Interval"/>
+        <dl_setting max="90" min="5" step="5" module="digital_cam/dc" var="dc_circle_interval" handler="Circle" shortname="Circle-Interval"/>
+        <dl_setting max="1" min="0" step="1" var="dc_cam_tracing" shortname="Cam-Tracing"/>
+      </dl_settings>
+
+<!--      
+      <dl_settings NAME="CAM">
+        <dl_setting var="rotorcraft_cam_mode" MIN="0" STEP="1" MAX="3" module="cam_control/rotorcraft_cam" shortname="mode" values="NONE|MAN|HEADING|WP" handler="SetCamMode">
+          <strip_button name="CN" value="0" group="cam_mode1"/>
+          <strip_button name="CM" value="1" group="cam_mode1"/>
+          <strip_button name="CH" value="2" group="cam_mode2"/>
+          <strip_button name="CWP" value="3" group="cam_mode2"/>
+          <key_press key="F1" value="0"/>
+          <key_press key="F2" value="1"/>
+        </dl_setting>
+        <dl_setting var="rotorcraft_cam_tilt_pwm" min="1000" step="1" max="2500" shortname="tilt_pwm"/>
+        <dl_setting var="rotorcraft_cam_tilt" min="-90" step="1" max="0" shortname="tilt" alt_unit="deg" alt_unit_coef="0.0139882">
+          <strip_button name="Look Foreward" icon="lookfore.png" value="0" group="cam_look"/>
+          <strip_button name="Look Down" icon="lookdown.png" value="-6434" group="cam_look"/>
+        </dl_setting>
+        <dl_setting var="rotorcraft_cam_pan" MIN="0" STEP="1" MAX="360" shortname="pan" unit="1/2^12r" alt_unit="deg" alt_unit_coef="0.0139882"/>
+      </dl_settings>
+      -->
+    </dl_settings>
+      
+  </dl_settings>
+</settings>

@@ -1,0 +1,19 @@
+<!DOCTYPE module SYSTEM "./module.dtd">
+
+<module name="consume_fixedwing"  dir="benchmark">
+  <doc>
+    <description>
+      Faz a media de consumo por km
+    </description>
+  </doc>
+  <header>
+    <file name="consume_fixedwing.h"/>
+  </header>
+
+  <periodic fun="consume_periodic()" freq="1" autorun="TRUE"/>
+
+  <makefile>
+    <file name="consume_fixedwing.c"/>
+  </makefile>
+
+</module>
