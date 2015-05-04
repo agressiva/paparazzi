@@ -7,6 +7,12 @@
     <subsystem name="actuators"     type="pwm">
       <define name="SERVO_HZ" value="490"/>
     </subsystem>
+
+    <target name="nps" board="pc">
+      <subsystem name="fdm"         type="jsbsim"/>
+    </target>
+
+
  <!--<configure name="MAVLINK_PORT" value="UART3"/>-->
 <!-- <configure name="MAVLINK_BAUD" value="B57600"/>-->
      <subsystem name="radio_control" type="sbus">
@@ -21,9 +27,9 @@
     <subsystem name="imu"           type="krooz_sd_memsic"/>
     <subsystem name="stabilization" type="int_quat"/>
     <subsystem name="ahrs"          type="float_mlkf"/>
- <!--   <subsystem name="ahrs"          type="int_cmpl_quat">
+    <subsystem name="ahrs"          type="int_cmpl_quat">
       <configure name="SECONDARY_AHRS" value="int_cmpl_quat"/>
-    </subsystem> -->
+    </subsystem>
 
     <subsystem name="ins"           type="hff"/>
     <!--<subsystem name="ins_extended"/> -->
@@ -55,6 +61,7 @@
   </firmware>
 
   <modules main_freq="512">
+    <load name="sys_mon.xml"/>
 <!--<load name="mavlink.xml"/> -->
  <!--  <load name="sonar_adc.xml"> 
   <configure name="ADC_SONAR" value="ADC_2"/>
@@ -65,7 +72,6 @@
     <load name="osd_max7456.xml"/>
     <load name="led_safety_status.xml">
       <define name="SAFETY_WARNING_LED" value="3"/>
-     <!-- <define name="MIN_BAT_LEVEL" value="10.2"/>-->
     </load>
 <!--    <load name="krooz_cam.xml">
       <define name="PAN_CENTER" value="1565"/>
@@ -206,30 +212,30 @@ To increase response time, you can increase the frequency, and the bounds.
     <define name="REF_OMEGA_P"  value="425" unit="deg/s"/> <!--225-->
     <define name="REF_ZETA_P"   value="0.90"/> <!-- 80 85-->
     <define name="REF_MAX_P"    value="400." unit="deg/s"/> <!--280-->
-    <define name="REF_MAX_PDOT" value="RadOfDeg(1000.)"/><!--800 400-->
+    <define name="REF_MAX_PDOT" value="RadOfDeg(8000.)"/><!--1000 800 400-->
 
     <define name="REF_OMEGA_Q"  value="425" unit="deg/s"/>
     <define name="REF_ZETA_Q"   value="0.90"/>
     <define name="REF_MAX_Q"    value="400." unit="deg/s"/>
-    <define name="REF_MAX_QDOT" value="RadOfDeg(1000.)"/>
+    <define name="REF_MAX_QDOT" value="RadOfDeg(8000.)"/>
 
     <define name="REF_OMEGA_R"  value="360" unit="deg/s"/>
     <define name="REF_ZETA_R"   value="0.85"/>
     <define name="REF_MAX_R"    value="280." unit="deg/s"/> <!--180 70 -->
-    <define name="REF_MAX_RDOT" value="RadOfDeg(420.)"/>
+    <define name="REF_MAX_RDOT" value="RadOfDeg(1800.)"/> <!-- 420 -->
 
     <!-- feedback -->
-    <define name="PHI_PGAIN"  value="260"/> <!--400 -->
-    <define name="PHI_DGAIN"  value="400"/> <!--520 -->
-    <define name="PHI_IGAIN"  value="600"/> <!-- 200 -->
+    <define name="PHI_PGAIN"  value="400"/> <!--206 400 -->
+    <define name="PHI_DGAIN"  value="460"/> <!--400 520 -->
+    <define name="PHI_IGAIN"  value="100"/> <!-- 600 200 -->
 
-    <define name="THETA_PGAIN"  value="260"/>
-    <define name="THETA_DGAIN"  value="400"/>
-    <define name="THETA_IGAIN"  value="600"/>
+    <define name="THETA_PGAIN"  value="400"/>
+    <define name="THETA_DGAIN"  value="460"/>
+    <define name="THETA_IGAIN"  value="100"/>
 
     <define name="PSI_PGAIN"  value="3000"/>
     <define name="PSI_DGAIN"  value="900"/>
-    <define name="PSI_IGAIN"  value="1000"/> <!--1600-->
+    <define name="PSI_IGAIN"  value="100"/> <!-- 1000 1600-->
 
     <!-- feedforward -->
     <define name="PHI_DDGAIN"   value="000"/> <!-- 300-->
@@ -252,9 +258,9 @@ To increase response time, you can increase the frequency, and the bounds.
     <define name="ADAPT_THROTTLE_ENABLED" value="TRUE"/>
     <define name="MAX_RC_CLIMB_SPEED" value="-3.0" unit="m/s"/>
     <define name="MAX_RC_DESCENT_SPEED" value="3.0" unit="m/s"/>
-    <define name="HOVER_KP"    value="130"/>
-    <define name="HOVER_KD"    value="150"/>
-    <define name="HOVER_KI"    value="10"/>
+    <define name="HOVER_KP"    value="100"/> <!-- 130 -->
+    <define name="HOVER_KD"    value="160"/> <!-- 150 -->
+    <define name="HOVER_KI"    value="0"/> <!-- 10 -->
   </section>
 
   <section name="GUIDANCE_H" prefix="GUIDANCE_H_">
@@ -267,25 +273,26 @@ To increase response time, you can increase the frequency, and the bounds.
     <define name="PGAIN" value="60"/><!--120 70 60-->
     <define name="DGAIN" value="140"/><!--140 100 84-->
     <define name="IGAIN" value="0"/><!--10-->
-    <define name="VGAIN" value="50"/><!--10-->
-    <define name="AGAIN" value="20"/><!--10-->
-  </section>
-
-  <section name="SIMULATOR" prefix="NPS_">
-    <define name="ACTUATOR_NAMES"  value="{&quot;front_motor&quot;, &quot;back_motor&quot;, &quot;right_motor&quot;, &quot;left_motor&quot;}"/>
-    <define name="JSBSIM_INIT" value="&quot;reset00&quot;"/>
-    <define name="SENSORS_PARAMS" value="&quot;nps_sensors_params_default.h&quot;"/>
+    <define name="VGAIN" value="0"/><!--50 10-->
+    <define name="AGAIN" value="50"/><!--20 10-->
   </section>
 
   <section name="AUTOPILOT">
     <define name="MODE_MANUAL" value="AP_MODE_ATTITUDE_DIRECT"/>
-  <!--  <define name="MODE_AUTO1"  value="AP_MODE_ATTITUDE_RC_CLIMB"/>
-    <define name="MODE_AUTO2"  value="AP_MODE_HOVER_CLIMB"/> -->  <!-- AP_MODE_HOVER_CLIMB  -  AP_MODE_HOVER_Z_HOLD -->
 
-    <define name="MODE_AUTO1"  value="AP_MODE_HOVER_CLIMB"/>
+    <define name="MODE_AUTO1"  value="AP_MODE_ATTITUDE_RC_CLIMB"/>
+    <define name="MODE_AUTO2"  value="AP_MODE_HOVER_Z_HOLD"/> 
+
+<!--
+    <define name="MODE_AUTO1"  value="AP_MODE_HOVER_Z_HOLD"/>
     <define name="MODE_AUTO2"  value="AP_MODE_NAV"/>
+-->   
 
 <!--    <define name="MODE_AUTO1"  value="AP_MODE_ATTITUDE_Z_HOLD"/>-->
+  </section>
+
+  <section name="MISC">
+    <define name="DEFAULT_CIRCLE_RADIUS" value="10."/>
   </section>
 
   <section name="BAT">
@@ -300,4 +307,17 @@ To increase response time, you can increase the frequency, and the bounds.
     -->
   </section>
 
+
+  <section name="GCS">
+    <define name="ALT_SHIFT_PLUS_PLUS" value="5"/>
+    <define name="ALT_SHIFT_PLUS" value="1"/>
+    <define name="ALT_SHIFT_MINUS" value="-1"/>
+    <define name="SPEECH_NAME" value="Quad"/>
+  </section>
+
+  <section name="SIMULATOR" prefix="NPS_">
+    <define name="ACTUATOR_NAMES"  value="{&quot;front_motor&quot;, &quot;right_motor&quot;, &quot;back_motor&quot;, &quot;left_motor&quot;}"/>
+    <define name="JSBSIM_MODEL" value="&quot;simple_quad&quot;"/>
+    <define name="SENSORS_PARAMS" value="&quot;nps_sensors_params_default.h&quot;"/>
+  </section>
 </airframe>

@@ -265,7 +265,9 @@ object (self)
   method draw_zone = fun geo1 geo2 ->
     let (x1, y1) = geomap#world_of geo1
     and (x2, y2) = geomap#world_of geo2 in
-    zone#set [`X1 x1; `Y1 y1; `X2 x2; `Y2 y2; `OUTLINE_COLOR "#ffc0c0"; `WIDTH_PIXELS 2]
+    (**zone#set [`X1 x1; `Y1 y1; `X2 x2; `Y2 y2; `OUTLINE_COLOR "#ffc0c0"; `WIDTH_PIXELS 2]**)
+        zone#set [`X1 x1; `Y1 y1; `X2 x2; `Y2 y2; `OUTLINE_COLOR color; `WIDTH_PIXELS 2]
+
 
     (** moves the rectangle representing the field covered by the camera *)
   method move_cam = fun cam_wgs84 mission_target_wgs84 ->

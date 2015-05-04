@@ -46,15 +46,15 @@
  */
 
 /* PB4, Camera power On/Off */
-#define CAM_SW_GPIO GPIOB
+#define CAM_SW_GPIO GPIOC //GPIOB
 #define CAM_SW_GPIO_CLK RCC_GPIOB
-#define CAM_SW_GPIO_PIN GPIO4
+#define CAM_SW_GPIO_PIN GPIO4 //GPIO4
 #define CAM_SW_AFIO_REMAP ((void)0)
 
 /* PC2, Camera shot */
-#define CAM_SH_GPIO GPIOC
+#define CAM_SH_GPIO GPIOB //GPIOC
 #define CAM_SH_GPIO_CLK RCC_GPIOC
-#define CAM_SH_GPIO_PIN GPIO2
+#define CAM_SH_GPIO_PIN GPIO0 //GPIO2
 #define CAM_SH_AFIO_REMAP ((void)0)
 
 /* PC15, Camera video */

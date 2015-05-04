@@ -51,6 +51,7 @@
       <call fun="NavSetAltitudeReferenceHere()"/>
       <call fun="NavSetWaypointHere(WP_STDBY)"/>
       <call fun="NavSetWaypointHere(WP_CLIMB)"/>
+      <call fun="NavSetWaypointHere(WP_TD)"/>
       <exception cond="stateGetPositionEnu_f()->z > 5.0" deroute="Standby"/>
       <set value="0" var="autopilot_flight_time"/>
       <exception cond="block_time > 30" deroute="land"/>

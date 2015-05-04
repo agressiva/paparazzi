@@ -57,6 +57,19 @@
   <!-- ************************* MODULES ************************* -->
 
   <modules>
+
+    <!-- **************************** DROP STORE ******************************* -->
+    <load name="nav_drop.xml">
+      <define name="TRIGGER_DELAY" value="3.0" unit="s"/> <!--TODO get correct value;  time it take from shoot command till actual release of payload -->
+      <define name="VELOCITY_AT_RELEASE" value="14" unit="m/s"/><!-- TODO not implemented - to set to min airspeed-->
+      <define name="ALPHA" value="44.18e-4"/><!-- TODO: adjust it for the 500ML bottle -->
+      <define name="MASS" value="5.00e-3" unit="KG"/>
+      <define name="SAFE_CLIMB" value="10" unit="m"/>
+      <define name="CLIMB_TIME" value="3" unit="s"/>
+    </load>
+
+
+
     <load name="geo_mag.xml"/>
     <load name="gps_ubx_ucenter.xml"/>
     <load name="airspeed_ets.xml">
@@ -89,6 +102,8 @@
     <servo name="ELEVATOR" no="2" min="2000" neutral="1500" max="1000"/>
     <servo name="RUDDER" no="3" min="1100" neutral="1500" max="1900"/>
     <servo name="AILEVON_RIGHT" no="4" min="1800" neutral="1500" max="1200"/>
+    <servo name="HATCH" no="5" min="1950" neutral="1900" max="1100"/>
+
   </servos>
 
   <commands>
@@ -96,6 +111,8 @@
     <axis name="ROLL" failsafe_value="0"/>
     <axis name="PITCH" failsafe_value="0"/>
     <axis name="YAW" failsafe_value="0"/>
+    <axis name="HATCH" failsafe_value="-9600"/>
+
   </commands>
 
   <rc_commands>
@@ -193,6 +210,7 @@
     <define name="ENERGY_DIFF_IGAIN" value="0.259"/>
     <define name="GLIDE_RATIO" value="7."/>
     <!-- auto throttle -->
+    <define name="AUTO_THROTTLE_MIN_CRUISE_THROTTLE" value="0.1"/>
     <define name="AUTO_THROTTLE_NOMINAL_CRUISE_THROTTLE" value="0.5"/>
     <define name="AUTO_THROTTLE_CLIMB_THROTTLE_INCREMENT" value="0." unit="%/(m/s)"/>
     <define name="AUTO_THROTTLE_PITCH_OF_VZ_PGAIN" value="0."/>
@@ -219,6 +237,7 @@
   </section>
 
   <section name="MISC">
+    <define name="BOMB_RADIUS" value="50"/>
     <define name="CLIMB_AIRSPEED" value="14." unit="m/s"/>
     <define name="NOMINAL_AIRSPEED" value="16." unit="m/s"/>
     <define name="GLIDE_AIRSPEED" value="12." unit="m/s"/>

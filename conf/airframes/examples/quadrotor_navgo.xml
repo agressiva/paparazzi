@@ -3,6 +3,9 @@
 <airframe name="Blender">
 
   <modules main_freq="512">
+    <!--<load name="photogrammetry_calculator.xml"/>-->
+    <load name="nav_survey_rectangle_rotorcraft.xml"/>
+    <load name="nav_survey_poly_rotorcraft.xml"/>
     <load name="servo_switch.xml"/>
     <load name="rotorcraft_cam.xml"/>
     <load name="digital_cam.xml">
@@ -37,7 +40,7 @@
     <subsystem name="gps"           type="ublox">
       <configure name="GPS_BAUD" value="B57600"/>
     </subsystem>
-    <subsystem name="stabilization" type="int_euler"/>
+    <subsystem name="stabilization" type="int_quat"/>
     <subsystem name="ahrs"          type="int_cmpl_quat"/>
     <subsystem name="ins"           type="hff"/>
 
@@ -215,15 +218,22 @@
   <section name="GUIDANCE_H" prefix="GUIDANCE_H_">
     <define name="MAX_BANK" value="30" unit="deg"/>
     <define name="PGAIN" value="50"/>
-    <define name="DGAIN" value="80"/>
-    <define name="IGAIN" value="20"/>
+    <define name="DGAIN" value="180"/> <!--80-->
+    <define name="IGAIN" value="00"/> <!--20-->
     <define name="NGAIN" value="0"/>
     <!-- feedforward -->
     <define name="AGAIN" value="0"/>
+    <define name="APPROX_FORCE_BY_THRUST" value="1"/>
+    <define name="USE_REF" value="1"/>
+    <define name="USE_SPEED_REF" value="1"/> <!-- using RC to control horizontal setpoint -->
+    <define name="REF_MAX_ACCEL" value="3."/> <!-- 7.0max reference horizontal acceleration in m/s2 -->
+    <define name="REF_MAX_SPEED" value="12."/> <!-- 3 max reference horizontal speed in m/s -->
   </section>
 
   <section name="BAT">
-    <define name="CATASTROPHIC_BAT_LEVEL" value="9.3" unit="V"/>
+    <define name="CRITIC_BAT_LEVEL" value="(3.4*6)" unit="V"/> <!--3.4-->
+    <define name="LOW_BAT_LEVEL" value="(3.6*6)" unit="V"/> <!--3.6 -->
+    <define name="MAX_BAT_LEVEL" value="(4.2*6)" unit="V"/> <!--4.2 -->
   </section>
 
   <section name="AUTOPILOT">
@@ -242,7 +252,7 @@
   </section>
 
   <section name="DIGITAL_CAMERA" prefix="DC_">
-    <define name="AUTOSHOOT_DISTANCE_INTERVAL" value="5" unit="meter"/>
+    <define name="AUTOSHOOT_DISTANCE_INTERVAL" value="50" unit="meter"/>
   </section>
 
   <section name="SERVO_SWITCH">
@@ -269,5 +279,25 @@
     <define name="JSBSIM_MODEL" value="&quot;simple_quad&quot;"/>
     <define name="SENSORS_PARAMS" value="&quot;nps_sensors_params_default.h&quot;"/>
   </section>
+
+ <section name="Photogrammetry" prefix="PHOTOGRAMMETRY_">
+    <!-- NX1000 Camera Parameters -->
+    <define name="FOCAL_LENGTH" value="16" unit="mm"/>
+    <define name="SENSOR_WIDTH" value="23.5" unit="mm"/>                <!-- In direction of the plane's wings -->
+    <define name="SENSOR_HEIGHT" value="15.7" unit="mm"/>               <!-- In direction of the plane's nose -->
+    <define name="PIXELS_WIDTH" value="5472" unit=""/>
+
+    <!-- Photogrammetry Parameters : defined per flightplan -->
+    <define name="OVERLAP" value="70" unit="PROCENT"/>
+    <define name="SIDELAP" value="50" unit="PROCENT"/>
+    <define name="RESOLUTION" value="100" unit="mm pixel projection"/>
+
+    <!-- Flight Safety Parameters -->
+    <define name="HEIGHT_MIN" value="100" unit="m"/>
+    <define name="HEIGHT_MAX" value="400" unit="m"/>
+    <define name="RADIUS_MIN" value="80" unit="m"/>
+  </section>
+
+
 
 </airframe>

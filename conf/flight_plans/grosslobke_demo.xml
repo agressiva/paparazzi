@@ -19,6 +19,10 @@
     <waypoint alt="120.0" name="_BASELEG" x="40." y="-130."/>
     <waypoint alt="120.0" name="RELEASE" x="40." y="-110."/>
     <waypoint alt="160.0" name="CLIMB" x="40." y="-90."/>
+        <waypoint alt="160.0" name="CLIMBOUT" x="40." y="-90."/>
+            <waypoint alt="160.0" name="BASETURN" x="40." y="-90."/>
+
+
   </waypoints>
   <blocks>
     <block name="start">
@@ -91,7 +95,7 @@
       <deroute block="bomb"/>
     </block>
     <block name="bomb" strip_button="Bomb">
-      <set value="NavDropComputeApproach(WP_TARGET, WP_START, nav_radius)" var="unit"/>
+      <set value="NavDropComputeApproach(WP_TARGET, WP_START, WP_BASETURN, WP_CLIMBOUT, nav_radius)" var="unit"/>
       <circle radius="nav_radius" until="NavQdrCloseTo(DegOfRad(nav_drop_start_qdr)-10)" wp="BASELEG"/>
     </block>
     <block name="align">

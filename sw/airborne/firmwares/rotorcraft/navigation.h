@@ -90,6 +90,12 @@ extern bool_t nav_set_heading_towards(float x, float y);
 extern bool_t nav_set_heading_towards_waypoint(uint8_t wp);
 extern bool_t nav_set_heading_current(void);
 
+/*
+extern float nav_survey_shift;
+extern float nav_survey_west, nav_survey_east, nav_survey_north, nav_survey_south;*/
+extern bool_t nav_survey_active;
+
+
 /** default approaching_time for a wp */
 #ifndef CARROT
 #define CARROT 0

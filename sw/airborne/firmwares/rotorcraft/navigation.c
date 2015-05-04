@@ -55,6 +55,11 @@ struct EnuCoor_i nav_last_point;
 
 uint8_t last_wp UNUSED;
 
+/* Used in nav_survey_rectangle. Defined here for downlink and uplink */
+/*float nav_survey_shift;
+float nav_survey_west, nav_survey_east, nav_survey_north, nav_survey_south;*/
+bool_t nav_survey_active;
+
 /** Maximum distance from HOME waypoint before going into failsafe mode */
 #ifndef FAILSAFE_MODE_DISTANCE
 #define FAILSAFE_MODE_DISTANCE (1.5*MAX_DIST_FROM_HOME)
@@ -93,7 +98,7 @@ float flight_altitude;
 static inline void nav_set_altitude(void);
 
 #define CLOSE_TO_WAYPOINT (15 << 8)
-#define CARROT_DIST (12 << 8)
+#define CARROT_DIST (12 << 8) //12
 
 /** minimum horizontal distance to waypoint to mark as arrived */
 #ifndef ARRIVED_AT_WAYPOINT
@@ -137,6 +142,15 @@ static void send_wp_moved(struct transport_tx *trans, struct link_device *dev)
                              &(waypoints[i].enu_i.y),
                              &(waypoints[i].enu_i.z));
 }
+
+/*
+static void send_survey(struct transport_tx *trans, struct link_device *dev)
+{
+  if (nav_survey_active) {
+    pprz_msg_send_SURVEY(trans, dev, AC_ID,
+                         &nav_survey_east, &nav_survey_north, &nav_survey_west, &nav_survey_south);
+  }
+}*/
 #endif
 
 void nav_init(void)
@@ -170,6 +184,7 @@ void nav_init(void)
 #if PERIODIC_TELEMETRY
   register_periodic_telemetry(DefaultPeriodic, "ROTORCRAFT_NAV_STATUS", send_nav_status);
   register_periodic_telemetry(DefaultPeriodic, "WP_MOVED", send_wp_moved);
+  //register_periodic_telemetry(DefaultPeriodic, "SURVEY", send_survey);
 #endif
 }
 
@@ -397,6 +412,7 @@ void nav_init_stage(void)
 void nav_periodic_task(void)
 {
   RunOnceEvery(NAV_FREQ, { stage_time++;  block_time++; });
+  nav_survey_active = FALSE;
 
   dist2_to_wp = 0;
 

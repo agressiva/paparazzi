@@ -90,21 +90,26 @@ void led_safety_status_periodic(void) {
   if (!stateIsAttitudeValid()) {
     RunOnceEvery(5, {beep=3;});
   }
-  else if  ((autopilot_mode != AP_MODE_KILL) && (electrical.vsupply < ((LOW_BAT_LEVEL) * 10))){  //bateria no nivel minimo
-    RunOnceEvery(5, {LED_TOGGLE(SAFETY_WARNING_LED);beep=4;});
+  
+  //========================================== NIVEL BATERIA ====================================
+  else if  ((autopilot_mode != AP_MODE_KILL) && (electrical.vsupply < ((CRITIC_BAT_LEVEL - 0.3) * 10))){ // bateria no nivel critico
+    RunOnceEvery(4, {LED_TOGGLE(SAFETY_WARNING_LED);beep=3;});
   }
   else if  ((autopilot_mode != AP_MODE_KILL) && (electrical.vsupply < ((CRITIC_BAT_LEVEL) * 10))){  //bateria no nivel minimo
-    RunOnceEvery(10, {LED_TOGGLE(SAFETY_WARNING_LED);beep=4;});
+    RunOnceEvery(10, {LED_TOGGLE(SAFETY_WARNING_LED);beep=3;});
+  }  
+  else if  ((autopilot_mode != AP_MODE_KILL) && (electrical.vsupply < ((LOW_BAT_LEVEL) * 10))){  //bateria no nivel minimo
+    RunOnceEvery(20, {LED_TOGGLE(SAFETY_WARNING_LED);beep=2;});
   }
-  else if  ((autopilot_mode != AP_MODE_KILL) && (electrical.vsupply < ((CRITIC_BAT_LEVEL - 0.4) * 10))){ // bateria no nivel critico
-     RunOnceEvery(20, {LED_TOGGLE(SAFETY_WARNING_LED);beep=4;});
-  }
+
+    //========================================== RC ====================================
   else if (radio_control.status == RC_LOST || radio_control.status == RC_REALLY_LOST){ //radio desligado
   //  RunXTimesEvery(  0,  60, 30, 2, {LED_TOGGLE(SAFETY_WARNING_LED);BEEPER_TOGGLE;});  //0,60,30,7
   //  RunXTimesEvery(130, 130, 60, 1, {LED_TOGGLE(SAFETY_WARNING_LED);BEEPER_TOGGLE;}); //130,130,60,6
    RunXTimesEvery(  0,  60, 30, 2, { beep = 40;});
   }
  
+     //========================================== GPS ====================================
  // gps nao locado em modo que precisa de gps
  else if (autopilot_mode == AP_MODE_HOVER_Z_HOLD || autopilot_mode == AP_MODE_HOVER_CLIMB || autopilot_mode == AP_MODE_HOVER_DIRECT || autopilot_mode == AP_MODE_NAV){
     if ((gps.num_sv < 5) || !(gps.fix == GPS_FIX_3D)){
@@ -117,7 +122,8 @@ void led_safety_status_periodic(void) {
  // else if (!ahrs_is_aligned() || ins_impl.baro_initialized != TRUE || !autopilot_mode == AP_MODE_KILL || autopilot_mode == AP_MODE_FAILSAFE){
  //  else if (!ahrs_is_aligned() || autopilot_mode == AP_MODE_KILL || autopilot_mode == AP_MODE_FAILSAFE){
   
- 
+      //========================================== MOTOR ====================================
+
   else if (  ((THROTTLE_STICK_DOWN() && !YAW_STICK_CENTERED()) && !autopilot_motors_on) ){
     RunOnceEvery(20, {LED_TOGGLE(SAFETY_WARNING_LED);beep=2;});
   }
@@ -130,6 +136,8 @@ void led_safety_status_periodic(void) {
     LED_ON(SAFETY_WARNING_LED);
   }
 
+     //========================================== CLIMB RATE ====================================
+  
     // else if ((autopilot_mode == AP_MODE_ATTITUDE_RC_CLIMB || autopilot_mode == AP_MODE_HOVER_CLIMB) && autopilot_motors_on) {
   if (guidance_v_mode == GUIDANCE_V_MODE_RC_CLIMB && autopilot_motors_on) {
     int32_t rc_zd;

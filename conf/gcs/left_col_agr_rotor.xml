@@ -1,28 +1,27 @@
 <!DOCTYPE layout SYSTEM "layout.dtd">
 
-<layout width="1920" height="1004">
+<layout width="1312" height="770">
   <columns>
     <rows SIZE="400">
       <widget NAME="strips" size="300"/>
-      <widget NAME="aircraft" size="500"/>
-      <widget NAME="alarms" size="190"/>
+      <widget NAME="aircraft" size="456"/>
+      <widget NAME="alarms" size="1"/>
     </rows>
     <rows>
-      <widget NAME="map2d" size="1002">
-        <papget type="expression" display="text" x="23" y="930">
-          <property name="scale" value="1"/>
-          <property name="expr" value="BlockName(ROTORCRAFT_NAV_STATUS.cur_block)"/>
-          <property name="format" value="%.2f"/>
-          <property name="size" value="20."/>
-          <property name="color" value="white"/>
-        </papget>
+      <widget NAME="map2d" size="768">
         <papget type="message_field" display="text" x="201" y="933">
           <property name="scale" value="1."/>
           <property name="field" value="DATALINK_REPORT:downlink_ovrn"/>
-          <property name="ac_id" value="10"/>
           <property name="format" value="Datalink overun: %.2f"/>
           <property name="size" value="15."/>
           <property name="color" value="#00ff00"/>
+        </papget>
+        <papget type="expression" display="text" x="20" y="823">
+          <property name="scale" value="1."/>
+          <property name="expr" value="(NAVIGATION.dist2_wp**0.500000)"/>
+          <property name="format" value="Dist2wp: %.fm"/>
+          <property name="size" value="15."/>
+          <property name="color" value="green"/>
         </papget>
         <papget type="expression" display="text" x="3" y="804">
           <property name="scale" value="1"/>
@@ -31,13 +30,6 @@
           <property name="size" value="14."/>
           <property name="color" value="green"/>
         </papget>
-        <papget type="message_field" display="text" x="16" y="362">
-          <property name="scale" value="1."/>
-          <property name="field" value="DC_SHOT:photo_nr"/>
-          <property name="format" value="Shots: %.f"/>
-          <property name="size" value="15."/>
-          <property name="color" value="orange"/>
-        </papget>
         <papget type="message_field" display="text" x="15" y="158">
           <property name="scale" value="1."/>
           <property name="field" value="GPS_INT:numsv"/>
@@ -45,20 +37,26 @@
           <property name="size" value="15."/>
           <property name="color" value="yellow"/>
         </papget>
-        <papget type="message_field" display="text" x="14" y="183">
+        <papget type="message_field" display="text" x="16" y="362">
+          <property name="scale" value="1."/>
+          <property name="field" value="DC_SHOT:photo_nr"/>
+          <property name="format" value="Shots: %.f"/>
+          <property name="size" value="15."/>
+          <property name="color" value="orange"/>
+        </papget>
+        <papget type="message_field" display="text" x="14" y="178">
           <property name="scale" value="0.01"/>
           <property name="field" value="GPS_INT:pacc"/>
-          <property name="ac_id" value="10"/>
-          <property name="format" value="Pacc %.1f"/>
+          <property name="format" value="Pacc:%.1f"/>
           <property name="size" value="15."/>
           <property name="color" value="yellow"/>
         </papget>
-        <papget type="expression" display="text" x="20" y="823">
-          <property name="scale" value="1."/>
-          <property name="expr" value="(NAVIGATION.dist2_wp**0.500000)"/>
-          <property name="format" value="Dist2wp: %.fm"/>
-          <property name="size" value="15."/>
-          <property name="color" value="green"/>
+        <papget type="expression" display="text" x="23" y="930">
+          <property name="scale" value="1"/>
+          <property name="expr" value="BlockName(ROTORCRAFT_NAV_STATUS.cur_block)"/>
+          <property name="format" value="%.2f"/>
+          <property name="size" value="20."/>
+          <property name="color" value="white"/>
         </papget>
       </widget>
     </rows>

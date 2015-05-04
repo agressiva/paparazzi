@@ -107,7 +107,13 @@ void imu_umarim_event(void)
   // If the itg3200 I2C transaction has succeeded: convert the data
   itg3200_event(&imu_umarim.itg);
   if (imu_umarim.itg.data_available) {
+    #ifdef UMARIM_UPSIDE_DOWN
+    RATES_ASSIGN(imu.gyro_unscaled, imu_umarim.itg.data.rates.p, -imu_umarim.itg.data.rates.q, -imu_umarim.itg.data.rates.r);
+    #elif UMARIM_SIDE_UP
+    RATES_ASSIGN(imu.gyro_unscaled, -imu_umarim.itg.data.rates.p, -imu_umarim.itg.data.rates.r, -imu_umarim.itg.data.rates.q);
+    #else
     RATES_COPY(imu.gyro_unscaled, imu_umarim.itg.data.rates);
+    #endif
     imu_umarim.itg.data_available = FALSE;
     imu_umarim.gyr_valid = TRUE;
   }
@@ -115,8 +121,13 @@ void imu_umarim_event(void)
   // If the adxl345 I2C transaction has succeeded: convert the data
   adxl345_i2c_event(&imu_umarim.adxl);
   if (imu_umarim.adxl.data_available) {
-    VECT3_ASSIGN(imu.accel_unscaled, imu_umarim.adxl.data.vect.y, -imu_umarim.adxl.data.vect.x,
-                 imu_umarim.adxl.data.vect.z);
+    #ifdef UMARIM_UPSIDE_DOWN
+    VECT3_ASSIGN(imu.accel_unscaled,  imu_umarim.adxl.data.vect.y,  imu_umarim.adxl.data.vect.x, -imu_umarim.adxl.data.vect.z);
+    #elif UMARIM_SIDE_UP
+    VECT3_ASSIGN(imu.accel_unscaled, -imu_umarim.adxl.data.vect.y, -imu_umarim.adxl.data.vect.z, imu_umarim.adxl.data.vect.x);
+    #else
+    VECT3_ASSIGN(imu.accel_unscaled,  imu_umarim.adxl.data.vect.y,  imu_umarim.adxl.data.vect.x,  imu_umarim.adxl.data.vect.z);
+    #endif
     imu_umarim.adxl.data_available = FALSE;
     imu_umarim.acc_valid = TRUE;
   }

@@ -1956,8 +1956,11 @@
     <field name="AMSL_GPS" type="float" unit="ft" alt_unit="m"/>
   </message>
 
- <!--224 is free -->
-
+ <message name="CONSUME" id="224">
+    <field name="consume" type="uint16" unit="mA"/>
+    <field name="total_distance" type="uint16" unit="m"/>
+  </message>
+  
   <message name="VIDEO_SYNC" id="225">
     <field name="id" type="uint8"/>
   </message>

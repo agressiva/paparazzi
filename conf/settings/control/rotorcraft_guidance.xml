@@ -2,7 +2,7 @@
 
 <settings>
   <dl_settings>
-
+  <dl_settings NAME="control">
     <dl_settings NAME="Vert Loop">
       <dl_setting var="guidance_v_kp" min="0" step="1" max="600"   module="guidance/guidance_v" shortname="kp" param="GUIDANCE_V_HOVER_KP"/>
       <dl_setting var="guidance_v_kd" min="0" step="1" max="600"   module="guidance/guidance_v" shortname="kd" param="GUIDANCE_V_HOVER_KD"/>
@@ -34,5 +34,6 @@
       <dl_setting var="nav_radius" MIN="-50" STEP="0.1" MAX="50" module="navigation" unit="m"/>
     </dl_settings>
 
+  </dl_settings>
   </dl_settings>
 </settings>

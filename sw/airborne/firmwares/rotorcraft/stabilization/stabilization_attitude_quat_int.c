@@ -60,7 +60,7 @@ struct Int32Quat stabilization_att_sum_err_quat;
 int32_t stabilization_att_fb_cmd[COMMANDS_NB];
 int32_t stabilization_att_ff_cmd[COMMANDS_NB];
 
-#define IERROR_SCALE 1024
+#define IERROR_SCALE 256
 #define GAIN_PRESCALER_FF 48
 #define GAIN_PRESCALER_P 48
 #define GAIN_PRESCALER_D 48
@@ -249,7 +249,7 @@ void stabilization_attitude_run(bool_t enable_integrator)
   struct Int32Rates *body_rate = stateGetBodyRates_i();
   RATES_DIFF(rate_err, rate_ref_scaled, (*body_rate));
 
-#define INTEGRATOR_BOUND 100000
+#define INTEGRATOR_BOUND 40000 //100000
   /* integrated error */
   if (enable_integrator) {
     stabilization_att_sum_err_quat.qx += att_err.qx / IERROR_SCALE;
@@ -277,7 +277,7 @@ void stabilization_attitude_run(bool_t enable_integrator)
   /* bound the result */
   BoundAbs(stabilization_cmd[COMMAND_ROLL], MAX_PPRZ);
   BoundAbs(stabilization_cmd[COMMAND_PITCH], MAX_PPRZ);
-  BoundAbs(stabilization_cmd[COMMAND_YAW], MAX_PPRZ/2);
+  BoundAbs(stabilization_cmd[COMMAND_YAW], MAX_PPRZ/4);
 }
 
 void stabilization_attitude_read_rc(bool_t in_flight, bool_t in_carefree, bool_t coordinated_turn)
