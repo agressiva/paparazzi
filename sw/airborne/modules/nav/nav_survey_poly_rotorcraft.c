@@ -24,10 +24,10 @@
  *
  */
 
-#include "std.h"
-#include "mcu_periph/uart.h"
-#include "messages.h"
-#include "subsystems/datalink/downlink.h"
+//#include "std.h"
+//#include "mcu_periph/uart.h"
+//#include "messages.h"
+//#include "subsystems/datalink/downlink.h"
 
 
 #include "modules/nav/nav_survey_poly_rotorcraft.h"
@@ -55,9 +55,9 @@
 #endif
 
 /// if 0 never check for min radius
-#ifndef POLY_OSAM_MIN_RADIUS
-#define POLY_OSAM_MIN_RADIUS 1
-#endif
+//#ifndef POLY_OSAM_MIN_RADIUS
+//#define POLY_OSAM_MIN_RADIUS 1
+//#endif
 
 /// if 0 default to half sweep
 #ifndef POLY_OSAM_FIRST_SWEEP_DISTANCE
@@ -94,8 +94,8 @@ bool_t nav_survey_poly_setup_towards(uint8_t FirstWP, uint8_t Size, float Sweep,
 struct Point2D {float x; float y;};
 struct Line {float m; float b; float x;};
 
-static void TranslateAndRotateFromWorld(struct Point2D *p, float Zrot, float transX, float transY);
-static void RotateAndTranslateToWorld(struct Point2D *p, float Zrot, float transX, float transY);
+static void TranslateAndRotateFromWorld(struct EnuCoor_f *p, float Zrot, float transX, float transY);
+static void RotateAndTranslateToWorld(struct EnuCoor_f *p, float Zrot, float transX, float transY);
 static void FindInterceptOfTwoLines(float *x, float *y, struct Line L1, struct Line L2);
 static float EvaluateLineForX(float y, struct Line L);
 
@@ -115,7 +115,7 @@ static float EvaluateLineForX(float y, struct Line L);
 /** This routine will cover the enitre area of any Polygon defined in the flightplan which is a convex polygon.
  */
 
-enum SurveyStatus { Init, Entry, Sweep, SweepCircle };
+enum SurveyStatus { Init, Entry, Sweep, Turn };
 static enum SurveyStatus CSurveyStatus;
 static struct Point2D SmallestCorner;
 static struct Line Edges[PolygonSize];
@@ -124,11 +124,11 @@ static float EdgeMinY[PolygonSize];
 static float SurveyTheta;
 static float dSweep;
 static float SurveyRadius;
-static struct Point2D SurveyToWP;
-static struct Point2D SurveyFromWP;
-static struct Point2D SurveyCircle;
+static struct EnuCoor_f SurveyToWP;
+static struct EnuCoor_f SurveyFromWP;
+static struct EnuCoor_f SurveyEntry;
 
-static struct EnuCoor_f survey_from, survey_to;
+//static struct EnuCoor_f survey_from, survey_to;
 static struct EnuCoor_i survey_from_i, survey_to_i;
 
 static uint8_t SurveyEntryWP;
@@ -145,7 +145,7 @@ bool_t nav_survey_poly_setup(uint8_t EntryWP, uint8_t Size, float sw, float Orie
   SmallestCorner.y = 0;
   int i = 0;
   float ys = 0;
-  static struct Point2D EntryPoint;
+  static struct EnuCoor_f EntryPoint;
   float LeftYInt;
   float RightYInt;
   float temp;
@@ -175,7 +175,7 @@ bool_t nav_survey_poly_setup(uint8_t EntryWP, uint8_t Size, float sw, float Orie
   SurveyEntryWP = EntryWP;
   SurveySize = Size;
 
-  struct Point2D Corners[PolygonSize];
+  struct EnuCoor_f Corners[PolygonSize];
 
   CSurveyStatus = Init;
 
@@ -333,43 +333,16 @@ bool_t nav_survey_poly_setup(uint8_t EntryWP, uint8_t Size, float sw, float Orie
     }
 
     //Find the entry circle
-    SurveyCircle.x = SurveyFromWP.x;
-    SurveyCircle.y = EntryPoint.y + entry_distance;// - EntryRadius;
+    SurveyEntry.x = SurveyFromWP.x;
+    SurveyEntry.y = EntryPoint.y + entry_distance;// - EntryRadius;
 
     //Go into entry circle state
     CSurveyStatus = Entry;
-    //LINE_STOP_FUNCTION;
-  //go to start position
-  //ENU_BFP_OF_REAL(survey_from_i, survey_from);
-  //horizontal_mode = HORIZONTAL_MODE_ROUTE;
-  //VECT3_COPY(navigation_target, survey_from_i);
-  LINE_STOP_FUNCTION;
-  NavVerticalAltitudeMode(waypoints[SurveyEntryWP].enu_f.z, 0.);
-  nav_set_heading_deg(Orientation);
-  
-  
-      //Rotate and translate circle point into real world
-  
-      //Find the entry circle
-      //struct EnuCoor_f C;  
-      //C.x = waypoints[SurveyEntryWP].enu_f.x;//SurveyFromWP.x;
-      //C.y = waypoints[SurveyEntryWP].enu_f.y;//SurveyCircle.y;
-      //C.z = 0;
-      //RotateAndTranslateToWorld(&C, 0, SmallestCorner.x, SmallestCorner.y);
-      //RotateAndTranslateToWorld(&C, SurveyTheta, 0, 0);
-      //ENU_BFP_OF_REAL(survey_from_i, C);
-      //horizontal_mode = HORIZONTAL_MODE_ROUTE;
-      //VECT3_COPY(navigation_target, survey_from_i);
-      
-      
-      //follow the circle
-      //nav_circle_XY(C.x, C.y, SurveyRadius);
 
-  
-  
-  
-  
-   
+    LINE_STOP_FUNCTION;
+    NavVerticalAltitudeMode(waypoints[SurveyEntryWP].enu_f.z, 0.);
+    nav_set_heading_deg(-Orientation +90.);
+
   }
 
   return FALSE;
@@ -382,11 +355,8 @@ bool_t nav_survey_poly_run(void)
   struct EnuCoor_f C;
   struct EnuCoor_f ToP;
   struct EnuCoor_f FromP;
-  //struct Point2D C;
-  //struct Point2D ToP;
-  //struct Point2D FromP;
   float ys;
-  static struct Point2D LastPoint;
+  static struct EnuCoor_f LastPoint;
   int i;
   bool_t LastHalfSweep;
   static bool_t HalfSweep = FALSE;
@@ -394,52 +364,28 @@ bool_t nav_survey_poly_run(void)
   float XIntercept2 = 0;
   float DInt1 = 0;
   float DInt2 = 0;
-  float temp;
-  float min_radius = POLY_OSAM_MIN_RADIUS;
-
-  //NavVerticalAutoThrottleMode(0);
-  //NavVerticalAltitudeMode(waypoints[SurveyEntryWP].a, 0.);
-
+  //float min_radius = POLY_OSAM_MIN_RADIUS;
 
   switch (CSurveyStatus) {
     case Entry:
-      //Rotate and translate circle point into real world
-      C.x = SurveyCircle.x;
-      C.y = SurveyCircle.y;
+      C = SurveyEntry;
       RotateAndTranslateToWorld(&C, 0, SmallestCorner.x, SmallestCorner.y);
       RotateAndTranslateToWorld(&C, SurveyTheta, 0, 0);
 
-      //follow the circle
-     // nav_circle_XY(C.x, C.y, SurveyRadius);
-      
-      //struct EnuCoor_f C;  
-      //C.x = waypoints[SurveyEntryWP].enu_f.x;//SurveyFromWP.x;
-      //C.y = waypoints[SurveyEntryWP].enu_f.y;//SurveyCircle.y;
-      //C.z = 0;
-      //RotateAndTranslateToWorld(&C, 0, SmallestCorner.x, SmallestCorner.y);
-      //RotateAndTranslateToWorld(&C, SurveyTheta, 0, 0);
       ENU_BFP_OF_REAL(survey_from_i, C);
       horizontal_mode = HORIZONTAL_MODE_ROUTE;
       VECT3_COPY(navigation_target, survey_from_i);      
-      
-      
-      
-      //if (NavQdrCloseTo(SurveyCircleQdr) && NavCircleCountNoRewind() > .1 && stateGetPositionUtm_f()->alt > waypoints[SurveyEntryWP].a - 10) {
-        if ( ((nav_approaching_from(&survey_from_i, NULL, 0)) && (fabsf(stateGetPositionEnu_f()->z - waypoints[SurveyEntryWP].enu_f.z)) < 1.) ) {
-          CSurveyStatus = Sweep;
-          nav_init_stage();
-          LINE_START_FUNCTION;
-        }
+
+      if ( ((nav_approaching_from(&survey_from_i, NULL, 0)) && (fabsf(stateGetPositionEnu_f()->z - waypoints[SurveyEntryWP].enu_f.z)) < 1.) ) {
+        CSurveyStatus = Sweep;
+        nav_init_stage();
+        LINE_START_FUNCTION;
+      }
       break;
     case Sweep:
-
-
-
       LastHalfSweep = HalfSweep;
-      ToP.x = SurveyToWP.x;
-      ToP.y = SurveyToWP.y;
-      FromP.x = SurveyFromWP.x;
-      FromP.y = SurveyFromWP.y;
+      ToP = SurveyToWP;
+      FromP = SurveyFromWP;
 
       //Rotate and Translate de plane position to local world
       C.x = stateGetPositionEnu_f()->x;
@@ -467,25 +413,26 @@ bool_t nav_survey_poly_run(void)
       RotateAndTranslateToWorld(&FromP, SurveyTheta, 0, 0);
 
       //follow the line
-//      nav_route_xy(FromP.x, FromP.y, ToP.x, ToP.y);
-      
-      
       ENU_BFP_OF_REAL(survey_to_i, ToP);
+      ENU_BFP_OF_REAL(survey_from_i, FromP);
 
-     // if (!nav_approaching_from(&survey_to_i, NULL, 0)) {
-        ENU_BFP_OF_REAL(survey_from_i, FromP);
-
-        horizontal_mode = HORIZONTAL_MODE_ROUTE;
-        nav_route(&survey_from_i, &survey_to_i);      
+      horizontal_mode = HORIZONTAL_MODE_ROUTE;
+      nav_route(&survey_from_i, &survey_to_i);      
       
-      
-      
-      
-//      if (nav_approaching_xy(ToP.x, ToP.y, FromP.x, FromP.y, 0)) {
       if (nav_approaching_from(&survey_to_i, NULL, 0)) {
-        LastPoint.x = SurveyToWP.x;
-        LastPoint.y = SurveyToWP.y;
+	LastPoint = SurveyToWP;
 
+        float temp1;
+        temp1 = fabsf(FromP.x - ToP.x) / dc_distance_interval;
+        double inteiro;
+        double fract = modf (temp1 , &inteiro);
+	
+	//fprintf(stderr,"dist %f temp %f fract %f\n",(FromP.x - ToP.x), temp, fract );
+        if (fract > .5) {
+          dc_send_command(DC_SHOOT); //if last shot is more than shot_distance/2 from the corner take a picture in the corner before go to the next sweep
+        }
+        
+	
         if (LastPoint.y + dSweep >= MaxY || LastPoint.y + dSweep <= 0) { //Your out of the Polygon so Sweep Back or Half Sweep
           if (LastPoint.y + (dSweep / 2) >= MaxY || LastPoint.y + (dSweep / 2) <= 0) { //Sweep back
             dSweep = -dSweep;
@@ -513,7 +460,6 @@ bool_t nav_survey_poly_run(void)
             }
             HalfSweep = TRUE;
           }
-
 
         } else { // Normal sweep
           //Find y value of the first sweep
@@ -569,7 +515,7 @@ bool_t nav_survey_poly_run(void)
           }
         }
 
-        //Find the radius to circle
+/*        //Find the radius to circle
         if (!HalfSweep || use_full_circle) {
           temp = dSweep / 2;
         } else {
@@ -581,6 +527,7 @@ bool_t nav_survey_poly_run(void)
           if (temp < 0) { temp = -min_radius; } else { temp = min_radius; }
         }
 
+
         //Find the direction to circle
         if (ys > 0 && SurveyToWP.x > SurveyFromWP.x) {
           SurveyRadius = temp;
@@ -589,44 +536,40 @@ bool_t nav_survey_poly_run(void)
         } else {
           SurveyRadius = -temp;
         }
-
-        //find x position to circle
-        if (fabs(LastPoint.x - SurveyToWP.x) > fabs(SurveyFromWP.x - SurveyToWP.x)) {
-          SurveyCircle.x = LastPoint.x;
-        } else {
-          SurveyCircle.x = SurveyFromWP.x;
-        }
-
-        //y position to circle
-        SurveyCircle.y = ys - temp;
-
+*/
+        
         //Go into circle state
-        CSurveyStatus = SweepCircle;
+        CSurveyStatus = Turn;
         nav_init_stage();
         LINE_STOP_FUNCTION;
+
         PolySurveySweepNum++;
       }
 
       break;
-    case SweepCircle:
+    case Turn:
+      FromP = LastPoint;
+      ToP = SurveyFromWP;
       
-      
-     
-      //Rotate and translate circle point into real world
-      C.x = SurveyCircle.x;
-      C.y = SurveyCircle.y;
-      RotateAndTranslateToWorld(&C, 0, SmallestCorner.x, SmallestCorner.y);
-      RotateAndTranslateToWorld(&C, SurveyTheta, 0, 0);
+      //Rotate and Translate Line points into real world
+      RotateAndTranslateToWorld(&ToP, 0, SmallestCorner.x, SmallestCorner.y);
+      RotateAndTranslateToWorld(&ToP, SurveyTheta, 0, 0);
 
-      //follow the circle
-      //nav_circle_XY(C.x, C.y, SurveyRadius);
+      RotateAndTranslateToWorld(&FromP, 0, SmallestCorner.x, SmallestCorner.y);
+      RotateAndTranslateToWorld(&FromP, SurveyTheta, 0, 0);
 
-      //if (NavQdrCloseTo(SurveyCircleQdr) && NavCircleCount() > 0) {
-      //  CSurveyStatus = Sweep;
-      //  nav_init_stage();
-        //LINE_START_FUNCTION;
+      //follow the line
+      ENU_BFP_OF_REAL(survey_to_i, ToP);
+      ENU_BFP_OF_REAL(survey_from_i, FromP);
 
-    //}
+      horizontal_mode = HORIZONTAL_MODE_ROUTE;
+      nav_route(&survey_from_i, &survey_to_i);  
+
+      if (nav_approaching_from(&survey_to_i, NULL, 0)) {
+        CSurveyStatus = Sweep;
+        nav_init_stage();
+        LINE_START_FUNCTION;
+      }
 
       break;
     case Init:
@@ -643,7 +586,7 @@ bool_t nav_survey_poly_run(void)
 /*
   Translates point so (transX, transY) are (0,0) then rotates the point around z by Zrot
 */
-void TranslateAndRotateFromWorld(struct Point2D *p, float Zrot, float transX, float transY)
+void TranslateAndRotateFromWorld(struct EnuCoor_f *p, float Zrot, float transX, float transY)
 {
   float temp;
 
@@ -656,7 +599,7 @@ void TranslateAndRotateFromWorld(struct Point2D *p, float Zrot, float transX, fl
 }
 
 /// Rotates point round z by -Zrot then translates so (0,0) becomes (transX,transY)
-void RotateAndTranslateToWorld(struct Point2D *p, float Zrot, float transX, float transY)
+void RotateAndTranslateToWorld(struct EnuCoor_f *p, float Zrot, float transX, float transY)
 {
   float temp = p->x;
 

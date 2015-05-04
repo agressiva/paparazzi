@@ -88,7 +88,8 @@
       <define name="TILT_AREA" value="425"/>
       <define name="TILT_DOWN" value="1750"/>
     </load>-->
-    <load name="photogrammetry_calculator.xml"/>
+    <!--<load name="photogrammetry_calculator.xml"/>-->
+    <load name="nav_survey_poly_rotorcraft.xml"/>
     <load name="nav_survey_rectangle_rotorcraft.xml"/>
     <load name="digital_cam.xml">
 	<define name="DC_SHUTTER_GPIO" value="GPIOB,GPIO0"/> <!-- ou GPIOC,GPIO4 -->

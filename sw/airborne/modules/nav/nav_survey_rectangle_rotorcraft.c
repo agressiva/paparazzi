@@ -28,12 +28,6 @@
  * Rectangle is defined by two points, sweep can be south-north or west-east.
  */
 
-#include <stdio.h>
-#include "mcu_periph/uart.h"
-#include "messages.h"
-#include "subsystems/datalink/downlink.h"
-
-
 #ifndef RECTANGLE_SURVEY_DEFAULT_SWEEP
 #define RECTANGLE_SURVEY_DEFAULT_SWEEP 25
 #endif
@@ -211,7 +205,6 @@ bool_t nav_survey_rectangle_rotorcraft_run(uint8_t wp1, uint8_t wp2)
           float x0 = survey_from.x; /* Current longitude */
           if ((x0 + nav_survey_shift < nav_survey_west)
               || (x0 + nav_survey_shift > nav_survey_east)) {   // not room for full sweep
-            //fprintf(stderr,"nao cabe inteiro\n");
             if (((x0 + (nav_survey_shift / 2)) < nav_survey_west)
                 || ((x0 + (nav_survey_shift / 2)) > nav_survey_east)) { //not room for half sweep
               if (is_last_half) {// was last sweep half?
