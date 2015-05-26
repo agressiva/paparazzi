@@ -40,7 +40,6 @@ extern uint16_t rectangle_survey_sweep_num;
 extern bool_t interleave;
 extern bool_t infinite;
 
-
 extern void nav_survey_rectangle_rotorcraft_init(void);
 extern bool_t nav_survey_rectangle_rotorcraft_setup(uint8_t wp1, uint8_t wp2, float grid1, survey_orientation_t so);
 extern bool_t nav_survey_rectangle_rotorcraft_run(uint8_t wp1, uint8_t wp2);

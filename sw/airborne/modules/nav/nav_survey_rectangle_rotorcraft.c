@@ -59,7 +59,6 @@ bool_t nav_in_circle = FALSE;
 bool_t interleave = USE_INTERLEAVE;
 bool_t infinite = FALSE;
 
-
 static struct EnuCoor_f survey_from, survey_to;
 static struct EnuCoor_i survey_from_i, survey_to_i;
 

@@ -13,6 +13,7 @@
       <!-- AUX1 -->
       <define name="DC_SHUTTER_GPIO" value="GPIOA,GPIO7"/>
     </load>
+    <load name="nav_survey_rectangle_rotorcraft.xml"/>
   </modules>
 
   <firmware name="rotorcraft">
