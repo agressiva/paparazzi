@@ -24,10 +24,13 @@
  *
  */
 
-//#include "std.h"
-//#include "mcu_periph/uart.h"
-//#include "messages.h"
-//#include "subsystems/datalink/downlink.h"
+/*
+#include <stdio.h>
+#include "mcu_periph/uart.h"
+#include "messages.h"
+#include "subsystems/datalink/downlink.h"
+*/
+
 
 
 #include "modules/nav/nav_survey_poly_rotorcraft.h"
@@ -41,41 +44,27 @@
 #include "modules/digital_cam/dc.h"
 #endif
 
-#ifndef POLY_OSAM_DEFAULT_SIZE
-#define POLY_OSAM_DEFAULT_SIZE 10
+#ifndef POLYSURVEY_DEFAULT_SIZE
+#define POLYSURVEY_DEFAULT_SIZE 10
 #endif
 
-#ifndef POLY_OSAM_DEFAULT_SWEEP
-#define POLY_OSAM_DEFAULT_SWEEP 25
+#ifndef POLYSURVEY_DEFAULT_DISTANCE
+#define POLYSURVEY_DEFAULT_DISTANCE 25
 #endif
-
-/// Default entry radius, if 0 default to half sweep
-#ifndef POLY_OSAM_ENTRY_RADIUS
-#define POLY_OSAM_ENTRY_RADIUS 0
-#endif
-
-/// if 0 never check for min radius
-//#ifndef POLY_OSAM_MIN_RADIUS
-//#define POLY_OSAM_MIN_RADIUS 1
-//#endif
 
 /// if 0 default to half sweep
-#ifndef POLY_OSAM_FIRST_SWEEP_DISTANCE
-#define POLY_OSAM_FIRST_SWEEP_DISTANCE 0
+#ifndef POLYSURVEY_ENTRY_DISTANCE
+#define POLYSURVEY_ENTRY_DISTANCE 0
 #endif
 
 /// maximum number of polygon corners
-#ifndef POLY_OSAM_POLYGONSIZE
-#define POLY_OSAM_POLYGONSIZE 10
+#ifndef POLYSURVEY_MAX_POLYGONSIZE
+#define POLYSURVEY_MAX_POLYGONSIZE 20
 #endif
 
-#ifndef POLY_OSAM_USE_FULL_CIRCLE
-#define POLY_OSAM_USE_FULL_CIRCLE TRUE
-#endif
+uint8_t Poly_Size = POLYSURVEY_DEFAULT_SIZE;
+float Poly_Distance = POLYSURVEY_DEFAULT_DISTANCE;
 
-uint8_t Poly_Size = POLY_OSAM_DEFAULT_SIZE;
-float Poly_Sweep = POLY_OSAM_DEFAULT_SWEEP;
-bool_t use_full_circle = POLY_OSAM_USE_FULL_CIRCLE;
 
 bool_t nav_survey_poly_setup_towards(uint8_t FirstWP, uint8_t Size, float Sweep, int SecondWP)
 {
@@ -87,7 +76,7 @@ bool_t nav_survey_poly_setup_towards(uint8_t FirstWP, uint8_t Size, float Sweep,
   
   //if values passed, use it.
   if (Size == 0) {Size = Poly_Size;}
-  if (Sweep == 0) {Sweep = Poly_Sweep;}
+  if (Sweep == 0) {Sweep = Poly_Distance;}
   return nav_survey_poly_setup(FirstWP, Size, Sweep, ang);
 }
 
@@ -99,7 +88,7 @@ static void RotateAndTranslateToWorld(struct EnuCoor_f *p, float Zrot, float tra
 static void FindInterceptOfTwoLines(float *x, float *y, struct Line L1, struct Line L2);
 static float EvaluateLineForX(float y, struct Line L);
 
-#define PolygonSize POLY_OSAM_POLYGONSIZE
+#define MaxPolygonSize POLYSURVEY_MAX_POLYGONSIZE
 #define MaxFloat   1000000000
 #define MinFloat   -1000000000
 
@@ -118,12 +107,11 @@ static float EvaluateLineForX(float y, struct Line L);
 enum SurveyStatus { Init, Entry, Sweep, Turn };
 static enum SurveyStatus CSurveyStatus;
 static struct Point2D SmallestCorner;
-static struct Line Edges[PolygonSize];
-static float EdgeMaxY[PolygonSize];
-static float EdgeMinY[PolygonSize];
+static struct Line Edges[MaxPolygonSize];
+static float EdgeMaxY[MaxPolygonSize];
+static float EdgeMinY[MaxPolygonSize];
 static float SurveyTheta;
 static float dSweep;
-static float SurveyRadius;
 static struct EnuCoor_f SurveyToWP;
 static struct EnuCoor_f SurveyFromWP;
 static struct EnuCoor_f SurveyEntry;
@@ -133,12 +121,13 @@ static struct EnuCoor_i survey_from_i, survey_to_i;
 
 static uint8_t SurveyEntryWP;
 static uint8_t SurveySize;
-static float SurveyCircleQdr;
+//static float SurveyCircleQdr;
 static float MaxY;
 uint16_t PolySurveySweepNum;
 uint16_t PolySurveySweepBackNum;
 float EntryRadius;
 
+//=========================================================================================================================
 bool_t nav_survey_poly_setup(uint8_t EntryWP, uint8_t Size, float sw, float Orientation)
 {
   SmallestCorner.x = 0;
@@ -153,21 +142,14 @@ bool_t nav_survey_poly_setup(uint8_t EntryWP, uint8_t Size, float sw, float Orie
   float XIntercept2 = 0;
   float entry_distance;
 
-  float PolySurveyEntryDistance = POLY_OSAM_FIRST_SWEEP_DISTANCE;
-  float PolySurveyEntryRadius = POLY_OSAM_ENTRY_RADIUS;
+  float PolySurveyEntryDistance = POLYSURVEY_ENTRY_DISTANCE;
 
   if (PolySurveyEntryDistance == 0) {
     entry_distance = sw / 2;
   } else {
     entry_distance = PolySurveyEntryDistance;
   }
-
-  if (PolySurveyEntryRadius == 0) {
-    EntryRadius = sw / 2;
-  } else {
-    EntryRadius = PolySurveyEntryRadius;
-  }
-
+  
   SurveyTheta = RadOfDeg(Orientation);
   PolySurveySweepNum = 0;
   PolySurveySweepBackNum = 0;
@@ -175,7 +157,7 @@ bool_t nav_survey_poly_setup(uint8_t EntryWP, uint8_t Size, float sw, float Orie
   SurveyEntryWP = EntryWP;
   SurveySize = Size;
 
-  struct EnuCoor_f Corners[PolygonSize];
+  struct EnuCoor_f Corners[MaxPolygonSize];
 
   CSurveyStatus = Init;
 
@@ -184,7 +166,7 @@ bool_t nav_survey_poly_setup(uint8_t EntryWP, uint8_t Size, float sw, float Orie
   }
 
   //Don't initialize if Polygon is too big or if the orientation is not between 0 and 90
-  if (Size <= PolygonSize && Orientation >= -90 && Orientation <= 90) {
+  if (Size <= MaxPolygonSize && Orientation >= -90 && Orientation <= 90) {
     //Initialize Corners
     for (i = 0; i < Size; i++) {
       Corners[i].x = waypoints[i + EntryWP].enu_f.x;
@@ -283,18 +265,9 @@ bool_t nav_survey_poly_setup(uint8_t EntryWP, uint8_t Size, float sw, float Orie
     //Find amount to increment by every sweep
     if (EntryPoint.y >= MaxY / 2) {
       entry_distance = -entry_distance;
-      EntryRadius = -EntryRadius;
       dSweep = -sw;
     } else {
-      EntryRadius = EntryRadius;
       dSweep = sw;
-    }
-
-    //CircleQdr tells the plane when to exit the circle
-    if (dSweep >= 0) {
-      SurveyCircleQdr = -DegOfRad(SurveyTheta);
-    } else {
-      SurveyCircleQdr = 180 - DegOfRad(SurveyTheta);
     }
 
     //Find y value of the first sweep
@@ -323,20 +296,11 @@ bool_t nav_survey_poly_setup(uint8_t EntryWP, uint8_t Size, float sw, float Orie
       SurveyFromWP.y = ys;
     }
 
-    //Find the direction to circle
-    if (ys > 0 && SurveyToWP.x > SurveyFromWP.x) {
-      SurveyRadius = EntryRadius;
-    } else if (ys < 0 && SurveyToWP.x < SurveyFromWP.x) {
-      SurveyRadius = EntryRadius;
-    } else {
-      SurveyRadius = -EntryRadius;
-    }
-
-    //Find the entry circle
+    //Find the entry point
     SurveyEntry.x = SurveyFromWP.x;
-    SurveyEntry.y = EntryPoint.y + entry_distance;// - EntryRadius;
+    SurveyEntry.y = EntryPoint.y + entry_distance;
 
-    //Go into entry circle state
+    //Go into entry state
     CSurveyStatus = Entry;
 
     LINE_STOP_FUNCTION;
@@ -355,7 +319,7 @@ bool_t nav_survey_poly_run(void)
   struct EnuCoor_f C;
   struct EnuCoor_f ToP;
   struct EnuCoor_f FromP;
-  float ys;
+  float ys = 0;
   static struct EnuCoor_f LastPoint;
   int i;
   bool_t LastHalfSweep;
@@ -364,7 +328,6 @@ bool_t nav_survey_poly_run(void)
   float XIntercept2 = 0;
   float DInt1 = 0;
   float DInt2 = 0;
-  //float min_radius = POLY_OSAM_MIN_RADIUS;
 
   switch (CSurveyStatus) {
     case Entry:
@@ -387,24 +350,8 @@ bool_t nav_survey_poly_run(void)
       ToP = SurveyToWP;
       FromP = SurveyFromWP;
 
-      //Rotate and Translate de plane position to local world
-      C.x = stateGetPositionEnu_f()->x;
-      C.y = stateGetPositionEnu_f()->y;
-      TranslateAndRotateFromWorld(&C, SurveyTheta, 0, 0);
-      TranslateAndRotateFromWorld(&C, 0, SmallestCorner.x, SmallestCorner.y);
-
-#ifdef DIGITAL_CAM
-      {
-        //calc distance from line start and plane position (use only X position because y can be far due to wind or other factor)
-        float dist = FromP.x - C.x;
-
-        // verify if plane are less than 10 meter from line start
-        if ((dc_autoshoot == DC_AUTOSHOOT_STOP) && (fabs(dist) < 10)) {
-          LINE_START_FUNCTION;
-        }
-      }
-#endif
-
+      float line_lenght = fabsf((fabsf(FromP.x) - fabsf(ToP.x)));
+      
       //Rotate and Translate Line points into real world
       RotateAndTranslateToWorld(&ToP, 0, SmallestCorner.x, SmallestCorner.y);
       RotateAndTranslateToWorld(&ToP, SurveyTheta, 0, 0);
@@ -421,48 +368,41 @@ bool_t nav_survey_poly_run(void)
       
       if (nav_approaching_from(&survey_to_i, NULL, 0)) {
 	LastPoint = SurveyToWP;
+      
+        line_lenght = line_lenght / dc_distance_interval;
 
-        float temp1;
-        temp1 = fabsf(FromP.x - ToP.x) / dc_distance_interval;
         double inteiro;
-        double fract = modf (temp1 , &inteiro);
-	
-	//fprintf(stderr,"dist %f temp %f fract %f\n",(FromP.x - ToP.x), temp, fract );
+        double fract = modf (line_lenght , &inteiro);
         if (fract > .5) {
-          dc_send_command(DC_SHOOT); //if last shot is more than shot_distance/2 from the corner take a picture in the corner before go to the next sweep
+          dc_send_command(DC_SHOOT); //if last shot is more than shot_distance/2 from the corner then take a picture in the corner before go to the next sweep
         }
         
-	
-        if (LastPoint.y + dSweep >= MaxY || LastPoint.y + dSweep <= 0) { //Your out of the Polygon so Sweep Back or Half Sweep
-          if (LastPoint.y + (dSweep / 2) >= MaxY || LastPoint.y + (dSweep / 2) <= 0) { //Sweep back
+        
+        //fprintf(stderr,"Lastpoint:%f <= %f\n",( LastPoint.y + dSweep  ), 0. );
+
+        
+        if (LastPoint.y + dSweep >= MaxY || LastPoint.y + dSweep <= 0  ) { //Your out of the Polygon so Sweep Back or Half Sweep
+	  //fprintf(stderr,"nao cabe interiro\n");
+
+          if ( (LastPoint.y + (dSweep / 2) ) <= MaxY || LastPoint.y + (dSweep / 2) >= 0 ) { //Sweep back
+            //fprintf(stderr,"nao cabe meio\n");
             dSweep = -dSweep;
-            if (LastHalfSweep) {
+          } else{
+            //fprintf(stderr,"cabe meio\n");
+	  }
+
+	    if (LastHalfSweep) {
               HalfSweep = FALSE;
               ys = LastPoint.y + (dSweep);
             } else {
               HalfSweep = TRUE;
               ys = LastPoint.y + (dSweep / 2);
             }
-
-            if (dSweep >= 0) {
-              SurveyCircleQdr = -DegOfRad(SurveyTheta);
-            } else {
-              SurveyCircleQdr = 180 - DegOfRad(SurveyTheta);
-            }
-            PolySurveySweepBackNum++;
-          } else { // Half Sweep forward
-            ys = LastPoint.y + (dSweep / 2);
-
-            if (dSweep >= 0) {
-              SurveyCircleQdr = -DegOfRad(SurveyTheta);
-            } else {
-              SurveyCircleQdr = 180 - DegOfRad(SurveyTheta);
-            }
-            HalfSweep = TRUE;
-          }
-
+    
         } else { // Normal sweep
-          //Find y value of the first sweep
+          //fprintf(stderr,"cabe interiro\n");
+
+	  //Find y value of the first sweep
           HalfSweep = FALSE;
           ys = LastPoint.y + dSweep;
         }
@@ -476,7 +416,7 @@ bool_t nav_survey_poly_run(void)
         }
 
         //Find point to come from and point to go to
-        DInt1 = XIntercept1 -  LastPoint.x;
+        DInt1 = XIntercept1 - LastPoint.x;
         DInt2 = XIntercept2 - LastPoint.x;
 
         if (DInt1 * DInt2 >= 0) {
@@ -515,30 +455,7 @@ bool_t nav_survey_poly_run(void)
           }
         }
 
-/*        //Find the radius to circle
-        if (!HalfSweep || use_full_circle) {
-          temp = dSweep / 2;
-        } else {
-          temp = dSweep / 4;
-        }
-
-        //if less than min radius
-        if (fabs(temp) < min_radius) {
-          if (temp < 0) { temp = -min_radius; } else { temp = min_radius; }
-        }
-
-
-        //Find the direction to circle
-        if (ys > 0 && SurveyToWP.x > SurveyFromWP.x) {
-          SurveyRadius = temp;
-        } else if (ys < 0 && SurveyToWP.x < SurveyFromWP.x) {
-          SurveyRadius = temp;
-        } else {
-          SurveyRadius = -temp;
-        }
-*/
-        
-        //Go into circle state
+        //Go into Turn state
         CSurveyStatus = Turn;
         nav_init_stage();
         LINE_STOP_FUNCTION;

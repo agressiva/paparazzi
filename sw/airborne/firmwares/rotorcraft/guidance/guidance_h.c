@@ -86,6 +86,8 @@ struct Int32Vect2 guidance_h_pos_err;
 struct Int32Vect2 guidance_h_speed_err;
 struct Int32Vect2 guidance_h_trim_att_integrator;
 
+struct Int32Vect2  guidance_h_cmd_earth_antes;  //==============================================
+
 struct Int32Vect2  guidance_h_cmd_earth;
 struct Int32Eulers guidance_h_rc_sp;
 int32_t guidance_h_heading_sp;
@@ -134,8 +136,8 @@ static void send_hover_loop(struct transport_tx *trans, struct link_device *dev)
                            &guidance_h_pos_err.y,
                            &guidance_h_speed_err.x,
                            &guidance_h_speed_err.y,
-                           &guidance_h_trim_att_integrator.x,
-                           &guidance_h_trim_att_integrator.y,
+                           &guidance_h_cmd_earth_antes.x, //&guidance_h_trim_att_integrator.x,
+                           &guidance_h_cmd_earth_antes.y, //&guidance_h_trim_att_integrator.y,
                            &guidance_h_cmd_earth.x,
                            &guidance_h_cmd_earth.y,
                            &guidance_h_heading_sp);
@@ -508,6 +510,11 @@ static void guidance_h_traj_run(bool_t in_flight)
     INT_VECT2_ZERO(guidance_h_trim_att_integrator);
   }
 
+  
+  guidance_h_cmd_earth_antes.x = guidance_h_cmd_earth.x;
+  guidance_h_cmd_earth_antes.y = guidance_h_cmd_earth.y;
+
+  
   /* compute a better approximation of force commands by taking thrust into account */
   if (guidance_h_approx_force_by_thrust && in_flight) {
     static int32_t thrust_cmd_filt;

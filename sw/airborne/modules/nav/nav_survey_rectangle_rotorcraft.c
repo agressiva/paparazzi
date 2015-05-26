@@ -32,6 +32,12 @@
 #define RECTANGLE_SURVEY_DEFAULT_SWEEP 25
 #endif
 
+#ifdef RECTANGLE_SURVEY_USE_INTERLEAVE
+#define USE_INTERLEAVE TRUE
+#else 
+#define USE_INTERLEAVE FALSE
+#endif
+
 #include "mcu_periph/uart.h"
 #include "messages.h"
 #include "subsystems/datalink/downlink.h"
@@ -50,6 +56,9 @@ static bool_t nav_survey_rectangle_active = FALSE;
 uint16_t rectangle_survey_sweep_num;
 bool_t nav_in_segment = FALSE;
 bool_t nav_in_circle = FALSE;
+bool_t interleave = USE_INTERLEAVE;
+bool_t infinite = FALSE;
+
 
 static struct EnuCoor_f survey_from, survey_to;
 static struct EnuCoor_i survey_from_i, survey_to_i;
@@ -209,11 +218,19 @@ bool_t nav_survey_rectangle_rotorcraft_run(uint8_t wp1, uint8_t wp2)
                 || ((x0 + (nav_survey_shift / 2)) > nav_survey_east)) { //not room for half sweep
               if (is_last_half) {// was last sweep half?
                 nav_survey_shift = -nav_survey_shift;
-                survey_radius = nav_survey_shift;
+                if (interleave) {
+                  survey_radius = nav_survey_shift;
+                }else {
+                  survey_radius = nav_survey_shift /2.;
+                }
                 is_last_half = FALSE;
               } else { // last sweep not half
                 nav_survey_shift = -nav_survey_shift;
-                survey_radius = nav_survey_shift / 2.;
+                if (interleave) {
+                  survey_radius = nav_survey_shift /2.;
+                }else{
+                  survey_radius = nav_survey_shift ;
+                }
               }
               rectangle_survey_sweep_num ++;
             } else { //room for half sweep after
@@ -250,11 +267,19 @@ bool_t nav_survey_rectangle_rotorcraft_run(uint8_t wp1, uint8_t wp2)
                 || ((my_y0 + (nav_survey_shift / 2)) > nav_survey_north)) { //not room for half sweep
               if (is_last_half) {// was last sweep half?
                 nav_survey_shift = -nav_survey_shift;
-                survey_radius = nav_survey_shift;
+                if (interleave) {
+                  survey_radius = nav_survey_shift;
+                }else {
+                  survey_radius = nav_survey_shift /2.;
+                }
                 is_last_half = FALSE;
               } else { // last sweep not half
                 nav_survey_shift = -nav_survey_shift;
-                survey_radius = nav_survey_shift / 2.;
+                if (interleave) {
+                  survey_radius = nav_survey_shift /2.;
+                }else{
+                  survey_radius = nav_survey_shift ;
+                }
               }
               rectangle_survey_sweep_num ++;
             } else { //room for half sweep after
@@ -299,6 +324,7 @@ bool_t nav_survey_rectangle_rotorcraft_run(uint8_t wp1, uint8_t wp2)
           dc_send_command(DC_SHOOT); //if last shot is more than shot_distance/2 from the corner take a picture in the corner before go to the next sweep
         }
 #endif
+        if (rectangle_survey_sweep_num >= 1 && !infinite) return FALSE;
       }
     } else { /* START turn */
 
@@ -332,13 +358,13 @@ bool_t nav_survey_rectangle_rotorcraft_run(uint8_t wp1, uint8_t wp2)
         LINE_START_FUNCTION;
       } else {
 
-        if (survey_orientation == WE) {
-          ENU_BFP_OF_REAL(survey_from_i, temp_f);
-          ENU_BFP_OF_REAL(survey_to_i, waypoints[0].enu_f);
-        } else {
-          ENU_BFP_OF_REAL(survey_from_i, temp_f);
-          ENU_BFP_OF_REAL(survey_to_i, waypoints[0].enu_f);
-        }
+       // if (survey_orientation == WE) {
+       //   ENU_BFP_OF_REAL(survey_from_i, temp_f);
+       //   ENU_BFP_OF_REAL(survey_to_i, waypoints[0].enu_f);
+       // } else {
+       //   ENU_BFP_OF_REAL(survey_from_i, temp_f);
+       //   ENU_BFP_OF_REAL(survey_to_i, waypoints[0].enu_f);
+       // }
 
         horizontal_mode = HORIZONTAL_MODE_ROUTE;
         nav_route(&survey_from_i, &survey_to_i);

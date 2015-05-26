@@ -30,7 +30,7 @@
 #include "std.h"
 
 extern uint8_t Poly_Size;
-extern float Poly_Sweep;
+extern float Poly_Distance;
 extern uint16_t PolySurveySweepNum;
 extern uint16_t PolySurveySweepBackNum;
 

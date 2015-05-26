@@ -5,11 +5,17 @@
   
     <dl_settings name="Survey">
 
-      <dl_settings NAME="Survey">
-        <dl_setting min="10" max="500" step="1" var="sweep" type="float" shortname="Sweep" module="modules/nav/nav_survey_rectangle_rotorcraft"/>
-	<dl_setting max="255" min="0" step="1" var="dc_distance_interval" shortname="dist" param="DC_AUTOSHOOT_DISTANCE_INTERVAL" unit="meter"/>
-<!--	<dl_setting min="0" max="20" step="1" var="Poly_Size" type="uint8_t" shortname="Size" module="modules/nav/nav_survey_poly_osam"/>
-	<dl_setting var="rotorcraft_cam_mode" MIN="0" STEP="1" MAX="1" module="cam_control/rotorcraft_cam" shortname="mode" values="NS|WE" handler="SetCamMode"/> -->
+      <dl_settings NAME="Rectangle">
+        <dl_setting min="10" max="500" step="1" var="sweep" type="float" shortname="Line dist" module="modules/nav/nav_survey_rectangle_rotorcraft"/>
+	<dl_setting max="255" min="0" step="1" var="dc_distance_interval" shortname="Shoot dist" param="DC_AUTOSHOOT_DISTANCE_INTERVAL" unit="meter"/>
+        <dl_setting min="0" max="1" step="1" values="FALSE|TRUE" var="infinite" type="bool" shortname="infinite_survei" module="modules/nav/nav_survey_rectangle_rotorcraft"/>
+        <dl_setting min="0" max="1" step="1" values="FALSE|TRUE" var="interleave" type="bool" shortname="use_interleave" module="modules/nav/nav_survey_rectangle_rotorcraft"/>
+	<!--<dl_setting var="rotorcraft_cam_mode" MIN="0" STEP="1" MAX="1" module="cam_control/rotorcraft_cam" shortname="mode" values="NS|WE" handler="SetCamMode"/> -->
+      </dl_settings>
+
+      <dl_settings NAME="Polygon">
+        <dl_setting min="0" max="20" step="1" var="Poly_Size" type="uint8_t" shortname="Num points" module="modules/nav/nav_survey_poly_rotorcraft"/>
+        <dl_setting min="0" max="500" step="1" var="Poly_Distance" type="float" shortname="Line dist" module="modules/nav/nav_survey_poly_rotorcraft"/>
       </dl_settings>
       
       <dl_settings name="dc">

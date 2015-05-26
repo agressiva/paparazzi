@@ -185,7 +185,7 @@
     <define name="COURSE_PGAIN" value="0.8"/> <!-- coef on course error (override course pgain for followers) -->
     <define name="ALTITUDE_PGAIN" value="0.1"/> <!-- coef on altitude error -->
     <define name="PROX" value="60." unit="m"/> <!-- proximity distance -->
-    <define name="MODE" value="0"/> <!-- mode 0 = global, 1 = local -->
+    <define name="MODE" value="1"/> <!-- mode 0 = global, 1 = local -->
   </section>
 
   <section name="TCAS" prefix="TCAS_">
@@ -221,7 +221,7 @@
   </section>
 
   <section name="SIMU">
-    <define name="YAW_RESPONSE_FACTOR" value="1."/>
+    <define name="YAW_RESPONSE_FACTOR" value="0.5"/>
   </section>
 
  <makefile>

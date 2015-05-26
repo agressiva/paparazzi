@@ -59,8 +59,20 @@
  * sens = 1/131.072 * pi/180 * 2^INT32_RATE_FRAC
  * sens = 1/131.072 * pi/180 * 4096 = 0.5454
  I*/
+
+
 #if !defined IMU_GYRO_P_SENS & !defined IMU_GYRO_Q_SENS & !defined IMU_GYRO_R_SENS
 // FIXME
+#define IMU_GYRO_P_SENS 4.359
+#define IMU_GYRO_P_SENS_NUM 4359
+#define IMU_GYRO_P_SENS_DEN 1000
+#define IMU_GYRO_Q_SENS 4.359
+#define IMU_GYRO_Q_SENS_NUM 4359
+#define IMU_GYRO_Q_SENS_DEN 1000
+#define IMU_GYRO_R_SENS 4.359
+#define IMU_GYRO_R_SENS_NUM 4359
+#define IMU_GYRO_R_SENS_DEN 1000
+/*
 #define IMU_GYRO_P_SENS 0.5454
 #define IMU_GYRO_P_SENS_NUM 2727
 #define IMU_GYRO_P_SENS_DEN 5000
@@ -70,7 +82,9 @@
 #define IMU_GYRO_R_SENS 0.5454
 #define IMU_GYRO_R_SENS_NUM 2727
 #define IMU_GYRO_R_SENS_DEN 5000
+*/
 #endif
+
 #if !defined IMU_GYRO_P_NEUTRAL & !defined IMU_GYRO_Q_NEUTRAL & !defined IMU_GYRO_R_NEUTRAL
 #define IMU_GYRO_P_NEUTRAL 0
 #define IMU_GYRO_Q_NEUTRAL 0
