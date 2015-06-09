@@ -164,7 +164,7 @@ void stabilization_attitude_set_earth_cmd_i(struct Int32Vect2 *cmd, int32_t head
   stab_att_sp_euler.psi = ANGLE_FLOAT_OF_BFP(heading);
 }
 
-#define MAX_SUM_ERR 200
+#define MAX_SUM_ERR 2000
 
 void stabilization_attitude_run(bool_t  in_flight)
 {
@@ -204,17 +204,17 @@ void stabilization_attitude_run(bool_t  in_flight)
   stabilization_att_fb_cmd[COMMAND_ROLL] =
     stabilization_gains.p.x  * att_err.phi +
     stabilization_gains.d.x  * rate_err.p +
-    stabilization_gains.i.x  * stabilization_att_sum_err.phi;
+    stabilization_gains.i.x  * stabilization_att_sum_err.phi / 64.0;
 
   stabilization_att_fb_cmd[COMMAND_PITCH] =
     stabilization_gains.p.y  * att_err.theta +
     stabilization_gains.d.y  * rate_err.q +
-    stabilization_gains.i.y  * stabilization_att_sum_err.theta;
+    stabilization_gains.i.y  * stabilization_att_sum_err.theta / 64.0;
 
   stabilization_att_fb_cmd[COMMAND_YAW] =
     stabilization_gains.p.z  * att_err.psi +
     stabilization_gains.d.z  * rate_err.r +
-    stabilization_gains.i.z  * stabilization_att_sum_err.psi;
+    stabilization_gains.i.z  * stabilization_att_sum_err.psi / 64.0;
 
 
   stabilization_cmd[COMMAND_ROLL] =
@@ -225,7 +225,7 @@ void stabilization_attitude_run(bool_t  in_flight)
     (stabilization_att_fb_cmd[COMMAND_YAW] + stabilization_att_ff_cmd[COMMAND_YAW]);
 
   /* bound the result */
-  BoundAbs(stabilization_cmd[COMMAND_ROLL], MAX_PPRZ);
-  BoundAbs(stabilization_cmd[COMMAND_PITCH], MAX_PPRZ);
-  BoundAbs(stabilization_cmd[COMMAND_YAW], MAX_PPRZ);
+  BoundAbs(stabilization_cmd[COMMAND_ROLL], MAX_PPRZ/2);
+  BoundAbs(stabilization_cmd[COMMAND_PITCH], MAX_PPRZ/2);
+  BoundAbs(stabilization_cmd[COMMAND_YAW], MAX_PPRZ/3);
 }

@@ -44,18 +44,15 @@
 
 #include "generated/flight_plan.h"
 
+int32_t carrot1;
+int8_t sign_radius;
 
 #define CARROT_DIST (12 << 8) //12
 bool_t nav_tower_run(struct EnuCoor_i *wp_center, int32_t radius)
 {
-  if (radius == 0) {
-    VECT2_COPY(navigation_target, *wp_center);
-    dist2_to_wp = get_dist2_to_point(wp_center);
-  } else {
     struct Int32Vect2 pos_diff;
     VECT2_DIFF(pos_diff, *stateGetPositionEnu_i(), *wp_center);
-    // go back to half metric precision or values are too large
-    //INT32_VECT2_RSHIFT(pos_diff,pos_diff,INT32_POS_FRAC/2);
+
     // store last qdr
     int32_t last_qdr = nav_circle_qdr;
     // compute qdr
@@ -71,13 +68,15 @@ bool_t nav_tower_run(struct EnuCoor_i *wp_center, int32_t radius)
     }
 
     // direction of rotation
-    int8_t sign_radius = radius > 0 ? 1 : -1;
+ //int8_t sign_radius = radius > 0 ? 1 : -1;
     // absolute radius
     int32_t abs_radius = abs(radius);
-    // carrot_angle
-    int32_t carrot_angle = ((CARROT_DIST << INT32_ANGLE_FRAC) / abs_radius);
+    //carrot_angle = ((CARROT_DIST << INT32_ANGLE_FRAC) / abs_radius);
     Bound(carrot_angle, (INT32_ANGLE_PI / 16), INT32_ANGLE_PI_4);
-    carrot_angle = nav_circle_qdr - sign_radius * carrot_angle;
+    carrot_angle = nav_circle_qdr - carrot1;
+    
+          fprintf(stderr,"qdr:%d carrot_Ang:%d\n",nav_circle_qdr,carrot_angle );
+
     int32_t s_carrot, c_carrot;
     PPRZ_ITRIG_SIN(s_carrot, carrot_angle);
     PPRZ_ITRIG_COS(c_carrot, carrot_angle);
@@ -85,11 +84,11 @@ bool_t nav_tower_run(struct EnuCoor_i *wp_center, int32_t radius)
     VECT2_ASSIGN(pos_diff, abs_radius * c_carrot, abs_radius * s_carrot);
     INT32_VECT2_RSHIFT(pos_diff, pos_diff, INT32_TRIG_FRAC);
     VECT2_SUM(navigation_target, *wp_center, pos_diff);
-  }
+
   nav_circle_center = *wp_center;
   nav_circle_radius = radius;
   horizontal_mode = HORIZONTAL_MODE_CIRCLE;
-  
+
   return TRUE;
 }
 

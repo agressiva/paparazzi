@@ -3,17 +3,17 @@
 <airframe name="Blender">
 
   <modules main_freq="512">
+    <load name="geo_mag.xml"/>
     <!--<load name="photogrammetry_calculator.xml"/>-->
+<!--    <load name="nav_tower_rotorcraft.xml"/> -->
     <load name="nav_survey_rectangle_rotorcraft.xml"/>
     <load name="nav_survey_poly_rotorcraft.xml"/>
-    <load name="nav_tower_rotorcraft.xml"/>
     <load name="servo_switch.xml"/>
     <load name="rotorcraft_cam.xml"/>
     <load name="digital_cam.xml">
       <!-- AUX1 -->
       <define name="DC_SHUTTER_GPIO" value="GPIOA,GPIO7"/>
     </load>
-    <load name="nav_survey_rectangle_rotorcraft.xml"/>
   </modules>
 
   <firmware name="rotorcraft">
@@ -29,6 +29,10 @@
       <subsystem name="fdm"         type="jsbsim"/>
     </target>
 
+
+<!-- <configure name="PERIODIC_FREQUENCY" value="1024"/> -->
+
+
     <subsystem name="radio_control" type="ppm"/>
     <subsystem name="telemetry"     type="transparent"/>
     <subsystem name="actuators"     type="mkk">
@@ -42,9 +46,11 @@
     <subsystem name="gps"           type="ublox">
       <configure name="GPS_BAUD" value="B57600"/>
     </subsystem>
-    <subsystem name="stabilization" type="int_quat"/>
-    <subsystem name="ahrs"          type="int_cmpl_quat"/>
+    <subsystem name="stabilization" type="int_euler"/>
+   <subsystem name="ahrs"          type="int_cmpl_quat"/>
     <subsystem name="ins"           type="hff"/>
+
+<!--    <subsystem name="ins"           type="float_invariant"/> -->
 
     <configure name="AHRS_PROPAGATE_FREQUENCY" value="512"/>
   </firmware>
@@ -161,7 +167,7 @@
     <!-- setpoints -->
     <define name="SP_MAX_PHI"     value="45." unit="deg"/>
     <define name="SP_MAX_THETA"   value="45." unit="deg"/>
-    <define name="SP_MAX_R"       value="40." unit="deg/s"/>
+    <define name="SP_MAX_R"       value="220." unit="deg/s"/>
     <define name="DEADBAND_R"     value="250"/>
 
     <!-- reference -->
@@ -175,10 +181,10 @@
     <define name="REF_MAX_Q"    value="300." unit="deg/s"/>
     <define name="REF_MAX_QDOT" value="RadOfDeg(7000.)"/>
 
-    <define name="REF_OMEGA_R"  value="150" unit="deg/s"/>
+    <define name="REF_OMEGA_R"  value="360" unit="deg/s"/>
     <define name="REF_ZETA_R"   value="0.85"/>
-    <define name="REF_MAX_R"    value="40." unit="deg/s"/>
-    <define name="REF_MAX_RDOT" value="RadOfDeg(900.)"/>
+    <define name="REF_MAX_R"    value="280." unit="deg/s"/> <!--180 70 -->
+    <define name="REF_MAX_RDOT" value="RadOfDeg(1800.)"/> <!-- 420 -->
 
     <!-- feedback -->
     <define name="PHI_PGAIN"  value="1800"/>
@@ -204,7 +210,6 @@
   </section>
 
   <section name="GUIDANCE_V"   prefix="GUIDANCE_V_">
-
     <define name="REF_MIN_ZDD"  value="-0.5*9.81"/>
     <define name="REF_MAX_ZDD"  value=" 0.5*9.81"/>
     <define name="REF_MIN_ZD"   value="-1.5"/>
@@ -218,19 +223,19 @@
   </section>
 
   <section name="GUIDANCE_H" prefix="GUIDANCE_H_">
-    <define name="MAX_BANK" value="30" unit="deg"/>
+    <define name="MAX_BANK" value="25" unit="deg"/>
     <define name="PGAIN" value="50"/>
     <define name="DGAIN" value="90"/> <!-- 140 80-->
     <define name="IGAIN" value="00"/> <!--20-->
-    <define name="NGAIN" value="0"/>
+    <define name="VGAIN" value="20"/>
     <!-- feedforward -->
-    <define name="AGAIN" value="0"/>
-    <define name="APPROX_FORCE_BY_THRUST" value="1"/>   <!-- 25_5_2015 -->
-    <define name="THRUST_CMD_FILTER" value="1"/>  <!-- 25_5_2015 -->
+    <define name="AGAIN" value="70"/>
+    <define name="APPROX_FORCE_BY_THRUST" value="0"/>   <!-- 25_5_2015 -->
+    <define name="THRUST_CMD_FILTER" value="10"/>  <!-- 25_5_2015 -->
     <define name="USE_REF" value="1"/>
     <define name="USE_SPEED_REF" value="1"/> <!-- using RC to control horizontal setpoint -->
-    <define name="REF_MAX_ACCEL" value="17."/> <!-- 7.0max reference horizontal acceleration in m/s2 -->
-    <define name="REF_MAX_SPEED" value="17."/> <!-- 3 max reference horizontal speed in m/s -->
+    <define name="REF_MAX_ACCEL" value="7."/> <!-- 7.0max reference horizontal acceleration in m/s2 -->
+    <define name="REF_MAX_SPEED" value="7."/> <!-- 3 max reference horizontal speed in m/s -->
   </section>
 
   <section name="BAT">
@@ -240,8 +245,8 @@
   </section>
 
   <section name="AUTOPILOT">
-    <define name="MODE_MANUAL" value="AP_MODE_ATTITUDE_DIRECT"/>
-    <define name="MODE_AUTO1"  value="AP_MODE_ATTITUDE_Z_HOLD"/>
+    <define name="MODE_MANUAL" value="AP_MODE_HOVER_Z_HOLD"/>
+    <define name="MODE_AUTO1"  value="AP_MODE_HOVER_Z_HOLD"/>
     <!--define name="MODE_AUTO2"  value="AP_MODE_ATTITUDE_Z_HOLD"/-->
     <define name="MODE_AUTO2"  value="AP_MODE_NAV"/>
   </section>

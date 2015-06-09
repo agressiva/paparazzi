@@ -56,8 +56,6 @@ struct EnuCoor_i nav_last_point;
 uint8_t last_wp UNUSED;
 
 /* Used in nav_survey_rectangle. Defined here for downlink and uplink */
-/*float nav_survey_shift;
-float nav_survey_west, nav_survey_east, nav_survey_north, nav_survey_south;*/
 bool_t nav_survey_active;
 
 /** Maximum distance from HOME waypoint before going into failsafe mode */
@@ -80,8 +78,6 @@ int32_t nav_circle_radius, nav_circle_qdr, nav_circle_radians;
 
 int32_t nav_leg_progress;
 uint32_t nav_leg_length;
-
-bool_t nav_survey_active;
 
 int32_t nav_roll, nav_pitch;
 int32_t nav_heading;

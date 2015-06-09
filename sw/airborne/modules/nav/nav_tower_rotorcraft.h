@@ -32,5 +32,12 @@
 #define NAV_TOWER_ROTORCRAFT_H
 
 #include "firmwares/rotorcraft/navigation.h"
+extern int32_t carrot1;
+extern int8_t sign_radius;
+extern bool_t nav_tower_run(struct EnuCoor_i *wp_center, int32_t radius);
+
+#define NavTower(_center, _radius) { \
+    nav_tower_run(&waypoints[_center].enu_i, POS_BFP_OF_REAL(_radius)); \
+  }
 
 #endif // NAV_TOWER_ROTORCRAFT_H

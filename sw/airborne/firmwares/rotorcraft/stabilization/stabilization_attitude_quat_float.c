@@ -90,7 +90,7 @@ static const float theta_ddgain_surface[] = STABILIZATION_ATTITUDE_THETA_DDGAIN_
 static const float psi_ddgain_surface[] = STABILIZATION_ATTITUDE_PSI_DDGAIN_SURFACE;
 #endif
 
-#define IERROR_SCALE 1024
+#define IERROR_SCALE 256 //1024=================================
 
 #if PERIODIC_TELEMETRY
 #include "subsystems/datalink/telemetry.h"

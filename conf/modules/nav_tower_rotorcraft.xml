@@ -29,6 +29,18 @@ or using flightplan primitive
     </description>
   </doc>
 
+
+  <settings>
+    <dl_settings>
+      <dl_settings NAME="Tower_Survey">
+        <dl_setting min="-12288" max="12288" step="8" var="carrot1" type="int32_t" shortname="Angulo" module="modules/nav/nav_tower_rotorcraft"/>
+	<dl_setting min="-1" max="1" step="1" var="sign_radius" type="int8_t" shortname="sinal" module="modules/nav/nav_tower_rotorcraft"/>
+
+      </dl_settings>
+    </dl_settings>
+  </settings>
+
+
   <header>
     <file name="nav_tower_rotorcraft.h"/>
   </header>

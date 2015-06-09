@@ -183,6 +183,7 @@ void stabilization_attitude_set_earth_cmd_i(struct Int32Vect2 *cmd, int32_t head
 #define OFFSET_AND_ROUND2(_a, _b) (((_a)+(1<<((_b)-1))-((_a)<0?1:0))>>(_b))
 
 #define MAX_SUM_ERR 4000000
+//#define IERROR_SCALE 8 // ========================================
 
 void stabilization_attitude_run(bool_t  in_flight)
 {
@@ -211,6 +212,10 @@ void stabilization_attitude_run(bool_t  in_flight)
   INT32_ANGLE_NORMALIZE(att_err.psi);
 
   if (in_flight) {
+    /* scale att_Err */
+ //   struct Int32Eulers scaled_att_err;
+ //   EULERS_SDIV(scaled_att_err,att_err,IERROR_SCALE);
+
     /* update integrator */
     EULERS_ADD(stabilization_att_sum_err, att_err);
     EULERS_BOUND_CUBE(stabilization_att_sum_err, -MAX_SUM_ERR, MAX_SUM_ERR);
@@ -232,17 +237,17 @@ void stabilization_attitude_run(bool_t  in_flight)
   stabilization_att_fb_cmd[COMMAND_ROLL] =
     stabilization_gains.p.x    * att_err.phi +
     stabilization_gains.d.x    * rate_err.p +
-    OFFSET_AND_ROUND2((stabilization_gains.i.x  * stabilization_att_sum_err.phi), 10);
+    OFFSET_AND_ROUND2((stabilization_gains.i.x  * stabilization_att_sum_err.phi), 10); //10
 
   stabilization_att_fb_cmd[COMMAND_PITCH] =
     stabilization_gains.p.y    * att_err.theta +
     stabilization_gains.d.y    * rate_err.q +
-    OFFSET_AND_ROUND2((stabilization_gains.i.y  * stabilization_att_sum_err.theta), 10);
+    OFFSET_AND_ROUND2((stabilization_gains.i.y  * stabilization_att_sum_err.theta), 10); //10
 
   stabilization_att_fb_cmd[COMMAND_YAW] =
     stabilization_gains.p.z    * att_err.psi +
     stabilization_gains.d.z    * rate_err.r +
-    OFFSET_AND_ROUND2((stabilization_gains.i.z  * stabilization_att_sum_err.psi), 10);
+    OFFSET_AND_ROUND2((stabilization_gains.i.z  * stabilization_att_sum_err.psi), 10); //10
 
 
   /* with P gain of 100, att_err of 180deg (3.14 rad)
@@ -262,8 +267,8 @@ void stabilization_attitude_run(bool_t  in_flight)
     OFFSET_AND_ROUND((stabilization_att_fb_cmd[COMMAND_YAW] + stabilization_att_ff_cmd[COMMAND_YAW]), CMD_SHIFT);
 
   /* bound the result */
-  BoundAbs(stabilization_cmd[COMMAND_ROLL], MAX_PPRZ);
-  BoundAbs(stabilization_cmd[COMMAND_PITCH], MAX_PPRZ);
-  BoundAbs(stabilization_cmd[COMMAND_YAW], MAX_PPRZ/2);
+  BoundAbs(stabilization_cmd[COMMAND_ROLL], MAX_PPRZ/3);
+  BoundAbs(stabilization_cmd[COMMAND_PITCH], MAX_PPRZ/3);
+  BoundAbs(stabilization_cmd[COMMAND_YAW], MAX_PPRZ/3);
 
 }

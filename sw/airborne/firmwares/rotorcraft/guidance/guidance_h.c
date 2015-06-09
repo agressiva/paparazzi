@@ -86,8 +86,6 @@ struct Int32Vect2 guidance_h_pos_err;
 struct Int32Vect2 guidance_h_speed_err;
 struct Int32Vect2 guidance_h_trim_att_integrator;
 
-struct Int32Vect2  guidance_h_cmd_earth_antes;  //==============================================
-
 struct Int32Vect2  guidance_h_cmd_earth;
 struct Int32Eulers guidance_h_rc_sp;
 int32_t guidance_h_heading_sp;
@@ -136,8 +134,8 @@ static void send_hover_loop(struct transport_tx *trans, struct link_device *dev)
                            &guidance_h_pos_err.y,
                            &guidance_h_speed_err.x,
                            &guidance_h_speed_err.y,
-                           &guidance_h_cmd_earth_antes.x, //&guidance_h_trim_att_integrator.x,
-                           &guidance_h_cmd_earth_antes.y, //&guidance_h_trim_att_integrator.y,
+                           &guidance_h_trim_att_integrator.x,
+                           &guidance_h_trim_att_integrator.y,
                            &guidance_h_cmd_earth.x,
                            &guidance_h_cmd_earth.y,
                            &guidance_h_heading_sp);
@@ -460,7 +458,7 @@ static void guidance_h_update_reference(void)
 static void guidance_h_traj_run(bool_t in_flight)
 {
   /* maximum bank angle: default 20 deg, max 40 deg*/
-  static const int32_t traj_max_bank = Max(BFP_OF_REAL(GUIDANCE_H_MAX_BANK, INT32_ANGLE_FRAC),
+  static const int32_t traj_max_bank = Min(BFP_OF_REAL(GUIDANCE_H_MAX_BANK, INT32_ANGLE_FRAC),
                                        BFP_OF_REAL(RadOfDeg(40), INT32_ANGLE_FRAC));
   static const int32_t total_max_bank = BFP_OF_REAL(RadOfDeg(45), INT32_ANGLE_FRAC);
 
@@ -510,11 +508,6 @@ static void guidance_h_traj_run(bool_t in_flight)
     INT_VECT2_ZERO(guidance_h_trim_att_integrator);
   }
 
-  
-  guidance_h_cmd_earth_antes.x = guidance_h_cmd_earth.x;
-  guidance_h_cmd_earth_antes.y = guidance_h_cmd_earth.y;
-
-  
   /* compute a better approximation of force commands by taking thrust into account */
   if (guidance_h_approx_force_by_thrust && in_flight) {
     static int32_t thrust_cmd_filt;
