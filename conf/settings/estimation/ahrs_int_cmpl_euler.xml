@@ -5,6 +5,7 @@
 
     <dl_settings NAME="Filter">
        <dl_setting var="ahrs_ice.reinj_1" min="512" step="512" max="262144" module="subsystems/ahrs/ahrs_int_cmpl_euler" shortname="reinj_1"/>
+       <dl_setting var="ahrs_ice.mag_offset" min="-1" step=".05" max="1" module="subsystems/ahrs/ahrs_int_cmpl_euler" shortname="mag_offset"/>
     </dl_settings>
 
   </dl_settings>
