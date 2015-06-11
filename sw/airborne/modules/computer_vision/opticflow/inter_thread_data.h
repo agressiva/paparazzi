@@ -29,6 +29,7 @@
 #ifndef _INTER_THREAD_DATA_H
 #define _INTER_THREAD_DATA_H
 
+
 /* The result calculated from the opticflow */
 struct opticflow_result_t {
   float fps;              ///< Frames per second of the optical flow calculation
@@ -42,6 +43,30 @@ struct opticflow_result_t {
 
   float vel_x;            ///< The velocity in the x direction
   float vel_y;            ///< The velocity in the y direction
+
+/// Data from thread to module
+struct CVresults {
+  int cnt;          // Number of processed frames
+
+  float Velx;       // Velocity as measured by camera
+  float Vely;
+  int flow_count;
+
+  float cam_h;      // Debug parameters
+
+  int count;
+
+  int plot_count;
+  int x[100], y[100]; // TODO: make less ugly
+
+  int new_plot_count;
+  int new_x[100], new_y[100];
+
+  float OFx, OFy, dx_sum, dy_sum;
+  float diff_roll;
+  float diff_pitch;
+  float FPS;
+
 };
 
 /* The state of the drone when it took an image */
