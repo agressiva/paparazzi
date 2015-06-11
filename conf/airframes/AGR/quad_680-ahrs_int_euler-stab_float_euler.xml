@@ -11,7 +11,7 @@
  <!--
     <configure name="PERIODIC_FREQUENCY" value="1024"/>
     <define name="HFF_PRESCALER"  value="32"/> -->
-    <define name="USE_ATTITUDE_REF" value="0"/>    <!-- 31_5_2015  veio do config krooz -->
+<!--    <define name="USE_ATTITUDE_REF" value="0"/> -->  <!-- 31_5_2015  veio do config krooz -->
 
 
     <subsystem name="radio_control" type="sbus">

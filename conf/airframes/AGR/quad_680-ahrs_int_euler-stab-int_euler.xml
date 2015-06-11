@@ -121,13 +121,13 @@
     <define name="ACCEL_Y_SENS" value="0.913497864536" integer="16"/>
     <define name="ACCEL_Z_SENS" value="0.927158126989" integer="16"/>
 
-    <!-- calibrado 05_06_2015 todos eixos-->
-    <define name="MAG_X_NEUTRAL" value="-182"/>
-    <define name="MAG_Y_NEUTRAL" value="17"/>
-    <define name="MAG_Z_NEUTRAL" value="96"/>
-    <define name="MAG_X_SENS" value="7.97600828875" integer="16"/>
-    <define name="MAG_Y_SENS" value="7.82837666833" integer="16"/>
-    <define name="MAG_Z_SENS" value="9.75804957465" integer="16"/>
+    <!-- calibrado 09_06_2015 todos eixos-->
+<define name="MAG_X_NEUTRAL" value="-263"/>
+<define name="MAG_Y_NEUTRAL" value="-115"/>
+<define name="MAG_Z_NEUTRAL" value="-97"/>
+<define name="MAG_X_SENS" value="8.44009841881" integer="16"/>
+<define name="MAG_Y_SENS" value="8.60196198233" integer="16"/>
+<define name="MAG_Z_SENS" value="9.80135116867" integer="16"/>
 
     <define name="BODY_TO_IMU_PHI"   value="0." unit="deg"/>
     <define name="BODY_TO_IMU_THETA" value="0." unit="deg"/>

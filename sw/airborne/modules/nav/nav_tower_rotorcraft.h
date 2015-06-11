@@ -32,7 +32,7 @@
 #define NAV_TOWER_ROTORCRAFT_H
 
 #include "firmwares/rotorcraft/navigation.h"
-extern int32_t carrot1;
+extern float carrot1;
 extern int8_t sign_radius;
 extern bool_t nav_tower_run(struct EnuCoor_i *wp_center, int32_t radius);
 

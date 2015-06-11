@@ -44,7 +44,7 @@
 
 #include "generated/flight_plan.h"
 
-int32_t carrot1;
+float carrot1;
 int8_t sign_radius;
 
 #define CARROT_DIST (12 << 8) //12
@@ -72,8 +72,8 @@ bool_t nav_tower_run(struct EnuCoor_i *wp_center, int32_t radius)
     // absolute radius
     int32_t abs_radius = abs(radius);
     //carrot_angle = ((CARROT_DIST << INT32_ANGLE_FRAC) / abs_radius);
-    Bound(carrot_angle, (INT32_ANGLE_PI / 16), INT32_ANGLE_PI_4);
-    carrot_angle = nav_circle_qdr - carrot1;
+    //Bound(carrot_angle, (INT32_ANGLE_PI / 16), INT32_ANGLE_PI_4);
+    int32_t carrot_angle =BFP_OF_REAL(carrot1, INT32_ANGLE_FRAC);
     
           fprintf(stderr,"qdr:%d carrot_Ang:%d\n",nav_circle_qdr,carrot_angle );
 
