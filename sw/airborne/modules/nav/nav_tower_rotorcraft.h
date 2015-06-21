@@ -33,11 +33,16 @@
 
 #include "firmwares/rotorcraft/navigation.h"
 extern float carrot1;
-extern int8_t sign_radius;
-extern bool_t nav_tower_run(struct EnuCoor_i *wp_center, int32_t radius);
+extern float raio;
+extern bool_t nav_tower_setup(struct EnuCoor_i *wp_center, int32_t radius);
+extern bool_t nav_tower_run(struct EnuCoor_i *wp_center);
 
-#define NavTower(_center, _radius) { \
-    nav_tower_run(&waypoints[_center].enu_i, POS_BFP_OF_REAL(_radius)); \
+#define NavTower(_center) { \
+    nav_tower_run(&waypoints[_center].enu_i); \
   }
+  
+#define NavTowerSetup(_center, _radius) { \
+    nav_tower_setup(&waypoints[_center].enu_i, _radius); \
+  }  
 
 #endif // NAV_TOWER_ROTORCRAFT_H

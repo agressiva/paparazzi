@@ -165,8 +165,8 @@
     </block>
 
     <block group="routes" name="tower" strip_button="tower">
-     <!-- <call fun="nav_survey_poly_setup_towards(WP_P1_1, 0, 0, WP_P1_angle)"/> -->
-      <call fun="NavTower(WP_TORRE, 15)"/>
+      <call fun="NavTowerSetup(WP_TORRE, 15)"/>
+      <call fun="NavTower(WP_TORRE)"/>
     </block>
 
     <block group="routes" name="circle" strip_button="CAM">

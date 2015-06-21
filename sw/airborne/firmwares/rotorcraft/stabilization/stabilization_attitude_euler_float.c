@@ -227,5 +227,5 @@ void stabilization_attitude_run(bool_t  in_flight)
   /* bound the result */
   BoundAbs(stabilization_cmd[COMMAND_ROLL], MAX_PPRZ/2);
   BoundAbs(stabilization_cmd[COMMAND_PITCH], MAX_PPRZ/2);
-  BoundAbs(stabilization_cmd[COMMAND_YAW], MAX_PPRZ/3);
+  BoundAbs(stabilization_cmd[COMMAND_YAW], MAX_PPRZ/2);
 }

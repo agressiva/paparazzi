@@ -31,7 +31,7 @@
 
 <!-- <configure name="PERIODIC_FREQUENCY" value="1024"/> -->
 
-
+    <define name="TOWER_RADIO_ANGLE" value="RADIO_CH8"/>
     <subsystem name="radio_control" type="ppm"/>
     <subsystem name="telemetry"     type="transparent"/>
     <subsystem name="actuators"     type="mkk">
@@ -223,18 +223,18 @@
 
   <section name="GUIDANCE_H" prefix="GUIDANCE_H_">
     <define name="MAX_BANK" value="25" unit="deg"/>
-    <define name="PGAIN" value="50"/>
-    <define name="DGAIN" value="90"/> <!-- 140 80-->
+    <define name="PGAIN" value="100"/>
+    <define name="DGAIN" value="180"/> <!-- 140 80-->
     <define name="IGAIN" value="00"/> <!--20-->
-    <define name="VGAIN" value="20"/>
+    <define name="VGAIN" value="5"/>
     <!-- feedforward -->
-    <define name="AGAIN" value="70"/>
+    <define name="AGAIN" value="80"/>
     <define name="APPROX_FORCE_BY_THRUST" value="0"/>   <!-- 25_5_2015 -->
     <define name="THRUST_CMD_FILTER" value="10"/>  <!-- 25_5_2015 -->
     <define name="USE_REF" value="1"/>
     <define name="USE_SPEED_REF" value="1"/> <!-- using RC to control horizontal setpoint -->
-    <define name="REF_MAX_ACCEL" value="7."/> <!-- 7.0max reference horizontal acceleration in m/s2 -->
-    <define name="REF_MAX_SPEED" value="7."/> <!-- 3 max reference horizontal speed in m/s -->
+    <define name="REF_MAX_ACCEL" value="4."/> <!-- 7.0max reference horizontal acceleration in m/s2 -->
+    <define name="REF_MAX_SPEED" value="4."/> <!-- 3 max reference horizontal speed in m/s -->
   </section>
 
   <section name="BAT">

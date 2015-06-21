@@ -1867,6 +1867,18 @@
   </message>
 
   <!--216 is free -->
+  
+  <message name="STAB_ATTITUDE_INDI" id="216">
+    <field name="angular_accel_p" type="float"/>
+    <field name="angular_accel_q" type="float"/>
+    <field name="angular_accel_r" type="float"/>
+    <field name="angular_accel_ref_p" type="float"/>
+    <field name="angular_accel_ref_q" type="float"/>
+    <field name="angular_accel_ref_r" type="float"/>
+    <field name="indi_u_p" type="float"/>
+    <field name="indi_u_q" type="float"/>
+    <field name="indi_u_r" type="float"/>
+  </message>
   <!--217 is free -->
 
   <message name="BEBOP_ACTUATORS" id="218">

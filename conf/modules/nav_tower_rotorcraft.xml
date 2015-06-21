@@ -3,8 +3,8 @@
 <module name="nav_tower_rotorcraft" dir="nav">
   <doc>
     <description>
-Survey a power tower with a rotorcraft.
-From NAC-VA Brasil.
+Survey a tower with a rotorcraft.
+NAC-VA Brasil.
 by Eduardo Reginato Lavratti
 In the flight plan, the survey blocks call init and run functions:
 1. Initialize the variables needed for the survey to start, with nav_survey_polygon_setup(WP1, WP2, sweep_width, orientation)
@@ -33,10 +33,10 @@ or using flightplan primitive
   <settings>
     <dl_settings>
       <dl_settings NAME="Tower_Survey">
-        <dl_setting min="-40" max="40" step=".1" var="carrot1" type="float" shortname="Angulo" module="modules/nav/nav_tower_rotorcraft"/>
-	<dl_setting min="-1" max="1" step="1" var="sign_radius" type="int8_t" shortname="sinal" module="modules/nav/nav_tower_rotorcraft"/>
+	        <dl_setting min="-0.02" max="0.02" step=".001" var="carrot1" type="float" shortname="angle" module="modules/nav/nav_tower_rotorcraft"/>
 
-      </dl_settings>
+        <dl_setting min="10" max="50" step="1" var="raio" type="float" shortname="Raio" module="modules/nav/nav_tower_rotorcraft"/>
+	</dl_settings>
     </dl_settings>
   </settings>
 

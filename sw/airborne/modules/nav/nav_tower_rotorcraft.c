@@ -27,8 +27,6 @@
  * Rectangle is defined by two points, sweep can be south-north or west-east.
  */
 
-#include <stdio.h>
-
 #include "mcu_periph/uart.h"
 #include "messages.h"
 #include "subsystems/datalink/downlink.h"
@@ -44,38 +42,44 @@
 
 #include "generated/flight_plan.h"
 
+#include "subsystems/radio_control.h"
+//#include "inter_mcu.h"
+
+#define TOWER_MIN_RADIUS 15
+
+#ifndef TOWER_RADIO_ANGLE
+#error "You need to define TOWER_RADIO_ANGLE to a RADIO_xxx channel to use this module"
+#endif
+
 float carrot1;
 int8_t sign_radius;
+static int32_t nav_entry_qdr;
+float raio;
 
-#define CARROT_DIST (12 << 8) //12
-bool_t nav_tower_run(struct EnuCoor_i *wp_center, int32_t radius)
+
+#define CARROT_DIST (12 << 8)
+bool_t nav_tower_run(struct EnuCoor_i *wp_center)
 {
     struct Int32Vect2 pos_diff;
     VECT2_DIFF(pos_diff, *stateGetPositionEnu_i(), *wp_center);
 
-    // store last qdr
-    int32_t last_qdr = nav_circle_qdr;
     // compute qdr
-    nav_circle_qdr = int32_atan2(pos_diff.y, pos_diff.x);
-    // increment circle radians
-    if (nav_circle_radians != 0) {
-      int32_t angle_diff = nav_circle_qdr - last_qdr;
-      INT32_ANGLE_NORMALIZE(angle_diff);
-      nav_circle_radians += angle_diff;
-    } else {
-      // Smallest angle to increment at next step
-      nav_circle_radians = 1;
-    }
+    //nav_circle_qdr = int32_atan2(pos_diff.y, pos_diff.x);
 
-    // direction of rotation
- //int8_t sign_radius = radius > 0 ? 1 : -1;
-    // absolute radius
-    int32_t abs_radius = abs(radius);
+    int32_t abs_radius = abs(POS_BFP_OF_REAL(raio));
     //carrot_angle = ((CARROT_DIST << INT32_ANGLE_FRAC) / abs_radius);
     //Bound(carrot_angle, (INT32_ANGLE_PI / 16), INT32_ANGLE_PI_4);
-    int32_t carrot_angle =BFP_OF_REAL(carrot1, INT32_ANGLE_FRAC);
+    //carrot_angle = nav_circle_qdr - 1 * carrot_angle;
+
+    carrot1 =  ( ((float)radio_control.values[TOWER_RADIO_ANGLE]) / 480000);
     
-          fprintf(stderr,"qdr:%d carrot_Ang:%d\n",nav_circle_qdr,carrot_angle );
+    int32_t advance_angle = BFP_OF_REAL(carrot1, INT32_ANGLE_FRAC);
+    //int32_t max_dist = ((CARROT_DIST << INT32_ANGLE_FRAC) / abs_radius);
+    //Bound(advance_angle, -max_dist, max_dist);    
+
+    nav_entry_qdr = nav_entry_qdr + advance_angle;
+    
+    int32_t carrot_angle = nav_entry_qdr;
 
     int32_t s_carrot, c_carrot;
     PPRZ_ITRIG_SIN(s_carrot, carrot_angle);
@@ -86,20 +90,23 @@ bool_t nav_tower_run(struct EnuCoor_i *wp_center, int32_t radius)
     VECT2_SUM(navigation_target, *wp_center, pos_diff);
 
   nav_circle_center = *wp_center;
-  nav_circle_radius = radius;
+  nav_circle_radius = abs_radius;
   horizontal_mode = HORIZONTAL_MODE_CIRCLE;
 
   return TRUE;
 }
 
-
-
-bool_t nav_tower_setup(void)
+bool_t nav_tower_setup(struct EnuCoor_i *wp_center, int32_t radius)
 {
-fprintf(stderr,"teste %d %d\n",1,2 );
-
+  float alt = POS_FLOAT_OF_BFP((*wp_center).z);
+  NavVerticalAltitudeMode(alt, 0.);
   
-  return FALSE;
+  raio = radius;
+  struct Int32Vect2 pos_diff;
+  VECT2_DIFF(pos_diff, *stateGetPositionEnu_i(), *wp_center);
+  nav_entry_qdr = int32_atan2(pos_diff.y, pos_diff.x);
+  
+return FALSE;
 }
 
 

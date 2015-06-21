@@ -50,7 +50,7 @@
     <load name="geo_mag.xml"/>
     <load name="air_data.xml"/>
     <load name="mavlink.xml">
-      <define name="UDP0_HOST" value="\\\"192.168.1.2\\\""/>
+      <define name="UDP0_HOST" value="\\\"192.168.200.119\\\""/>
       <define name="UDP0_BROADCAST" value="TRUE"/>
       <define name="UDP0_PORT_OUT" value="5000"/>
       <define name="UDP0_PORT_IN" value="5000"/>
