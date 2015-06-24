@@ -31,9 +31,9 @@
 
    <!-- <define name="PERIODIC_TELEMETRY"/> -->
 
-		    <define name="USE_BAROMETER"/>
-		    <define name="USE_BARO_MS5611"/>
-                  <!--  <define name="INS_BARO_ID"  value="BARO_MS5611_SENDER_ID"/> -->
+    <define name="USE_BAROMETER"/>
+    <define name="USE_BARO_MS5611"/>
+    <!--  <define name="INS_BARO_ID"  value="BARO_MS5611_SENDER_ID"/> -->
     <define name="SENSOR_SYNC_SEND"/>
     <define name="USE_GYRO_PITCH_RATE"/>
     <define name="RADIO_FLAP" value="RADIO_CH8"/>
@@ -45,8 +45,8 @@
     <define name="ASPIRIN_ACCEL_RATE" value="ADXL345_RATE_50HZ"/>  <!--25,50,100,200,400,800,1600,3200-->
     <define name="ASPIRIN_GYRO_LOWPASS" value="ITG3200_DLPF_20HZ"/>  <!--256,188,98,42,20,10,5 -->
     <define name="ASPIRIN_GYRO_SMPLRT_DIV"  value="1"/>
-<configure name="USE_MAGNETOMETER" value="0"/>
-<subsystem name="ahrs" type="int_cmpl_quat">   <!--float_dcm   int_cmpl_quat-->
+    <configure name="USE_MAGNETOMETER" value="0"/>
+    <subsystem name="ahrs" type="int_cmpl_quat">
 	<define name="AHRS_USE_GPS_HEADING"/>
 	<define name="AHRS_GRAVITY_UPDATE_COORDINATED_TURN"/>
 	<define name="AHRS_GRAVITY_UPDATE_NORM_HEURISTIC"/>
@@ -73,7 +73,7 @@
     <axis name="THROTTLE" failsafe_value="0"/>
     <axis name="ROLL"     failsafe_value="0"/>
     <axis name="PITCH"    failsafe_value="0"/>
-    <axis name="YAW"      failsafe_value="2000"/>
+    <axis name="YAW"      failsafe_value="1600"/>
     <axis name="FLAP"     failsafe_value="0"/>
   </commands>
 
@@ -118,16 +118,16 @@
 
     <modules>
 	<load name="baro_ms5611_i2c.xml"/>
-		<!--<load name="adc_generic.xml">
-    		<configure name="ADC_CHANNEL_GENERIC1" value="ADC_2"/>
-		</load>-->
+	<!--<load name="adc_generic.xml">
+	<configure name="ADC_CHANNEL_GENERIC1" value="ADC_2"/>
+	</load>-->
     </modules>
 
 
   <section name="IMU" prefix="IMU_">
     <define name="BODY_TO_IMU_PHI"   value="0." unit="deg"/>
     <define name="BODY_TO_IMU_THETA" value="0." unit="deg"/>
-    <define name="BODY_TO_IMU_PSI"   value="270." unit="deg"/>
+    <define name="BODY_TO_IMU_PSI"   value="-90." unit="deg"/>
   </section>
 
   <section name="INS" prefix="INS_">
@@ -188,7 +188,7 @@
 
   <section name="FAILSAFE" prefix="FAILSAFE_">
     <define name="DELAY_WITHOUT_GPS" value="3" unit="s"/>
-    <define name="DEFAULT_THROTTLE" value="0.4" unit="%"/>
+    <define name="DEFAULT_THROTTLE" value="0.3" unit="%"/>
     <define name="DEFAULT_ROLL" value="15" unit="deg"/>
     <define name="DEFAULT_PITCH" value="0" unit="deg"/>
     <define name="HOME_RADIUS" value="90" unit="m"/>
