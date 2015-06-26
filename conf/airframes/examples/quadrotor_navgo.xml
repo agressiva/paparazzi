@@ -134,7 +134,7 @@
 
   <!-- Magnetic field for Toulouse (declination -16°) -->
   <section name="AHRS" prefix="AHRS_">
-    <define name="PROPAGATE_LOW_PASS_RATES" value="1"/>
+<!--    <define name="PROPAGATE_LOW_PASS_RATES" value="1"/> -->
     <define name="H_X" value=" 0.513081"/>
     <define name="H_Y" value="-0.00242783"/>
     <define name="H_Z" value=" 0.858336"/>
@@ -166,7 +166,7 @@
     <!-- setpoints -->
     <define name="SP_MAX_PHI"     value="45." unit="deg"/>
     <define name="SP_MAX_THETA"   value="45." unit="deg"/>
-    <define name="SP_MAX_R"       value="220." unit="deg/s"/>
+    <define name="SP_MAX_R"       value="40." unit="deg/s"/>
     <define name="DEADBAND_R"     value="250"/>
 
     <!-- reference -->
@@ -180,7 +180,7 @@
     <define name="REF_MAX_Q"    value="300." unit="deg/s"/>
     <define name="REF_MAX_QDOT" value="RadOfDeg(7000.)"/>
 
-    <define name="REF_OMEGA_R"  value="360" unit="deg/s"/>
+    <define name="REF_OMEGA_R"  value="90" unit="deg/s"/>
     <define name="REF_ZETA_R"   value="0.85"/>
     <define name="REF_MAX_R"    value="280." unit="deg/s"/> <!--180 70 -->
     <define name="REF_MAX_RDOT" value="RadOfDeg(1800.)"/> <!-- 420 -->

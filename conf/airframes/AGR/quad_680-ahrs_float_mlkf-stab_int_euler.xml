@@ -8,12 +8,6 @@
     </subsystem>
     <define name="USE_ADC_2"/>  <!-- current_sensor-->
 
- <!--
-    <configure name="PERIODIC_FREQUENCY" value="1024"/>
-    <define name="HFF_PRESCALER"  value="32"/> -->
-    <!--<define name="USE_ATTITUDE_REF" value="0"/> --><!-- 31_5_2015  veio do config krooz -->
-
-
     <subsystem name="radio_control" type="sbus">
        <configure name="SBUS_PORT" value="UART1"/>
     </subsystem>
@@ -29,17 +23,21 @@
     <subsystem name="ahrs"          type="float_mlkf"/>
     <subsystem name="ins"           type="hff"/>
 
-    <define name="RADIO_CAM" value="RADIO_CH8"/>
+<!--    <define name="USE_ATTITUDE_REF" value="0"/> -->  <!-- 31_5_2015  veio do config krooz -->
+    <define name="TOWER_RADIO_ANGLE" value="RADIO_CH8"/>
     <define name="RADIO_KILL_SWITCH" value="RADIO_CH6"/>
     <define name="NO_RC_THRUST_LIMIT"/>
     <define name="NO_ATTITUDE_RESET_ON_MODE_CHANGE"/>
     <define name="FAILSAFE_GROUND_DETECT" value="1"/>
     <define name="KILL_ON_GROUND_DETECT" value="TRUE"/>
-    <define name="THRESHOLD_GROUND_DETECT" value="10."/> <!--12-->
-<!--    <define name="HFF_R_POS_MIN" value="2.5"/>
+    <define name="THRESHOLD_GROUND_DETECT" value="9."/> <!--12-->
+    <define name="HFF_R_POS_MIN" value="2.5"/>
     <define name="HFF_R_SPEED_MIN" value="2."/>
-    <define name="VF_FLOAT_MEAS_NOISE" value="2."/> -->
-    <configure name="GPS_LED" value="2"/>
+<!--    <define name="VF_FLOAT_MEAS_NOISE" value="2."/>  --> <!--  2. -->
+    <configure name="GPS_LED" value="1"/>
+    <configure name="AHRS_ALIGNER_LED" value="2"/>
+    <configure name="BARO_LED" value="2"/>
+
   </firmware>
 
   <modules main_freq="512">
@@ -47,14 +45,15 @@
       <define name="DC_RADIO_SHOOT" value="RADIO_CH7"/>
     </load>
 
-    <load name="sys_mon.xml"/>
+
     <load name="openlog.xml"/>
     <load name="geo_mag.xml"/>
-    <load name="osd_max7456.xml"/>
-
+<!--    <load name="osd_max7456.xml"/> -->
+<!--    <load name="sys_mon.xml"/> -->
     <load name="led_safety_status.xml">
       <define name="SAFETY_WARNING_LED" value="3"/>
     </load>
+    <load name="nav_tower_rotorcraft.xml"/>
     <load name="nav_survey_poly_rotorcraft.xml"/>
     <load name="nav_survey_rectangle_rotorcraft.xml"/>
     <load name="digital_cam.xml">
@@ -96,7 +95,7 @@
     <define name="SCALE" value="256"/>
     <define name="ROLL_COEF"   value="{  181, -181, -181,  181 }"/>
     <define name="PITCH_COEF"  value="{  181,  181, -181, -181 }"/>
-    <define name="YAW_COEF"    value="{ -128,  128, -128,  128 }"/>
+    <define name="YAW_COEF"    value="{ -168,  168, -168,  168 }"/>
     <define name="THRUST_COEF" value="{  256,  256,  256,  256 }"/>
   </section>
 
@@ -135,6 +134,7 @@
   </section>
 
   <section name="AHRS" prefix="AHRS_">
+    <define name="PROPAGATE_LOW_PASS_RATES" value="1"/>
     <define name="GRAVITY_HEURISTIC_FACTOR" value="30"/>
     <!-- valores para porto alegre -->
     <define name="H_X" value=" 0.75127"/>
@@ -179,9 +179,9 @@ The response time (95% of the final value when doing a step input): ~ 3/(freq*da
 To increase response time, you can increase the frequency, and the bounds.
 -->
     <!-- setpoints -->
-    <define name="SP_MAX_PHI"     value="45." unit="deg"/>
-    <define name="SP_MAX_THETA"   value="45." unit="deg"/>
-    <define name="SP_MAX_R"       value="320." unit="deg/s"/> <!--220 hooperfly=90 -->
+    <define name="SP_MAX_PHI"     value="40." unit="deg"/>
+    <define name="SP_MAX_THETA"   value="40." unit="deg"/>
+    <define name="SP_MAX_R"       value="90." unit="deg/s"/> <!--220 -->
     <define name="DEADBAND_A"     value="0"/>
     <define name="DEADBAND_E"     value="0"/>
     <define name="DEADBAND_R"     value="250"/>
@@ -192,39 +192,40 @@ To increase response time, you can increase the frequency, and the bounds.
     <define name="REF_MAX_P"    value="400." unit="deg/s"/> <!--280-->
     <define name="REF_MAX_PDOT" value="RadOfDeg(8000.)"/><!--1000 800 400-->
 
-    <define name="REF_OMEGA_Q"  value="RadOfDeg(260)"/>
+    <define name="REF_OMEGA_Q"  value="RadOfDeg(400)"/>
     <define name="REF_ZETA_Q"   value="0.85"/>
     <define name="REF_MAX_Q"    value="400." unit="deg/s"/>
     <define name="REF_MAX_QDOT" value="RadOfDeg(8000.)"/>
 
-<!-- valores from hoverfly
+<!-- valores from hoverfly -->
     <define name="REF_OMEGA_R"  value="250" unit="deg/s"/>
     <define name="REF_ZETA_R"   value="0.85"/>
-    <define name="REF_MAX_R"    value="180." unit="deg/s"/>
-    <define name="REF_MAX_RDOT" value="RadOfDeg(1800.)"/>
- -->
-    <define name="REF_OMEGA_R"  value="RadOfDeg(800)"/> <!--1200-->
+    <define name="REF_MAX_R"    value="220." unit="deg/s"/>
+    <define name="REF_MAX_RDOT" value="RadOfDeg(400.)"/> <!-- 1800 -->
+<!--
+    <define name="REF_OMEGA_R"  value="RadOfDeg(800)"/>
     <define name="REF_ZETA_R"   value="0.85"/>
-    <define name="REF_MAX_R"    value="600." unit="deg/s"/> <!--280 70 -->
-    <define name="REF_MAX_RDOT" value="RadOfDeg(1800.)"/> <!--420-->
+    <define name="REF_MAX_R"    value="400." unit="deg/s"/>
+    <define name="REF_MAX_RDOT" value="RadOfDeg(800.)"/>
+ -->
+ 
+   <!-- feedback -->
+    <define name="PHI_PGAIN"  value="280"/> <!-- 1240 -->
+    <define name="PHI_DGAIN"  value="300"/>  <!-- 360 -->
+    <define name="PHI_IGAIN"  value="500"/>  <!-- 512 -->
 
-    <!-- feedback -->
-    <define name="PHI_PGAIN"  value="1240"/> <!--240 -->
-    <define name="PHI_DGAIN"  value="360"/> <!-- 280 -->
-    <define name="PHI_IGAIN"  value="512"/> <!-- 120 -->
+    <define name="THETA_PGAIN"  value="280"/>
+    <define name="THETA_DGAIN"  value="300"/>
+    <define name="THETA_IGAIN"  value="500"/>
 
-    <define name="THETA_PGAIN"  value="1240"/>
-    <define name="THETA_DGAIN"  value="360"/>
-    <define name="THETA_IGAIN"  value="512"/>
-
-    <define name="PSI_PGAIN"  value="2000"/> <!-- 2000 -->
-    <define name="PSI_DGAIN"  value="1000"/> <!--1000 -->
-    <define name="PSI_IGAIN"  value="220"/> <!-- 120-->
+    <define name="PSI_PGAIN"  value="4600"/>
+    <define name="PSI_DGAIN"  value="1400"/>
+    <define name="PSI_IGAIN"  value="220"/>
 
     <!-- feedforward -->
-    <define name="PHI_DDGAIN"   value="300"/>
-    <define name="THETA_DDGAIN" value="300"/>
-    <define name="PSI_DDGAIN"   value="300"/>
+    <define name="PHI_DDGAIN"   value="000"/>
+    <define name="THETA_DDGAIN" value="000"/>
+    <define name="PSI_DDGAIN"   value="000"/>
   </section>
 
   <section name="GUIDANCE_V" prefix="GUIDANCE_V_">
@@ -242,13 +243,19 @@ To increase response time, you can increase the frequency, and the bounds.
     <define name="ADAPT_THROTTLE_ENABLED" value="TRUE"/>
     <define name="MAX_RC_CLIMB_SPEED" value="-3.0" unit="m/s"/>
     <define name="MAX_RC_DESCENT_SPEED" value="3.0" unit="m/s"/>
-    <define name="HOVER_KP"    value="200"/> <!-- 100 130 -->
+    <define name="HOVER_KP"    value="180"/> <!-- 100 130 -->
     <define name="HOVER_KD"    value="240"/> <!-- 160 150 -->
-    <define name="HOVER_KI"    value="10"/> <!-- 10 -->
+    <define name="HOVER_KI"    value="0"/> <!-- 10 -->
+
+<!-- nao tinha  14_06_2015 -->
+
+    <define name="REF_OMEGA"    value="RadOfDeg(80.)"/>
+ <!--   <define name="REF_ZETA"    value="0.90"/>
+-->
   </section>
 
   <section name="GUIDANCE_H" prefix="GUIDANCE_H_">
-    <define name="MAX_BANK" value="20" unit="deg"/>
+    <define name="MAX_BANK" value="25" unit="deg"/>
 
 <!--    <define name="APPROX_FORCE_BY_THRUST" value="FALSE"/> -->  <!-- 25_5_2015 -->
 <!--    <define name="THRUST_CMD_FILTER" value="10"/> --> <!-- 25_5_2015 -->
@@ -256,10 +263,10 @@ To increase response time, you can increase the frequency, and the bounds.
     <define name="REF_OMEGA" value="1.2"/>    <!-- 18_5_2015 0.4  RadOfDeg(67.) deixa a navegacao mais calma-->
     <define name="USE_REF" value="1"/>
     <define name="USE_SPEED_REF" value="1"/> <!-- using RC to control horizontal setpoint -->
-  <!--  <define name="REF_MAX_ACCEL" value="7."/>  --><!-- 3. 7.0max reference horizontal acceleration in m/s2 -->
-  <!--  <define name="REF_MAX_SPEED" value="5."/> -->  <!-- 3 max reference horizontal speed in m/s -->
-    <define name="PGAIN" value="80"/><!--60 120 70 60-->
-    <define name="DGAIN" value="140"/><!--140 100 84-->
+    <define name="REF_MAX_ACCEL" value="3."/>  <!-- 3. 7.0max reference horizontal acceleration in m/s2 -->
+    <define name="REF_MAX_SPEED" value="3."/>  <!-- 3 max reference horizontal speed in m/s -->
+    <define name="PGAIN" value="90"/><!--60 120 70 60-->
+    <define name="DGAIN" value="160"/><!--140 100 84-->
     <define name="IGAIN" value="0"/><!--10-->
     <define name="AGAIN" value="70"/><!--20 10-->
     <define name="VGAIN" value="00"/><!--50 10-->

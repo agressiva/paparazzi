@@ -55,6 +55,7 @@
 #ifndef BB_MS5611_SLAVE_ADDR
 #define BB_MS5611_SLAVE_ADDR 0xEE
 #endif
+PRINT_CONFIG_VAR(BB_MS5611_SLAVE_ADDR)
 
 /// set to TRUE if baro is actually a MS5607
 #ifndef BB_MS5611_TYPE_MS5607
@@ -81,7 +82,7 @@ void baro_periodic(void)
     /* call the convenience periodic that initializes the sensor and starts reading*/
     ms5611_i2c_periodic(&bb_ms5611);
 
-#if DEBUG
+#if DEBUG_MS5611
     if (bb_ms5611.initialized)
       RunOnceEvery((50 * 30), DOWNLINK_SEND_MS5611_COEFF(DefaultChannel, DefaultDevice,
                    &bb_ms5611.data.c[0],
@@ -109,14 +110,16 @@ void baro_event(void)
       bb_ms5611.data_available = FALSE;
 
 #ifdef BARO_LED
-      RunOnceEvery(10, LED_TOGGLE(BARO_LED));
+      //RunOnceEvery(10, LED_TOGGLE(BARO_LED));
+      LED_ON(BARO_LED);
+
 #endif
 
-#if DEBUG
+#if DEBUG_MS5611
       float fbaroms = bb_ms5611.data.pressure / 100.;
-      DOWNLINK_SEND_BARO_MS5611(DefaultChannel, DefaultDevice,
+      RunOnceEvery((10),DOWNLINK_SEND_BARO_MS5611(DefaultChannel, DefaultDevice,
                                 &bb_ms5611.data.d1, &bb_ms5611.data.d2,
-                                &fbaroms, &temp);
+                                &fbaroms, &temp));
 #endif
     }
   }

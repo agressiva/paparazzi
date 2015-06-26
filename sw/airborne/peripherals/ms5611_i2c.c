@@ -32,10 +32,10 @@
 #include "mcu_periph/sys_time.h"
 
 
-/** delay in seconds until sensor is read after startup */
-#ifndef MS5611_START_DELAY
-#define MS5611_START_DELAY 0.2
-#endif
+///** delay in seconds until sensor is read after startup */
+//#ifndef MS5611_START_DELAY
+//#define MS5611_START_DELAY .4
+//#endif
 
 
 void ms5611_i2c_init(struct Ms5611_I2c *ms, struct i2c_periph *i2c_p, uint8_t addr,
@@ -56,8 +56,16 @@ void ms5611_i2c_init(struct Ms5611_I2c *ms, struct i2c_periph *i2c_p, uint8_t ad
   ms->is_ms5607 = is_ms5607;
 }
 
+//uint32_t ms5611_delay_time;
+//bool_t ms5611_delay_done;
 void ms5611_i2c_start_configure(struct Ms5611_I2c *ms)
 {
+  
+//  if (!ms5611_delay_done) {
+//  if (SysTimeTimer(ms5611_delay_time) < USEC_OF_SEC(MS5611_START_DELAY)) { return; }
+//  else { ms5611_delay_done = TRUE; }  
+//  }
+
   if (ms->status == MS5611_STATUS_UNINIT) {
     ms->initialized = FALSE;
     ms->prom_cnt = 0;
@@ -83,15 +91,10 @@ void ms5611_i2c_start_conversion(struct Ms5611_I2c *ms)
  * Should run at 100Hz max.
  * Typical conversion time is 8.22ms at max resolution.
  */
-uint32_t ms5611_delay_time;
-bool_t ms5611_delay_done;
+
 
 void ms5611_i2c_periodic_check(struct Ms5611_I2c *ms)
 {
-if (!ms5611_delay_done) {
-  if (SysTimeTimer(ms5611_delay_time) < USEC_OF_SEC(MS5611_START_DELAY)) { return; }
-  else { ms5611_delay_done = TRUE; }  
-}
   
   switch (ms->status) {
     case MS5611_STATUS_RESET:

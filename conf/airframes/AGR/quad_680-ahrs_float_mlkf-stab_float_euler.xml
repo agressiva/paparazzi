@@ -34,7 +34,10 @@
     <define name="HFF_R_POS_MIN" value="2.5"/>
     <define name="HFF_R_SPEED_MIN" value="2."/>
     <define name="VF_FLOAT_MEAS_NOISE" value="2."/>
-    <configure name="GPS_LED" value="2"/>
+    <configure name="GPS_LED" value="1"/>
+    <configure name="AHRS_ALIGNER_LED" value="2"/>
+<configure name="BARO_LED" value="2"/>
+
   </firmware>
 
   <modules main_freq="512">
@@ -42,11 +45,11 @@
       <define name="DC_RADIO_SHOOT" value="RADIO_CH7"/>
     </load>
 
-    <load name="sys_mon.xml"/>
+
     <load name="openlog.xml"/>
     <load name="geo_mag.xml"/>
-    <load name="osd_max7456.xml"/>
-
+<!--    <load name="osd_max7456.xml"/> -->
+<!--    <load name="sys_mon.xml"/> -->
     <load name="led_safety_status.xml">
       <define name="SAFETY_WARNING_LED" value="3"/>
     </load>
@@ -131,6 +134,7 @@
   </section>
 
   <section name="AHRS" prefix="AHRS_">
+    <define name="PROPAGATE_LOW_PASS_RATES" value="1"/>
     <define name="GRAVITY_HEURISTIC_FACTOR" value="30"/>
     <!-- valores para porto alegre -->
     <define name="H_X" value=" 0.75127"/>
