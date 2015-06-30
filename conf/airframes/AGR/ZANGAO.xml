@@ -275,7 +275,7 @@
 <!--############################################################################################################-->
 
 	<modules>
-		<load name="consumo.xml"/>
+		<load name="consume_fixedwing.xml"/>
 		<load name="openlog.xml"/>
     <load name="sys_mon.xml"/>
 		<!--<load name="baro_ms5611_i2c.xml"/> -->
