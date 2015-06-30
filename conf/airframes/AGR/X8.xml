@@ -248,6 +248,8 @@
     <define name="ROLL_ATTITUDE_GAIN" value="8600"/> <!-- 8600 -->
     <define name="ROLL_RATE_GAIN" value="1600"/> <!-- 600 -->
     <define name="ROLL_IGAIN" value="50"/>
+    <!-- maybe handy to avoid over corner with lots of wind and small airframe -->
+    <!-- <define name="COURSE_SLEW_INCREMENT" value="RadOfDeg(4)"/> -->
   </section>
 
   <section name="AHRS" prefix="AHRS_">

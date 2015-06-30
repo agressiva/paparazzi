@@ -73,6 +73,15 @@
       <set value="DC_AUTOSHOOT_STOP" var="dc_autoshoot"/>
       <stay wp="STDBY"/>
     </block>
+
+    <block name="test yaw">
+      <go wp="p1"/>
+      <for var="i" from="1" to="16">
+        <heading alt="WaypointAlt(WP_p1)" course="90 * $i" until="stage_time > 3"/>
+      </for>
+      <deroute block="Standby"/>
+    </block>
+
     <block group="principal2" name="0deg" strip_button="0deg">
       <call fun="nav_set_heading_deg(0)"/>
       <stay wp="STDBY"/>
