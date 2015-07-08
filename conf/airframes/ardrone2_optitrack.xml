@@ -1,9 +1,9 @@
 <!DOCTYPE airframe SYSTEM "airframe.dtd">
 
-<airframe name="ardrone2_raw">
+<airframe name="ardrone2_optitrack">
 
   <firmware name="rotorcraft">
-    <target name="ap" board="ardrone2_raw">
+    <target name="ap" board="ardrone2">
       <define name="FAILSAFE_DESCENT_SPEED" value="0.5"/>
       <configure name="USE_MAGNETOMETER" value="0"/>
     </target>

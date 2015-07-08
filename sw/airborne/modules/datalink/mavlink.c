@@ -45,6 +45,48 @@
 #include "subsystems/electrical.h"
 #include "subsystems/gps.h"
 #include "state.h"
+<<<<<<< HEAD
+=======
+#include "pprz_version.h"
+
+#if defined RADIO_CONTROL
+#include "subsystems/radio_control.h"
+#endif
+
+// for waypoints, include correct header until we have unified API
+#ifdef AP
+#include "subsystems/navigation/common_nav.h"
+#else
+#include "firmwares/rotorcraft/navigation.h"
+#endif
+#include "generated/flight_plan.h"
+
+// for UINT16_MAX
+#include <stdint.h>
+
+mavlink_system_t mavlink_system;
+
+static uint8_t mavlink_params_idx = NB_SETTING; /**< Transmitting parameters index */
+/** mavlink parameter names.
+ * 16 chars + 1 NULL termination.
+ */
+static char mavlink_param_names[NB_SETTING][16+1] = SETTINGS_NAMES_SHORT;
+static uint8_t custom_version[8]; /**< first 8 bytes (16 chars) of GIT SHA1 */
+
+static inline void mavlink_send_heartbeat(void);
+static inline void mavlink_send_sys_status(void);
+static inline void mavlink_send_attitude(void);
+static inline void mavlink_send_local_position_ned(void);
+static inline void mavlink_send_global_position_int(void);
+static inline void mavlink_send_params(void);
+static inline void mavlink_send_autopilot_version(void);
+static inline void mavlink_send_attitude_quaternion(void);
+static inline void mavlink_send_gps_raw_int(void);
+static inline void mavlink_send_rc_channels(void);
+static inline void mavlink_send_battery_status(void);
+static inline void mavlink_send_gps_global_origin(void);
+
+>>>>>>> dd1bfb3d4b48311e17ced42007d5889f1bd29496
 
 mavlink_mission_mgr mission_mgr;
 
@@ -146,6 +188,7 @@ static void mavlink_send_altitude_ground_speed(void)
  */
 static void mavlink_send_battery_status(void)
 {
+<<<<<<< HEAD
 #ifdef MAVLINK_FLAG_DEBUG
   printf("Send battery status message\n");
 #endif 	
@@ -177,6 +220,73 @@ static void mavlink_send_battery_status(void)
                         	   			      -1, // energy consumed                    	   			      
                         	   			      0); // battery remaining
    mavlink_send_message(&msg);
+=======
+  uint8_t mav_state = MAV_STATE_CALIBRATING;
+  uint8_t mav_mode = 0;
+#ifdef AP
+  uint8_t mav_type = MAV_TYPE_FIXED_WING;
+  switch (pprz_mode) {
+    case PPRZ_MODE_MANUAL:
+      mav_mode |= MAV_MODE_FLAG_MANUAL_INPUT_ENABLED;
+      break;
+    case PPRZ_MODE_AUTO1:
+      mav_mode |= MAV_MODE_FLAG_STABILIZE_ENABLED|MAV_MODE_FLAG_MANUAL_INPUT_ENABLED;
+      break;
+    case PPRZ_MODE_AUTO2:
+      mav_mode |= MAV_MODE_FLAG_GUIDED_ENABLED|MAV_MODE_FLAG_AUTO_ENABLED;
+      break;
+    case PPRZ_MODE_HOME:
+      mav_mode |= MAV_MODE_FLAG_AUTO_ENABLED;
+      break;
+    default:
+      break;
+  }
+#else
+  uint8_t mav_type = MAV_TYPE_QUADROTOR;
+  switch (autopilot_mode) {
+    case AP_MODE_HOME:
+      mav_mode |= MAV_MODE_FLAG_AUTO_ENABLED;
+      break;
+    case AP_MODE_RATE_DIRECT:
+    case AP_MODE_RATE_RC_CLIMB:
+    case AP_MODE_RATE_Z_HOLD:
+    case AP_MODE_RC_DIRECT:
+      mav_mode |= MAV_MODE_FLAG_MANUAL_INPUT_ENABLED;
+      break;
+    case AP_MODE_ATTITUDE_DIRECT:
+    case AP_MODE_ATTITUDE_CLIMB:
+    case AP_MODE_ATTITUDE_Z_HOLD:
+    case AP_MODE_ATTITUDE_RC_CLIMB:
+    case AP_MODE_HOVER_DIRECT:
+    case AP_MODE_HOVER_CLIMB:
+    case AP_MODE_HOVER_Z_HOLD:
+    case AP_MODE_CARE_FREE_DIRECT:
+      mav_mode |= MAV_MODE_FLAG_STABILIZE_ENABLED|MAV_MODE_FLAG_MANUAL_INPUT_ENABLED;
+      break;
+    case AP_MODE_NAV:
+      mav_mode |= MAV_MODE_FLAG_GUIDED_ENABLED|MAV_MODE_FLAG_AUTO_ENABLED;
+      break;
+    default:
+      break;
+  }
+#endif
+  if (stateIsAttitudeValid()) {
+    if (kill_throttle) {
+      mav_state = MAV_STATE_STANDBY;
+    }
+    else {
+      mav_state = MAV_STATE_ACTIVE;
+      mav_mode |= MAV_MODE_FLAG_SAFETY_ARMED;
+    }
+  }
+  mavlink_msg_heartbeat_send(MAVLINK_COMM_0,
+                             mav_type,
+                             MAV_AUTOPILOT_PPZ,
+                             mav_mode,
+                             0, // custom_mode
+                             mav_state);
+  MAVLinkSendMessage();
+>>>>>>> dd1bfb3d4b48311e17ced42007d5889f1bd29496
 }
 
 /**

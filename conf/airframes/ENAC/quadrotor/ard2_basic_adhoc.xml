@@ -1,11 +1,14 @@
 <!DOCTYPE airframe SYSTEM "../../airframe.dtd">
 
-<airframe name="ardrone2_vision">
+<airframe name="ardrone2_basic">
 
   <firmware name="rotorcraft">
     <define name="DEBUG_VFF_EXTENDED"/>
     <configure name="HOST" value="192.168.1.$(AC_ID)"/>
-    <target name="ap" board="ardrone2">
+    <configure name="MODEM_HOST" value="192.168.1.1"/>
+    <configure name="MODEM_BROADCAST" value="FALSE"/>
+
+    <target name="ap" board="ardrone2_raw">
       <define name="USE_SONAR"/>
       <define name="USE_BARO_MEDIAN_FILTER"/>
       <define name="AUTOPILOT_DISABLE_AHRS_KILL"/>
@@ -32,23 +35,13 @@
   </firmware>
 
   <modules main_freq="512">
-    <!--load name="gps_ubx_ucenter.xml"/-->
-    <load name="agl_dist.xml">
-      <define name="USE_SONAR"/>
-    </load>
-    <load name="video_rtp_stream.xml">
-      <define name="VIDEO_SOCK_OUT_OFFSET" value="$(AC_ID)"/>
-      <define name="VIDEO_DOWNSIZE_FACTOR" value="2"/>
-      <define name="VIDEO_QUALITY_FACTOR" value="80"/>
-      <define name="VIDEO_FPS" value="1"/>
-    </load>
-    <load name="rotorcraft_cam.xml"/>
+    <load name="gps_ubx_ucenter.xml"/>
   </modules>
 
   <!-- include common control -->
-  <include href="conf/airframes/ENAC/quadrotor/ard2_base_control.xml"/>
+  <include href="conf/airframes/ENAC/parrot/ard2_base_control.xml"/>
   <!-- include arframe calibration -->
-  <include href="conf/airframes/ENAC/quadrotor/ard2_$AC_ID.xml"/>
+  <include href="conf/airframes/ENAC/parrot/ard2_$AC_ID.xml"/>
 
   <!-- local magnetic field -->
   <!-- http://paparazzi.enac.fr/wiki/Subsystem/ahrs#Local_Magnetic_Field -->

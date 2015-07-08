@@ -60,11 +60,11 @@ struct Int32Quat stabilization_att_sum_err_quat;
 int32_t stabilization_att_fb_cmd[COMMANDS_NB];
 int32_t stabilization_att_ff_cmd[COMMANDS_NB];
 
-#define IERROR_SCALE 256
+#define IERROR_SCALE 128
 #define GAIN_PRESCALER_FF 48
-#define GAIN_PRESCALER_P 48
-#define GAIN_PRESCALER_D 48
-#define GAIN_PRESCALER_I 48
+#define GAIN_PRESCALER_P 12
+#define GAIN_PRESCALER_D 3
+#define GAIN_PRESCALER_I 3
 
 #if PERIODIC_TELEMETRY
 #include "subsystems/datalink/telemetry.h"
@@ -203,19 +203,19 @@ static void attitude_run_fb(int32_t fb_commands[], struct Int32AttitudeGains *ga
 {
   /*  PID feedback */
   fb_commands[COMMAND_ROLL] =
-    GAIN_PRESCALER_P * gains->p.x  * QUAT1_FLOAT_OF_BFP(att_err->qx) / 4 +
-    GAIN_PRESCALER_D * gains->d.x  * RATE_FLOAT_OF_BFP(rate_err->p) / 16 +
-    GAIN_PRESCALER_I * gains->i.x  * QUAT1_FLOAT_OF_BFP(sum_err->qx) / 2;
+    GAIN_PRESCALER_P * gains->p.x  * QUAT1_FLOAT_OF_BFP(att_err->qx) +
+    GAIN_PRESCALER_D * gains->d.x  * RATE_FLOAT_OF_BFP(rate_err->p) +
+    GAIN_PRESCALER_I * gains->i.x  * QUAT1_FLOAT_OF_BFP(sum_err->qx);
 
   fb_commands[COMMAND_PITCH] =
-    GAIN_PRESCALER_P * gains->p.y  * QUAT1_FLOAT_OF_BFP(att_err->qy) / 4 +
-    GAIN_PRESCALER_D * gains->d.y  * RATE_FLOAT_OF_BFP(rate_err->q)  / 16 +
-    GAIN_PRESCALER_I * gains->i.y  * QUAT1_FLOAT_OF_BFP(sum_err->qy) / 2;
+    GAIN_PRESCALER_P * gains->p.y  * QUAT1_FLOAT_OF_BFP(att_err->qy) +
+    GAIN_PRESCALER_D * gains->d.y  * RATE_FLOAT_OF_BFP(rate_err->q) +
+    GAIN_PRESCALER_I * gains->i.y  * QUAT1_FLOAT_OF_BFP(sum_err->qy);
 
   fb_commands[COMMAND_YAW] =
-    GAIN_PRESCALER_P * gains->p.z  * QUAT1_FLOAT_OF_BFP(att_err->qz) / 4 +
-    GAIN_PRESCALER_D * gains->d.z  * RATE_FLOAT_OF_BFP(rate_err->r)  / 16 +
-    GAIN_PRESCALER_I * gains->i.z  * QUAT1_FLOAT_OF_BFP(sum_err->qz) / 2;
+    GAIN_PRESCALER_P * gains->p.z  * QUAT1_FLOAT_OF_BFP(att_err->qz) +
+    GAIN_PRESCALER_D * gains->d.z  * RATE_FLOAT_OF_BFP(rate_err->r) +
+    GAIN_PRESCALER_I * gains->i.z  * QUAT1_FLOAT_OF_BFP(sum_err->qz);
 
 }
 
@@ -249,7 +249,7 @@ void stabilization_attitude_run(bool_t enable_integrator)
   struct Int32Rates *body_rate = stateGetBodyRates_i();
   RATES_DIFF(rate_err, rate_ref_scaled, (*body_rate));
 
-#define INTEGRATOR_BOUND 40000 //100000
+#define INTEGRATOR_BOUND 100000
   /* integrated error */
   if (enable_integrator) {
     stabilization_att_sum_err_quat.qx += att_err.qx / IERROR_SCALE;
@@ -275,9 +275,9 @@ void stabilization_attitude_run(bool_t enable_integrator)
   stabilization_cmd[COMMAND_YAW] = stabilization_att_fb_cmd[COMMAND_YAW] + stabilization_att_ff_cmd[COMMAND_YAW];
 
   /* bound the result */
-  BoundAbs(stabilization_cmd[COMMAND_ROLL], MAX_PPRZ/4);
-  BoundAbs(stabilization_cmd[COMMAND_PITCH], MAX_PPRZ/4);
-  BoundAbs(stabilization_cmd[COMMAND_YAW], MAX_PPRZ/4);
+  BoundAbs(stabilization_cmd[COMMAND_ROLL], MAX_PPRZ);
+  BoundAbs(stabilization_cmd[COMMAND_PITCH], MAX_PPRZ);
+  BoundAbs(stabilization_cmd[COMMAND_YAW], MAX_PPRZ);
 }
 
 void stabilization_attitude_read_rc(bool_t in_flight, bool_t in_carefree, bool_t coordinated_turn)
