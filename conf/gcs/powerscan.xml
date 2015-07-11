@@ -1,0 +1,77 @@
+<!DOCTYPE layout SYSTEM "layout.dtd">
+
+<layout width="1283" height="651">
+  <columns>
+    <rows SIZE="400">
+      <widget NAME="strips" size="300"/>
+      <widget NAME="alarms" size="1"/>
+    </rows>
+    <rows>
+      <widget NAME="map2d" size="649">
+        <papget type="message_field" display="text" x="201" y="933">
+          <property name="scale" value="1."/>
+          <property name="field" value="DATALINK_REPORT:downlink_ovrn"/>
+          <property name="format" value="Datalink overun: %.2f"/>
+          <property name="size" value="15."/>
+          <property name="color" value="#00ff00"/>
+        </papget>
+        <papget type="message_field" display="text" x="15" y="158">
+          <property name="scale" value="1."/>
+          <property name="field" value="GPS_INT:numsv"/>
+          <property name="format" value="Sats: %.f"/>
+          <property name="size" value="15."/>
+          <property name="color" value="yellow"/>
+        </papget>
+        <papget type="message_field" display="text" x="13" y="250">
+          <property name="scale" value="1."/>
+          <property name="field" value="ENERGY:amp"/>
+          <property name="format" value="Current: %.1f amp"/>
+          <property name="size" value="15."/>
+          <property name="color" value="yellow"/>
+        </papget>
+        <papget type="message_field" display="text" x="13" y="299">
+          <property name="scale" value="1."/>
+          <property name="field" value="ENERGY:power"/>
+          <property name="format" value="Power: %.2f w"/>
+          <property name="size" value="15."/>
+          <property name="color" value="yellow"/>
+        </papget>
+        <papget type="message_field" display="text" x="14" y="178">
+          <property name="scale" value="0.01"/>
+          <property name="field" value="GPS_INT:pacc"/>
+          <property name="format" value="Pacc:%.1f"/>
+          <property name="size" value="15."/>
+          <property name="color" value="yellow"/>
+        </papget>
+        <papget type="message_field" display="text" x="16" y="362">
+          <property name="scale" value="1."/>
+          <property name="field" value="DC_SHOT:photo_nr"/>
+          <property name="format" value="Shots: %.f"/>
+          <property name="size" value="15."/>
+          <property name="color" value="orange"/>
+        </papget>
+        <papget type="expression" display="text" x="23" y="930">
+          <property name="scale" value="1"/>
+          <property name="expr" value="BlockName(ROTORCRAFT_NAV_STATUS.cur_block)"/>
+          <property name="format" value="%.2f"/>
+          <property name="size" value="20."/>
+          <property name="color" value="white"/>
+        </papget>
+        <papget type="message_field" display="text" x="11" y="200">
+          <property name="scale" value="0.0139882"/>
+          <property name="field" value="ROTORCRAFT_FP:psi"/>
+          <property name="format" value="PSi: %.1f"/>
+          <property name="size" value="27."/>
+          <property name="color" value="blue"/>
+        </papget>
+        <papget type="message_field" display="text" x="12" y="275">
+          <property name="scale" value="1."/>
+          <property name="field" value="ENERGY:energy"/>
+          <property name="format" value="Total: %.2f mA"/>
+          <property name="size" value="15."/>
+          <property name="color" value="yellow"/>
+        </papget>
+      </widget>
+    </rows>
+  </columns>
+</layout>
