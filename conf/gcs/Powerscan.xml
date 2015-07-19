@@ -1,0 +1,23 @@
+<!DOCTYPE layout SYSTEM "layout.dtd">
+
+<layout width="1024" height="809">
+  <rows>
+    <widget NAME="map2d" size="500">
+      <papget type="goto_block" display="button" x="19" y="431">
+        <property name="block_name" value="Start Engine"/>
+        <property name="icon" value="./takeoff.png"/>
+      </papget>
+      <papget type="goto_block" display="button" x="972" y="424">
+        <property name="block_name" value="land here"/>
+        <property name="icon" value="./land-right.png"/>
+      </papget>
+    </widget>
+    <columns>
+      <rows SIZE="375">
+        <widget NAME="strips" size="301"/>
+      </rows>
+      <widget NAME="aircraft" size="400"/>
+      <widget NAME="alarms" size="235"/>
+    </columns>
+  </rows>
+</layout>
