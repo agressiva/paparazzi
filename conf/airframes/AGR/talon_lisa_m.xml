@@ -19,7 +19,7 @@
       <define name="AHRS_TRIGGERED_ATTITUDE_LOOP"/>
      <!-- <configure name="LISA_M_BARO"  value="BARO_MS5611_I2C"/> -->
       <define name="MS5611_I2C_DEV" value="i2c2"/>
-     <define name="MS5611_SLAVE_ADDR" value="0xEC"/>
+     <define name="MS5611_SLAVE_ADDR" value="0xEE"/>
       <define name="USE_ADC"/>
       <define name="USE_ADC_2"/>  <!-- current_sensor-->
    <!--  <define name="USE_ADC_1"/>

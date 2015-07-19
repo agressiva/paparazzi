@@ -45,7 +45,7 @@
 #include "subsystems/radio_control.h"
 //#include "inter_mcu.h"
 
-#define TOWER_MIN_RADIUS 15
+#define TOWER_MIN_RADIUS 10
 
 #ifndef TOWER_RADIO_ANGLE
 #error "You need to define TOWER_RADIO_ANGLE to a RADIO_xxx channel to use this module"

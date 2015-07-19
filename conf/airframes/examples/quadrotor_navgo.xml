@@ -31,7 +31,7 @@
 
 <!-- <configure name="PERIODIC_FREQUENCY" value="1024"/> -->
 
-    <define name="TOWER_RADIO_ANGLE" value="RADIO_CH8"/>
+    <define name="TOWER_RADIO_ANGLE" value="RADIO_ROLL"/>
     <subsystem name="radio_control" type="ppm"/>
     <subsystem name="telemetry"     type="transparent"/>
     <subsystem name="actuators"     type="mkk">

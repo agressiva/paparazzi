@@ -105,7 +105,7 @@ upload: $(OBJDIR)/$(TARGET).hex
 	@echo "Assuming luftboot bootloader: $(ASSUMING_LUFTBOOT)"
 	@echo "Using OOCD = $(OOCD)"
 	@echo "  OOCD\t$<"
-	$(Q)$(OOCD) -f interface/$(OOCD_INTERFACE).cfg \
+	$(Q)$(OOCD) -f interface/ftdi/flossjtag.cfg \
 		-f board/$(OOCD_BOARD).cfg $(OOCD_OPTIONS) \
 		-c init \
 		-c "reset halt" \
