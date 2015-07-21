@@ -5,8 +5,8 @@
   <modules main_freq="512">
     <!--<load name="photogrammetry_calculator.xml"/>-->
     <load name="nav_tower_rotorcraft.xml"/>
-    <load name="nav_survey_rectangle_rotorcraft.xml"/>
-    <load name="nav_survey_poly_rotorcraft.xml"/>
+ <!--   <load name="nav_survey_rectangle_rotorcraft.xml"/>
+    <load name="nav_survey_poly_rotorcraft.xml"/>  -->
     <load name="servo_switch.xml"/>
     <load name="rotorcraft_cam.xml"/>
     <load name="digital_cam.xml">
@@ -32,6 +32,7 @@
 <!-- <configure name="PERIODIC_FREQUENCY" value="1024"/> -->
 
     <define name="TOWER_RADIO_ANGLE" value="RADIO_ROLL"/>
+    <define name="TOWER_RADIO_RADIUS" value="RADIO_PITCH"/>
     <subsystem name="radio_control" type="ppm"/>
     <subsystem name="telemetry"     type="transparent"/>
     <subsystem name="actuators"     type="mkk">
@@ -245,7 +246,7 @@
 
   <section name="AUTOPILOT">
     <define name="MODE_MANUAL" value="AP_MODE_HOVER_Z_HOLD"/>
-    <define name="MODE_AUTO1"  value="AP_MODE_HOVER_Z_HOLD"/>
+    <define name="MODE_AUTO1"  value="AP_MODE_NAV"/>
     <!--define name="MODE_AUTO2"  value="AP_MODE_ATTITUDE_Z_HOLD"/-->
     <define name="MODE_AUTO2"  value="AP_MODE_NAV"/>
   </section>

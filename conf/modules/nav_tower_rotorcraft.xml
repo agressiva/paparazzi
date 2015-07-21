@@ -34,8 +34,6 @@ or using flightplan primitive
     <dl_settings>
       <dl_settings NAME="Tower_Survey">
 	        <dl_setting min="-0.02" max="0.02" step=".001" var="carrot1" type="float" shortname="angle" module="modules/nav/nav_tower_rotorcraft"/>
-
-        <dl_setting min="10" max="50" step="1" var="raio" type="float" shortname="Raio" module="modules/nav/nav_tower_rotorcraft"/>
 	</dl_settings>
     </dl_settings>
   </settings>

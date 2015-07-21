@@ -33,7 +33,6 @@
 
 #include "firmwares/rotorcraft/navigation.h"
 extern float carrot1;
-extern float raio;
 extern bool_t nav_tower_setup(struct EnuCoor_i *wp_center, int32_t radius);
 extern bool_t nav_tower_run(struct EnuCoor_i *wp_center);
 

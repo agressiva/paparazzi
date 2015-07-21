@@ -16,7 +16,6 @@
       <rows SIZE="375">
         <widget NAME="strips" size="301"/>
       </rows>
-      <widget NAME="aircraft" size="400"/>
       <widget NAME="alarms" size="235"/>
     </columns>
   </rows>

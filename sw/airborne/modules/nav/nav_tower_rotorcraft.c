@@ -45,17 +45,22 @@
 #include "subsystems/radio_control.h"
 //#include "inter_mcu.h"
 
-#define TOWER_MIN_RADIUS 10
+#define TOWER_MIN_RADIUS 5
 
 #ifndef TOWER_RADIO_ANGLE
 #error "You need to define TOWER_RADIO_ANGLE to a RADIO_xxx channel to use this module"
 #endif
 
+#ifndef TOWER_RADIO_RADIUS
+#error "You need to define TOWER_RADIO_RADIUS to a RADIO_xxx channel to use this module"
+#endif
+
 float carrot1;
+float raio_local;
 int8_t sign_radius;
 static int32_t nav_entry_qdr;
-float raio;
-
+int32_t raio;
+int32_t abs_radius;
 
 #define CARROT_DIST (12 << 8)
 bool_t nav_tower_run(struct EnuCoor_i *wp_center)
@@ -66,18 +71,22 @@ bool_t nav_tower_run(struct EnuCoor_i *wp_center)
     // compute qdr
     //nav_circle_qdr = int32_atan2(pos_diff.y, pos_diff.x);
 
-    int32_t abs_radius = abs(POS_BFP_OF_REAL(raio));
+
     //carrot_angle = ((CARROT_DIST << INT32_ANGLE_FRAC) / abs_radius);
     //Bound(carrot_angle, (INT32_ANGLE_PI / 16), INT32_ANGLE_PI_4);
     //carrot_angle = nav_circle_qdr - 1 * carrot_angle;
 
     carrot1 =  ( ((float)radio_control.values[TOWER_RADIO_ANGLE]) / 480000);
+    raio_local =  ( ((float)radio_control.values[TOWER_RADIO_RADIUS]) / 960000);
+
     
     int32_t advance_angle = BFP_OF_REAL(carrot1, INT32_ANGLE_FRAC);
     //int32_t max_dist = ((CARROT_DIST << INT32_ANGLE_FRAC) / abs_radius);
     //Bound(advance_angle, -max_dist, max_dist);    
 
+    
     nav_entry_qdr = nav_entry_qdr + advance_angle;
+    abs_radius = abs_radius + BFP_OF_REAL(raio_local, INT32_ANGLE_FRAC);
     
     int32_t carrot_angle = nav_entry_qdr;
 
@@ -101,7 +110,7 @@ bool_t nav_tower_setup(struct EnuCoor_i *wp_center, int32_t radius)
   float alt = POS_FLOAT_OF_BFP((*wp_center).z);
   NavVerticalAltitudeMode(alt, 0.);
   
-  raio = radius;
+  abs_radius = abs(POS_BFP_OF_REAL(radius));
   struct Int32Vect2 pos_diff;
   VECT2_DIFF(pos_diff, *stateGetPositionEnu_i(), *wp_center);
   nav_entry_qdr = int32_atan2(pos_diff.y, pos_diff.x);

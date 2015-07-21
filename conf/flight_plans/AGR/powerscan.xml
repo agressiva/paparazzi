@@ -18,11 +18,24 @@
     <waypoint name="MOB" x="4.2" y="0.9"/>
     <waypoint name="TD" x="-1.2" y="-2.7"/>
     <waypoint name="CAM" x="1.8" y="10.6"/>
-    <waypoint name="in" alt="5.0" x="-2.8" y="2.4"/>
+    <waypoint alt="5.0" name="in" x="-2.8" y="2.4"/>
     <waypoint name="out" x="-2.8" y="2.4"/>
-    <waypoint name="TORRE" alt="5.0"  x="-5.4" y="4.5"/>
+    <waypoint alt="10.0" name="TORRE1" x="-5.4" y="4.5"/>
+    <waypoint alt="10.0" name="TORRE2" x="-15.4" y="4.5"/>
+    <waypoint name="T1" x="-15.4" y="15.4"/>
+    <waypoint name="T2" x="-10.2" y="11.2"/>
+    <waypoint name="T3" x="114.8" y="208.2"/>
+    <waypoint name="T4" x="109.3" y="213.0"/>
     <waypoint name="p1" x="-9.4" y="8.8"/>
   </waypoints>
+  <sectors>
+    <sector name="Square" type="dynamic">
+      <corner name="T1"/>
+      <corner name="T2"/>
+      <corner name="T3"/>
+      <corner name="T4"/>
+    </sector>
+  </sectors>
   <blocks>
     <block name="Wait GPS">
       <call fun="NavKillThrottle()"/>
@@ -67,24 +80,25 @@
     <block name="stay_p1">
       <stay wp="p1"/>
     </block>
-    <block group="principal2" name="Entrada" strip_button="Entrada">
+    <block group="JOB" name="Entrada" strip_button="Entrada">
       <stay wp="in"/>
     </block>
-    <block group="principal2" name="tower" strip_button="tower" strip_icon="torre1.png">
-      <call fun="NavTowerSetup(WP_TORRE, 10)"/>
-      <call fun="NavTower(WP_TORRE)"/>
+    <block group="JOB" name="tower" strip_button="tower" strip_icon="torre1.png">
+      <call fun="NavTowerSetup(WP_TORRE1, 10)"/>
+      <call fun="NavTower(WP_TORRE1)"/>
     </block>
-    <block group="principal2" name="Saida" strip_button="Saida">
+    <block group="JOB" name="Saida" strip_button="Saida">
       <call fun="NavSetWaypointHere(WP_MOB)"/>
       <exception cond="stateGetPositionEnu_f()->z > 20.0" deroute="Saida2"/>
       <stay climb="1.5" vmode="climb" wp="MOB"/>
     </block>
-
-    <block group="principal2" name="Saida2">
+    <block name="Saida2">
       <call fun="NavCopyWaypoint(WP_out, WP_in)"/>
-    <stay wp="out"/>
+      <go alt="stateGetPositionEnu_f()->z" wp="out"/>
     </block>
-
+    <block name="Saida3">
+      <stay wp="in"/>
+    </block>
 
     <block group="principal2" name="circle" strip_button="CAM">
       <circle radius="nav_radius" wp="CAM"/>
