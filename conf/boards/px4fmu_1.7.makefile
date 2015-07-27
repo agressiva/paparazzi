@@ -27,7 +27,7 @@ FLASH_MODE ?= SWD
 #
 RADIO_CONTROL_LED  ?= none
 BARO_LED           ?= none
-AHRS_ALIGNER_LED   ?= 2
+AHRS_ALIGNER_LED   ?= none
 GPS_LED            ?= none
 SYS_TIME_LED       ?= 1
 
@@ -35,13 +35,13 @@ SYS_TIME_LED       ?= 1
 # default UART configuration (modem, gps, spektrum)
 #
 
-MODEM_PORT ?= UART1
+MODEM_PORT ?= UART2
 MODEM_BAUD ?= B57600
 
-GPS_PORT ?= UART6
+GPS_PORT ?= UART4
 GPS_BAUD ?= B38400
 
-RADIO_CONTROL_SPEKTRUM_PRIMARY_PORT ?= UART2
+RADIO_CONTROL_SPEKTRUM_PRIMARY_PORT ?= none
 
 
 #

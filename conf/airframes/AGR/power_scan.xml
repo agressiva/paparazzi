@@ -23,7 +23,8 @@
     <subsystem name="ins"           type="hff"/>
 
     <define name="USE_BAROMETER"/>
-    <define name="TOWER_RADIO_ANGLE" value="RADIO_CH8"/>
+    <define name="TOWER_RADIO_ANGLE" value="RADIO_ROLL"/>
+    <define name="TOWER_RADIO_RADIUS" value="RADIO_PITCH"/>
     <define name="RADIO_KILL_SWITCH" value="RADIO_CH6"/>
     <define name="NO_RC_THRUST_LIMIT"/>
     <define name="NO_ATTITUDE_RESET_ON_MODE_CHANGE"/>

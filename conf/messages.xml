@@ -1873,9 +1873,6 @@
     <field name="angular_accel_ref_p" type="float"/>
     <field name="angular_accel_ref_q" type="float"/>
     <field name="angular_accel_ref_r" type="float"/>
-    <field name="indi_u_p" type="float"/>
-    <field name="indi_u_q" type="float"/>
-    <field name="indi_u_r" type="float"/>
     <field name="g1_p" type="float"/>
     <field name="g1_q" type="float"/>
     <field name="g1_r" type="float"/>

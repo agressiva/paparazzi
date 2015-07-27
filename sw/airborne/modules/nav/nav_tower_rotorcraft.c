@@ -24,7 +24,8 @@
  *
  * tower survey for rotorcraft.
  *
- * Rectangle is defined by two points, sweep can be south-north or west-east.
+ * Tower is defined by waypoint. Pitch & roll control de radius and angle of circle flight.
+ * Altitude and yaw ?????????????????????
  */
 
 #include "mcu_periph/uart.h"
@@ -78,6 +79,8 @@ bool_t nav_tower_run(struct EnuCoor_i *wp_center)
 
     carrot1 =  ( ((float)radio_control.values[TOWER_RADIO_ANGLE]) / 480000);
     raio_local =  ( ((float)radio_control.values[TOWER_RADIO_RADIUS]) / 960000);
+    //Yaw =  ( ((float)radio_control.values[TOWER_RADIO_YAW]) / 960000);
+    //altitude =  ( ((float)radio_control.values[TOWER_RADIO_ALTITUDE]) / 960000);
 
     
     int32_t advance_angle = BFP_OF_REAL(carrot1, INT32_ANGLE_FRAC);
