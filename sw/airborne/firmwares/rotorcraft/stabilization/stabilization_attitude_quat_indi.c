@@ -267,7 +267,7 @@ void stabilization_attitude_run(bool_t enable_integrator)
   /* bound the result */
   BoundAbs(stabilization_cmd[COMMAND_ROLL], MAX_PPRZ/2);
   BoundAbs(stabilization_cmd[COMMAND_PITCH], MAX_PPRZ/2);
-  BoundAbs(stabilization_cmd[COMMAND_YAW], MAX_PPRZ/2);
+  BoundAbs(stabilization_cmd[COMMAND_YAW], MAX_PPRZ);
 }
 
 // This function reads rc commands
