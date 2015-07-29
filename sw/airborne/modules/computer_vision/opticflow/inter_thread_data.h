@@ -43,35 +43,7 @@ struct opticflow_result_t {
   float vel_x;            ///< The velocity in the x direction
   float vel_y;            ///< The velocity in the y direction
 
-/// Data from thread to module
-struct CVresults {
-  int cnt;          // Number of processed frames
-
-  float Velx;       // Velocity as measured by camera
-  float Vely;
-  int flow_count;
-
-  float cam_h;      // Debug parameters
-
-  int count;
-
-  int plot_count;
-  int x[100], y[100]; // TODO: make less ugly
-
-  int new_plot_count;
-  int new_x[100], new_y[100];
-
-  float OFx, OFy, dx_sum, dy_sum;
-  float diff_roll;
-  float diff_pitch;
-  float FPS;
-  int16_t flow_x;         ///< Flow in x direction from the camera (in subpixels)
-  int16_t flow_y;         ///< Flow in y direction from the camera (in subpixels)
-  int16_t flow_der_x;     ///< The derotated flow calculation in the x direction (in subpixels)
-  int16_t flow_der_y;     ///< The derotated flow calculation in the y direction (in subpixels)
-
-  float vel_x;            ///< The velocity in the x direction
-  float vel_y;            ///< The velocity in the y direction
+  float div_size;         ///< Divergence as determined with the size_divergence script
 };
 
 /* The state of the drone when it took an image */
@@ -82,3 +54,5 @@ struct opticflow_state_t {
 };
 
 #endif
+
+
