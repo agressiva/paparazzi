@@ -7,7 +7,7 @@
       <define name="BB_MS5611_SLAVE_ADDR" value="0xEC"/>
     </target>
     <subsystem name="actuators"     type="pwm">
-      <define name="SERVO_HZ" value="490"/>
+      <define name="SERVO_HZ" value="400"/>
     </subsystem>
     <define name="USE_ADC_2"/>  <!-- current_sensor-->
     <configure name="RADIO_CONTROL_PPM_PIN" value="UART1_RX"/>
@@ -18,6 +18,15 @@
 	<configure name="GPS_BAUD"  value="B38400"/>
         <configure name="GPS_PORT"  value="UART3"/>
     <subsystem name="imu"           type="aspirin_v1.5"/>
+
+
+<define name="AUTOPILOT_IN_FLIGHT_MIN_SPEED" value="0.2"/>  <!--0.2-->
+<define name="AUTOPILOT_IN_FLIGHT_MIN_ACCEL" value="3.0"/> <!--2.0-->
+
+<!--
+<define name="ASPIRIN_GYRO_LOWPASS" value="ITG3200_DLPF_256HZ"/>
+<define name="ASPIRIN_GYRO_SMPLRT_DIV" value="14"/>
+-->
     <subsystem name="stabilization" type="int_euler"/>
     <subsystem name="ahrs"          type="int_cmpl_quat"/>
     <subsystem name="ins"           type="hff"/>
@@ -31,6 +40,10 @@
     <define name="FAILSAFE_GROUND_DETECT" value="1"/>
     <define name="KILL_ON_GROUND_DETECT" value="TRUE"/>
     <define name="THRESHOLD_GROUND_DETECT" value="10."/> <!--12-->
+    <define name="HFF_LOWPASS_CUTOFF_FREQUENCY" value="10"/>
+
+<!--    <define name="STAB_D_LOWPASS_FREQ" value="32"/> -->
+
     <define name="HFF_R_POS_MIN" value="2.5"/>
     <define name="HFF_R_SPEED_MIN" value="2."/>
 <!--    <define name="VF_FLOAT_MEAS_NOISE" value="2."/>  --> <!--  2. -->
@@ -43,6 +56,7 @@
   <modules main_freq="512">
     <load name="openlog.xml"/>
     <load name="geo_mag.xml"/>
+    <load name="consume_rotorcraft.xml"/>
     <load name="sys_mon.xml"/>
 <!--    <load name="led_safety_status.xml">
       <define name="SAFETY_WARNING_LED" value="3"/>
@@ -205,22 +219,22 @@ To increase response time, you can increase the frequency, and the bounds.
  -->
  
    <!-- feedback -->
-    <define name="PHI_PGAIN"  value="1340"/> <!-- 1200 -->
-    <define name="PHI_DGAIN"  value="1800"/>  <!-- 900 -->
-    <define name="PHI_IGAIN"  value="1140"/>  <!-- 240 -->
+    <define name="PHI_PGAIN"  value="1500"/> <!-- 1500 -->
+    <define name="PHI_DGAIN"  value="1"/>  <!-- 600 -->
+    <define name="PHI_IGAIN"  value="500"/>  <!-- 400 -->
 
-    <define name="THETA_PGAIN"  value="1340"/>
-    <define name="THETA_DGAIN"  value="1800"/>
-    <define name="THETA_IGAIN"  value="1140"/>
+    <define name="THETA_PGAIN"  value="1500"/>
+    <define name="THETA_DGAIN"  value="1"/>
+    <define name="THETA_IGAIN"  value="500"/>
 
-    <define name="PSI_PGAIN"  value="6600"/>
-    <define name="PSI_DGAIN"  value="2000"/>
-    <define name="PSI_IGAIN"  value="320"/>
+    <define name="PSI_PGAIN"  value="3400"/>
+    <define name="PSI_DGAIN"  value="1"/>
+    <define name="PSI_IGAIN"  value="200"/>
 
     <!-- feedforward -->
-    <define name="PHI_DDGAIN"   value="000"/>
-    <define name="THETA_DDGAIN" value="000"/>
-    <define name="PSI_DDGAIN"   value="000"/>
+    <define name="PHI_DDGAIN"   value="300"/> <!-- usando como D term modificado -->
+    <define name="THETA_DDGAIN" value="300"/>
+    <define name="PSI_DDGAIN"   value="600"/>
   </section>
 
   <section name="GUIDANCE_V" prefix="GUIDANCE_V_">
@@ -234,7 +248,9 @@ To increase response time, you can increase the frequency, and the bounds.
     <define name="REF_MIN_ZD" value="-3."/>        <!-- 3 max descent speed in m/s -->
     <define name="REF_MAX_ZD" value="3."/>         <!-- 3 max climb speed in m/s -->
     <define name="ADAPT_NOISE_FACTOR"     value="0.7"/>
-    <define name="NOMINAL_HOVER_THROTTLE" value="0.4"/>
+
+    <define name="GUIDANCE_V_ADAPT_INITIAL_HOVER_THROTTLE" value="0.4"/>
+    <define name="NOMINAL_HOVER_THROTTLE" value="0.45"/>
     <define name="ADAPT_THROTTLE_ENABLED" value="TRUE"/>
     <define name="MAX_RC_CLIMB_SPEED" value="-3.0" unit="m/s"/>
     <define name="MAX_RC_DESCENT_SPEED" value="3.0" unit="m/s"/>

@@ -1,6 +1,6 @@
 <!DOCTYPE module SYSTEM "./module.dtd">
 
-<module name="consume per minute"  dir="benchmark">
+<module name="consume_per_minute"  dir="benchmark">
   <doc>
     <description>
       Faz a media de consumo por minuto

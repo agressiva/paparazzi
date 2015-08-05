@@ -19,8 +19,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-/** @file modules/benchmarck/?????.c
- * Consumo com KM
+/** @file modules/benchmarck/consume_rotorcraft.h
+ * Consumo per minute
  *
  */
 

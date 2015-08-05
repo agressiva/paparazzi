@@ -27,6 +27,8 @@
 
 #include "generated/airframe.h"
 
+#include "filters/low_pass_filter.h"
+
 #include "firmwares/rotorcraft/stabilization/stabilization_attitude.h"
 #include "firmwares/rotorcraft/stabilization/stabilization_attitude_rc_setpoint.h"
 
@@ -35,7 +37,36 @@
 #include "math/pprz_algebra_int.h"
 #include "state.h"
 
+/** Time constant for second order Butterworth low pass filter
+ * Default of 0.15 should give cut-off freq of 1/(2*pi*tau) ~= 1Hz
+ */
+#ifndef STAB_D_LOWPASS_FREQ
+#define STAB_D_LOWPASS_FREQ 50   // 17 ou 32
+#endif
+
+#if STAB_D_LOWPASS_FREQ < 8
+#error "It is not allowed to use a cutoff frequency lower than 8Hz due to overflow issues."
+#endif
+
+#ifndef STAB_P_LOWPASS_FREQ
+#define STAB_P_LOWPASS_FREQ 26   // 32 ou 50
+#endif
+
+PRINT_CONFIG_VAR(STAB_D_LOWPASS_FREQ)
+
+#define DT_UPDATE (1./PERIODIC_FREQUENCY)
+
+
+static Butterworth2LowPass_int stab_p_filter;
+static Butterworth2LowPass_int stab_q_filter;
+
+static Butterworth2LowPass_int stab_att_phi_filter;
+static Butterworth2LowPass_int stab_att_theta_filter;
+
 struct Int32AttitudeGains  stabilization_gains;
+int32_t ratep_gain, rateq_gain, rater_gain; // eu coloquei - funciona melhor 
+int32_t rateSumpFiltered, rateSumqFiltered;
+int32_t att_err_phi_filtered, att_err_theta_filtered;
 
 /* warn if some gains are still negative */
 #if (STABILIZATION_ATTITUDE_PHI_PGAIN < 0) || \
@@ -134,8 +165,13 @@ void stabilization_attitude_init(void)
                STABILIZATION_ATTITUDE_THETA_DDGAIN,
                STABILIZATION_ATTITUDE_PSI_DDGAIN);
 
-
   INT_EULERS_ZERO(stabilization_att_sum_err);
+  
+  init_butterworth_2_low_pass_int(&stab_p_filter, STAB_D_LOWPASS_FREQ, DT_UPDATE, 0);
+  init_butterworth_2_low_pass_int(&stab_q_filter, STAB_D_LOWPASS_FREQ, DT_UPDATE, 0);
+  
+  init_butterworth_2_low_pass_int(&stab_att_phi_filter, STAB_P_LOWPASS_FREQ, DT_UPDATE, 0);
+  init_butterworth_2_low_pass_int(&stab_att_theta_filter, STAB_P_LOWPASS_FREQ, DT_UPDATE, 0);
 
 #if PERIODIC_TELEMETRY
   register_periodic_telemetry(DefaultPeriodic, "STAB_ATTITUDE", send_att);
@@ -187,17 +223,17 @@ void stabilization_attitude_set_earth_cmd_i(struct Int32Vect2 *cmd, int32_t head
 
 void stabilization_attitude_run(bool_t  in_flight)
 {
+      static int32_t rateSumq, rateSum1q, rateSum2q;
+      static int32_t rateSump, rateSum1p, rateSum2p;
+      static int32_t rateSumr, rateSum1r, rateSum2r;
 
   /* update reference */
   stabilization_attitude_ref_update();
 
   /* compute feedforward command */
-  stabilization_att_ff_cmd[COMMAND_ROLL] =
-    OFFSET_AND_ROUND(stabilization_gains.dd.x * stab_att_ref_accel.p, 5);
-  stabilization_att_ff_cmd[COMMAND_PITCH] =
-    OFFSET_AND_ROUND(stabilization_gains.dd.y * stab_att_ref_accel.q, 5);
-  stabilization_att_ff_cmd[COMMAND_YAW] =
-    OFFSET_AND_ROUND(stabilization_gains.dd.z * stab_att_ref_accel.r, 5);
+  stabilization_att_ff_cmd[COMMAND_ROLL] =0;//    OFFSET_AND_ROUND(stabilization_gains.dd.x * stab_att_ref_accel.p, 5);
+  stabilization_att_ff_cmd[COMMAND_PITCH] = 0; //    OFFSET_AND_ROUND(stabilization_gains.dd.y * stab_att_ref_accel.q, 5);
+  stabilization_att_ff_cmd[COMMAND_YAW] =0;//    OFFSET_AND_ROUND(stabilization_gains.dd.z * stab_att_ref_accel.r, 5);
 
   /* compute feedback command */
   /* attitude error            */
@@ -234,19 +270,39 @@ void stabilization_attitude_run(bool_t  in_flight)
   RATES_DIFF(rate_err, rate_ref_scaled, (*body_rate));
 
   /* PID                  */
+  //3stage moving average filter
+  rateSump = rateSum1p + rateSum2p + rate_err.p;
+  rateSum2p = rateSum1p;
+  rateSum1p = rate_err.p;
+  rateSumpFiltered = update_butterworth_2_low_pass_int(&stab_p_filter, rateSump);
+  att_err_phi_filtered = update_butterworth_2_low_pass_int(&stab_att_phi_filter, att_err.phi);
+  
   stabilization_att_fb_cmd[COMMAND_ROLL] =
-    stabilization_gains.p.x    * att_err.phi +
+    stabilization_gains.p.x    * att_err_phi_filtered + //att_err.phi
     stabilization_gains.d.x    * rate_err.p +
+    stabilization_gains.dd.x   * rateSump + //rateSumpFiltered + //
     OFFSET_AND_ROUND2((stabilization_gains.i.x  * stabilization_att_sum_err.phi), 10); //10
 
+  rateSumq = rateSum1q + rateSum2q + rate_err.q;
+  rateSum2q = rateSum1q;
+  rateSum1q = rate_err.q;    
+  rateSumpFiltered = update_butterworth_2_low_pass_int(&stab_q_filter, rateSumq);
+  att_err_theta_filtered = update_butterworth_2_low_pass_int(&stab_att_theta_filter, att_err.theta);
+  
   stabilization_att_fb_cmd[COMMAND_PITCH] =
-    stabilization_gains.p.y    * att_err.theta +
+    stabilization_gains.p.y    * att_err_theta_filtered + //att_err.theta
     stabilization_gains.d.y    * rate_err.q +
+    stabilization_gains.dd.y   * rateSumq + //rateSumpFiltered + //
     OFFSET_AND_ROUND2((stabilization_gains.i.y  * stabilization_att_sum_err.theta), 10); //10
+
+  rateSumr = rateSum1r + rateSum2r + rate_err.r;
+  rateSum2r = rateSum1r;
+  rateSum1r = rate_err.r;   
 
   stabilization_att_fb_cmd[COMMAND_YAW] =
     stabilization_gains.p.z    * att_err.psi +
     stabilization_gains.d.z    * rate_err.r +
+    stabilization_gains.dd.z   * rateSumr + 
     OFFSET_AND_ROUND2((stabilization_gains.i.z  * stabilization_att_sum_err.psi), 10); //10
 
 
@@ -269,6 +325,6 @@ void stabilization_attitude_run(bool_t  in_flight)
   /* bound the result */
   BoundAbs(stabilization_cmd[COMMAND_ROLL], MAX_PPRZ/3);
   BoundAbs(stabilization_cmd[COMMAND_PITCH], MAX_PPRZ/3);
-  BoundAbs(stabilization_cmd[COMMAND_YAW], MAX_PPRZ/3);
+  BoundAbs(stabilization_cmd[COMMAND_YAW], MAX_PPRZ/2);
 
 }

@@ -3,6 +3,7 @@
 <airframe name="Blender">
 
   <modules main_freq="512">
+    <load name="consume_rotorcraft.xml"/>
     <!--<load name="photogrammetry_calculator.xml"/>-->
     <load name="nav_tower_rotorcraft.xml"/>
  <!--   <load name="nav_survey_rectangle_rotorcraft.xml"/>
